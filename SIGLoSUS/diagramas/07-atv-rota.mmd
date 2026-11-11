@@ -1,0 +1,14 @@
+flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1["Reunir entregas e verificar prioridade e capacidade do veículo"]:::act
+    A1 --> D1{"Demanda cabe na capacidade do veículo?"}:::dec
+    D1 -- Não --> A2["Dividir em múltiplas rotas"]:::act
+    D1 -- Sim --> A3["Calcular sequência otimizada de paradas e estimar distância/tempo"]:::act
+    A2 --> A3
+    A3 --> D2{"Rota atende às restrições de negócio?"}:::dec
+    D2 -- Não --> A3
+    D2 -- Sim --> A4["Disponibilizar rota para despacho"]:::act --> Fim((Fim)):::endn

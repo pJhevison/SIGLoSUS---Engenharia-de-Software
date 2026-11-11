@@ -1,0 +1,15 @@
+flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1[Informar e-mail/CPF e senha]:::act
+    A1 --> A2[Validar formato dos campos]:::act
+    A2 --> D1{Credenciais válidas?}:::dec
+    D1 -- Não --> D2{Tentativas excedidas?}:::dec
+    D2 -- Não --> A1
+    D2 -- Sim --> A3[Bloquear acesso temporariamente]:::act --> Fim1((Fim)):::endn
+    D1 -- Sim --> A4[Registrar acesso na auditoria]:::act
+    A4 --> A5[Liberar aplicação conforme perfil]:::act
+    A5 --> Fim2((Fim)):::endn

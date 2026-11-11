@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    actor A as Administrador
+    participant I as :TelaIntegracao (boundary)
+    participant C as :ControladorIntegracao (control)
+    participant S as :ServicoExterno (e-SUS/HÓRUS)
+    participant E as :Estoque (entity)
+
+    A->>I: Solicita sincronização
+    I->>C: sincronizar()
+    C->>S: Requisição de dados de estoque/dispensação (API)
+    S-->>C: Retorna dados (JSON/FHIR)
+    C->>C: Valida e concilia os dados
+    loop Para cada item de estoque
+        C->>E: Atualiza posição de estoque
+        E-->>C: Confirmação
+    end
+    C->>C: Registra resultado da sincronização
+    C-->>I: Retorna status da sincronização
+    I-->>A: Exibe resultado (sucesso/divergências)

@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor G as Gestor
+    participant I as :TelaRota (boundary)
+    participant C as :ControladorRota (control)
+    participant E as :Estoque (entity)
+    participant V as :Veiculo (entity)
+    participant R as :Rota (entity)
+    participant O as :ServicoRoteirizacao (control)
+
+    G->>I: Seleciona destinos e veículo
+    I->>C: gerarRota(destinos, veiculoId)
+    C->>E: Consulta estoque e prioridades das unidades
+    E-->>C: Posição de estoque
+    C->>V: Consulta capacidade de carga
+    V-->>C: Capacidade disponível
+    C->>O: calcularRotaOtimizada(destinos, prioridades, capacidade)
+    O-->>C: Sequência de paradas + distância + tempo
+    C->>R: Persiste a rota e suas paradas
+    R-->>C: Rota criada
+    C-->>I: Exibe a rota otimizada
+    G->>I: Confirma a rota
+    I->>C: confirmarRota(id)
+    C->>R: Atualiza situação para DISPONÍVEL PARA DESPACHO
+    C-->>I: Confirmação
+    I-->>G: Rota pronta para despacho

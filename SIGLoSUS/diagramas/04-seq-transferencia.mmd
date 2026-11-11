@@ -1,0 +1,25 @@
+sequenceDiagram
+    autonumber
+    actor G as Gestor
+    participant I as :TelaRedistribuicao (boundary)
+    participant C as :ControladorTransferencia (control)
+    participant P as :PrevisaoDemanda (entity)
+    participant E as :Estoque (entity)
+    participant T as :Transferencia (entity)
+
+    G->>I: Acessa painel de redistribuição
+    I->>C: gerarSugestoes()
+    C->>P: Obtém previsão de demanda
+    P-->>C: Quantidades previstas por unidade
+    C->>E: Consulta excedentes e déficits
+    E-->>C: Posição de estoque
+    C->>C: Aplica regras (nível de segurança, FEFO, validade, proximidade)
+    C->>T: Cria sugestões de transferência
+    T-->>C: Sugestões criadas
+    C-->>I: Exibe sugestões
+    G->>I: Seleciona e aprova uma sugestão
+    I->>C: aprovarTransferencia(id)
+    C->>T: Atualiza situação para APROVADA
+    T-->>C: Confirmação
+    C-->>I: Confirma aprovação
+    I-->>G: Exibe confirmação

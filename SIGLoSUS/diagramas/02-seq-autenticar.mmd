@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    actor U as Usuário
+    participant I as :TelaLogin (boundary)
+    participant C as :ControladorAutenticacao (control)
+    participant U_ as :Usuario (entity)
+    participant L as :LogAuditoria (entity)
+
+    U->>I: Informa e-mail/CPF e senha
+    I->>I: Valida formato dos campos
+    I->>C: Solicita autenticação(credenciais)
+    C->>U_: Consulta usuário por identificador
+    U_-->>C: Retorna usuário e senha (hash)
+    C->>C: Compara hash da senha (SHA-256)
+    alt Credenciais válidas
+        C->>L: Registra acesso bem-sucedido
+        C-->>I: Autenticação aprovada + perfil
+        I-->>U: Redireciona ao painel inicial
+    else Credenciais inválidas
+        C-->>I: Autenticação recusada
+        I-->>U: Exibe mensagem de erro
+    end

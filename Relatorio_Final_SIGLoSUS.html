@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIGLoSUS – Documentação (Parte 1)</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root { --azul:#1e40af; --cinza:#555; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; color:#1f2937; line-height:1.55; max-width: 980px; margin: 0 auto; padding: 32px 40px 80px; }
+  h1 { color: var(--azul); border-bottom: 2px solid var(--azul); padding-bottom: 6px; margin-top: 42px; }
+  h2 { color:#1f2937; margin-top: 30px; }
+  h3 { color:#374151; margin-top: 22px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 20px; font-size: 14px; }
+  th, td { border: 1px solid #c7cdd6; padding: 6px 9px; vertical-align: top; text-align: left; }
+  th { background: #d9e2f3; }
+  .tabela-cap, .figura-cap { font-style: italic; color: var(--cinza); text-align: center; font-size: 13px; margin-top: -8px; }
+  .mermaid { text-align: center; margin: 18px 0; }
+  blockquote { border-left: 4px solid #93c5fd; background:#eff6ff; margin: 16px 0; padding: 8px 16px; color:#334155; }
+  code { background:#f1f5f9; padding: 1px 5px; border-radius: 4px; }
+  ul { margin-top: 6px; }
+  @media print {
+    body { max-width: none; padding: 0; }
+    h1 { page-break-after: avoid; } h2, h3 { page-break-after: avoid; }
+    table, .mermaid, img { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<h1>Relatório Final – Projeto SIGLoSUS (Parte 1)</h1>
+<p><strong>Instituição:</strong> Universidade Federal do Amazonas – UFAM / Instituto de Ciências Exatas e Tecnologia – ICET
+<strong>Disciplina:</strong> Engenharia de Software
+<strong>Documento:</strong> Relatório Final da Parte 1 (consolidação de todo o trabalho realizado)</p>
+<hr>
+<h2>Apresentação</h2>
+<p>Este documento constitui o <strong>relatório final da Parte 1</strong> do projeto <strong>SIGLoSUS</strong>, desenvolvido para a disciplina de Engenharia de Software (UFAM/ICET). O relatório consolida <strong>todo o trabalho realizado</strong>: a compreensão do problema de logística de medicamentos no SUS, a elicitação e a padronização dos requisitos (funcionais, não-funcionais e regras de negócio) e a modelagem UML completa do sistema.</p>
+<p>Além da narrativa do processo, este relatório incorpora a <strong>documentação técnica final da Parte 1</strong>, contemplando os itens solicitados: Introdução (Descrição Geral do Sistema e Descrição dos Usuários), Requisitos Gerais do Sistema e Diagramas UML (Casos de Uso, Especificação dos Casos de Uso, Sequência, Atividades e Classes).</p>
+<h2>Contexto e Problema</h2>
+<p>A falta de medicamentos nas farmácias das unidades de saúde do SUS é um problema que afeta diretamente a vida do cidadão. Entre as principais causas estão a ausência de visão consolidada do estoque entre as unidades, os processos manuais e descentralizados, a dificuldade de prever a demanda e a ineficiência das rotas de distribuição.</p>
+<p>A proposta do <strong>SIGLoSUS</strong> é integrar-se aos sistemas já utilizados pela rede (e-SUS APS, HÓRUS/SNA e BNAFAR) para oferecer uma visão em tempo real do estoque e, a partir dela, agir de forma proativa: prever a demanda, alertar sobre o risco de desabastecimento, sugerir transferências entre unidades e gerar rotas de distribuição otimizadas. O objetivo final não é apenas uma gestão de estoque eficiente, mas garantir que o medicamento esteja disponível quando e onde o paciente precisa — ou seja, <strong>salvar vidas</strong>.</p>
+<h2>Objetivos</h2>
+<p><strong>Objetivo geral:</strong> especificar um sistema de gestão logística de medicamentos para o SUS capaz de reduzir a falta de remédios nas farmácias.</p>
+<p><strong>Objetivos específicos:</strong></p>
+<ul>
+<li>Definir a descrição geral do sistema e o perfil dos usuários;</li>
+<li>Elicitar e padronizar os requisitos funcionais, não-funcionais e as regras de negócio;</li>
+<li>Modelar o sistema em UML (casos de uso, especificação, sequência, atividades e classes).</li>
+</ul>
+<h2>Metodologia e Processo de Trabalho</h2>
+<p>O trabalho foi conduzido a partir da análise dos materiais de referência disponibilizados na disciplina, seguindo as convenções neles definidas:</p>
+<ul>
+<li><strong>Modelo de Projeto – Padrão ISO:</strong> definiu a estrutura do documento e o formato das tabelas de especificação de casos de uso;</li>
+<li><strong>Técnicas de Identificação e Escrita de Requisitos:</strong> orientou a padronização dos RF e RNF (iniciados por &quot;O sistema deve…&quot;), a distinção das Regras de Negócio (políticas da organização) e a definição de prioridades (Essencial, Importante e Desejável);</li>
+<li><strong>Sintaxe de Caso de Uso:</strong> forneceu a notação UML (atores em boneco palito, casos de uso em elipses, linhas de associação e setas <code>&lt;&lt;include&gt;&gt;</code> / <code>&lt;&lt;extend&gt;&gt;</code>);</li>
+<li><strong>Revisão de Programação Orientada a Objetos:</strong> embasou a construção do diagrama de classes.</li>
+</ul>
+<p>Os diagramas foram produzidos em notação UML e renderizados como imagens (SVG/PNG), sendo incorporados ao documento final. O diagrama de casos de uso foi gerado em <strong>notação UML clássica</strong>, e os demais (sequência, atividades e classes) por meio de ferramenta de diagramação a partir de código.</p>
+<h2>Resultados Obtidos</h2>
+<p>A Parte 1 do projeto foi concluída com os seguintes artefatos:</p>
+<ul>
+<li>Introdução com a descrição geral do sistema (problema, proposta, escopo e fora de escopo) e a descrição de <strong>6 perfis de usuários</strong>;</li>
+<li><strong>22 Requisitos Funcionais</strong> (RF01–RF22), <strong>13 Requisitos Não-Funcionais</strong> (RNF01–RNF13) e <strong>9 Regras de Negócio</strong> (RN01–RN09);</li>
+<li><strong>Diagrama de Casos de Uso</strong> com 6 atores e 22 casos de uso, com relacionamentos <code>&lt;&lt;include&gt;&gt;</code> e <code>&lt;&lt;extend&gt;&gt;</code>;</li>
+<li><strong>Especificação detalhada de 7 casos de uso</strong> principais;</li>
+<li><strong>4 Diagramas de Sequência</strong>, <strong>3 Diagramas de Atividades</strong> e <strong>1 Diagrama de Classes</strong> com 18 classes e enumerações.</li>
+</ul>
+<p>Todos os artefatos estão apresentados na íntegra na documentação técnica que compõe a segunda parte deste relatório.</p>
+<h2>Considerações Finais</h2>
+<p>A modelagem produzida demonstra a viabilidade de um sistema que integra os dados já existentes na rede pública e transforma essa informação em ações concretas de reposição de estoque e distribuição. As próximas etapas do projeto (Parte 2) contemplam a arquitetura do sistema, os padrões de projeto, a prototipação das telas e a análise de riscos.</p>
+<h2>Referências</h2>
+<ul>
+<li>PRESSMAN, Roger S. <em>Engenharia de software: uma abordagem profissional</em>. Porto Alegre: AMGH, 2011.</li>
+<li>SOMMERVILLE, Ian. <em>Engenharia de software</em>. São Paulo: Pearson Addison-Wesley, 2011.</li>
+<li>BRASIL. Ministério da Saúde. Materiais de referência da disciplina de Engenharia de Software (UFAM/ICET), 2026.</li>
+</ul>
+<hr>
+<h1>Documentação Técnica – Parte 1</h1>
+<h1>1. Introdução</h1>
+<h2>1.1. Descrição Geral do Sistema</h2>
+<p>O <strong>SIGLoSUS</strong> é um sistema de informação voltado à <strong>gestão logística e à distribuição de medicamentos no âmbito do Sistema Único de Saúde (SUS)</strong>. Ele nasce de um problema concreto e recorrente na rede pública: a <strong>falta de medicamentos nas farmácias</strong> (desabastecimento), causada, entre outros fatores, pela <strong>ausência de visão consolidada do estoque</strong> entre as unidades, por <strong>processos manuais e descentralizados</strong>, pela <strong>dificuldade de prever a demanda</strong> e por <strong>rotas de distribuição ineficientes</strong>.</p>
+<p>O sistema <strong>não substitui</strong> as ferramentas já utilizadas pela gestão de saúde — ele <strong>integra-se a elas</strong> (por exemplo, <strong>e-SUS APS</strong>, <strong>HÓRUS/SNA</strong> e <strong>BNAFAR</strong>) para consolidar dados de estoque e dispensação em uma <strong>única visão em tempo real</strong>. A partir dessa visão, o SIGLoSUS passa a agir de forma <strong>proativa</strong>:</p>
+<ul>
+<li><strong>Prevê a demanda</strong> de cada medicamento por unidade, com base no histórico de consumo;</li>
+<li><strong>Antecipa o risco de desabastecimento</strong> e emite alertas antes que a falta aconteça;</li>
+<li><strong>Sugere transferências</strong> entre unidades com excedente e unidades com déficit;</li>
+<li><strong>Gera rotas de distribuição otimizadas</strong>, para que o medicamento chegue mais rápido e a um custo menor;</li>
+<li><strong>Rastreia as entregas</strong> até a confirmação de recebimento na ponta.</li>
+</ul>
+<p>O objetivo final não é apenas ter uma gestão de estoque eficiente: é <strong>garantir que o medicamento esteja disponível quando e onde o paciente precisa</strong>, reduzindo a falta de remédios nas farmácias e, com isso, <strong>salvando vidas</strong>.</p>
+<p><strong>Escopo do sistema (o que está contemplado):</strong></p>
+<ul>
+<li>Gestão do estoque de medicamentos de uma <strong>região de saúde</strong>, da <strong>Central de Abastecimento Farmacêutico (CAF)</strong> até as unidades de ponta (UBS, hospitais, farmácias populares);</li>
+<li>Integração com os sistemas de saúde já existentes;</li>
+<li>Previsão de demanda, alertas, redistribuição e roteirização;</li>
+<li>Rastreamento de entregas e controle de lotes/validade;</li>
+<li>Relatórios e painéis gerenciais.</li>
+</ul>
+<p><strong>Fora do escopo (o que NÃO está contemplado nesta versão):</strong></p>
+<ul>
+<li>Prontuário eletrônico e prescrição médica (o sistema apenas recebe o registro de dispensação);</li>
+<li>Compras públicas/licitações (o sistema registra a requisição, mas não realiza o processo licitatório);</li>
+<li>Aplicativos para o cidadão/paciente.</li>
+</ul>
+<h2>1.2. Descrição dos Usuários</h2>
+<p>Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na cadeia de assistência farmacêutica. Cada perfil possui responsabilidades e níveis de acesso distintos.</p>
+<table>
+<thead>
+<tr>
+<th>Perfil (Ator)</th>
+<th>Descrição</th>
+<th>Principais responsabilidades no sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Gestor de Assistência Farmacêutica</strong></td>
+<td>Profissional responsável pela gestão da assistência farmacêutica na região de saúde.</td>
+<td>Acompanha painéis, aprova transferências e requisições, configura parâmetros de estoque, analisa previsões e relatórios.</td>
+</tr>
+<tr>
+<td><strong>Farmacêutico da Unidade</strong></td>
+<td>Farmacêutico responsável pelo estoque e pela dispensação em uma unidade de saúde (UBS/hospital).</td>
+<td>Consulta o estoque da unidade, registra movimentações e dispensações, confirma recebimentos e sinaliza necessidades.</td>
+</tr>
+<tr>
+<td><strong>Almoxarife / Responsável pela CAF</strong></td>
+<td>Profissional que opera a Central de Abastecimento Farmacêutico.</td>
+<td>Registra entradas e saídas, atende requisições, prepara e despacha entregas, controla lotes e validade.</td>
+</tr>
+<tr>
+<td><strong>Motorista / Entregador</strong></td>
+<td>Profissional que realiza a distribuição física dos medicamentos.</td>
+<td>Visualiza a rota, confirma a saída, registra a entrega e reporta ocorrências; opera em modo offline.</td>
+</tr>
+<tr>
+<td><strong>Administrador do Sistema</strong></td>
+<td>Profissional de TI responsável pela manutenção técnica e pela configuração do sistema.</td>
+<td>Gerencia usuários e perfis, configura integrações, monitora sincronizações e a auditoria.</td>
+</tr>
+<tr>
+<td><strong>Sistema de Saúde Externo</strong> <em>(ator secundário)</em></td>
+<td>Sistemas já utilizados pela rede (e-SUS APS, HÓRUS/SNA, BNAFAR).</td>
+<td>Fornecem e recebem dados de estoque e dispensação por meio de integração/API.</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>2. Requisitos Gerais do Sistema</h1>
+<blockquote>
+<p><strong>Convenções de escrita (conforme material de referência):</strong></p>
+<ul>
+<li><strong>Requisitos Funcionais (RF)</strong> e <strong>Requisitos Não-Funcionais (RNF)</strong> são escritos no infinitivo, iniciando por <em>&quot;O sistema deve…&quot;</em>.</li>
+<li><strong>Regras de Negócio (RN)</strong> descrevem <strong>políticas/condições da organização</strong>, não iniciam com <em>&quot;O sistema deve…&quot;</em> e não citam as palavras sistema, software ou aplicativo.</li>
+<li><strong>Prioridades:</strong> <em>Essencial</em> (sem ele o sistema não funciona), <em>Importante</em> (funciona, mas de forma insatisfatória) e <em>Desejável</em> (pode ficar para versões futuras).</li>
+</ul>
+</blockquote>
+<h2>2.1. Requisitos Funcionais</h2>
+<table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Descrição</th>
+<th>Escopo</th>
+<th>Prioridade</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RF01</strong></td>
+<td>O sistema deve permitir o acesso do usuário por meio de login e senha.</td>
+<td>Geral</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF02</strong></td>
+<td>O sistema deve permitir que o usuário recupere a senha esquecida.</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF03</strong></td>
+<td>O sistema deve permitir a saída do usuário (logout).</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF04</strong></td>
+<td>O sistema deve permitir o cadastro, a edição e a inativação de usuários, atribuindo-lhes perfis de acesso.</td>
+<td>Administração</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF05</strong></td>
+<td>O sistema deve permitir o cadastro e a manutenção das unidades de saúde (UBS, hospitais e centros de distribuição).</td>
+<td>Cadastros</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF06</strong></td>
+<td>O sistema deve permitir o cadastro e a manutenção do catálogo de medicamentos (nome, princípio ativo, apresentação, código CATMAT e indicação de controlado).</td>
+<td>Cadastros</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF07</strong></td>
+<td>O sistema deve integrar-se, por meio de API, aos sistemas de saúde já utilizados (e-SUS APS, HÓRUS/SNA e BNAFAR) para importar e exportar dados de estoque e de dispensação.</td>
+<td>Integração</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF08</strong></td>
+<td>O sistema deve registrar todas as movimentações de estoque (entradas, saídas, transferências e ajustes), vinculando o lote e o usuário responsável.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF09</strong></td>
+<td>O sistema deve consolidar e apresentar, em tempo real, a posição de estoque de cada medicamento em cada unidade.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF10</strong></td>
+<td>O sistema deve permitir a configuração dos níveis mínimo e de segurança de estoque por medicamento e por unidade.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF11</strong></td>
+<td>O sistema deve gerar alertas automáticos de risco de desabastecimento quando o estoque atingir o nível mínimo configurado.</td>
+<td>Monitoramento</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF12</strong></td>
+<td>O sistema deve prever a demanda de cada medicamento por unidade e por período, com base no histórico de consumo.</td>
+<td>Inteligência</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF13</strong></td>
+<td>O sistema deve sugerir transferências de medicamentos entre unidades com excedente e unidades com déficit.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF14</strong></td>
+<td>O sistema deve permitir que o gestor aprove ou rejeite as transferências sugeridas.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF15</strong></td>
+<td>O sistema deve gerar rotas de distribuição otimizadas, considerando a distância, a prioridade das unidades e a capacidade do veículo.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF16</strong></td>
+<td>O sistema deve permitir o despacho e o acompanhamento das entregas em tempo real.</td>
+<td>Distribuição</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF17</strong></td>
+<td>O sistema deve permitir a confirmação de recebimento da entrega pela unidade de destino.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF18</strong></td>
+<td>O sistema deve controlar lotes e datas de validade, aplicando a regra de saída por validade.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF19</strong></td>
+<td>O sistema deve permitir o registro da dispensação de medicamentos ao paciente.</td>
+<td>Assistência</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF20</strong></td>
+<td>O sistema deve gerenciar as requisições de medicamentos enviadas pelas unidades ao centro de distribuição.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RF21</strong></td>
+<td>O sistema deve emitir relatórios e painéis gerenciais (dashboards) de estoque, consumo, desabastecimento e entregas.</td>
+<td>Gestão</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RF22</strong></td>
+<td>O sistema deve registrar logs de auditoria de todas as operações críticas realizadas pelos usuários.</td>
+<td>Segurança</td>
+<td>Essencial</td>
+</tr>
+</tbody></table>
+<h2>2.2. Requisitos Não-Funcionais</h2>
+<table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Descrição</th>
+<th>Categoria</th>
+<th>Escopo</th>
+<th>Prioridade</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RNF01</strong></td>
+<td>O sistema deve criptografar as senhas dos usuários e os dados sensíveis, tanto em trânsito (TLS) quanto em repouso.</td>
+<td>Segurança</td>
+<td>Geral</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF02</strong></td>
+<td>O sistema deve tratar os dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD).</td>
+<td>Segurança / Conformidade</td>
+<td>Geral</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF03</strong></td>
+<td>O sistema deve responder às consultas de estoque em tempo real em até 2 segundos.</td>
+<td>Desempenho</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF04</strong></td>
+<td>O sistema deve calcular e apresentar uma rota otimizada em até 60 segundos.</td>
+<td>Desempenho</td>
+<td>Distribuição</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF05</strong></td>
+<td>O sistema deve estar disponível 99,5% do tempo, de forma contínua (24 horas por dia, 7 dias por semana).</td>
+<td>Disponibilidade</td>
+<td>Geral</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF06</strong></td>
+<td>O sistema deve apresentar interface responsiva, de fácil uso e acessível, atendendo ao nível AA das diretrizes WCAG 2.1.</td>
+<td>Usabilidade / Acessibilidade</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF07</strong></td>
+<td>O sistema deve disponibilizar interfaces de programação (APIs REST) e adotar o padrão HL7 FHIR para interoperabilidade com os sistemas de saúde.</td>
+<td>Interoperabilidade</td>
+<td>Integração</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF08</strong></td>
+<td>O sistema deve suportar, no mínimo, 500 unidades de saúde e 5.000 usuários simultâneos sem degradação.</td>
+<td>Escalabilidade</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF09</strong></td>
+<td>O sistema deve garantir a integridade das operações de estoque por meio de transações consistentes (tudo ou nada).</td>
+<td>Confiabilidade</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RNF10</strong></td>
+<td>O sistema deve manter os registros de auditoria por, no mínimo, 5 anos.</td>
+<td>Auditabilidade</td>
+<td>Segurança</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF11</strong></td>
+<td>O sistema deve funcionar nos principais navegadores modernos e em dispositivos móveis.</td>
+<td>Portabilidade</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF12</strong></td>
+<td>O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade.</td>
+<td>Manutenibilidade</td>
+<td>Geral</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RNF13</strong></td>
+<td>O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão.</td>
+<td>Disponibilidade</td>
+<td>Distribuição</td>
+<td>Importante</td>
+</tr>
+</tbody></table>
+<h2>2.3. Regras de Negócio</h2>
+<table>
+<thead>
+<tr>
+<th>Identificador</th>
+<th>Descrição</th>
+<th>Escopo</th>
+<th>Prioridade</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>RN01</strong></td>
+<td>Um medicamento só pode ser transferido de uma unidade que possua estoque acima do seu nível de segurança.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RN02</strong></td>
+<td>A distribuição e a dispensação de medicamentos devem seguir a regra FEFO (<em>First Expired, First Out</em>): o primeiro que expira é o primeiro que sai.</td>
+<td>Estoque</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RN03</strong></td>
+<td>Medicamentos com validade inferior a 90 dias não podem ser transferidos entre unidades.</td>
+<td>Estoque</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RN04</strong></td>
+<td>Unidades com estoque abaixo do nível mínimo têm prioridade no recebimento de entregas.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RN05</strong></td>
+<td>Medicamentos sujeitos a controle especial (Portaria SVS/MS nº 344/98) exigem rastreabilidade por lote e conferência por dois responsáveis.</td>
+<td>Assistência</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RN06</strong></td>
+<td>O abastecimento deve priorizar os medicamentos da RENAME (componente básico da assistência farmacêutica).</td>
+<td>Distribuição</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RN07</strong></td>
+<td>As rotas de entrega devem respeitar a capacidade de carga do veículo e a jornada de trabalho do motorista.</td>
+<td>Distribuição</td>
+<td>Essencial</td>
+</tr>
+<tr>
+<td><strong>RN08</strong></td>
+<td>Transferências entre unidades devem priorizar as unidades mais próximas, a fim de reduzir custo e tempo de entrega.</td>
+<td>Distribuição</td>
+<td>Importante</td>
+</tr>
+<tr>
+<td><strong>RN09</strong></td>
+<td>Requisições acima do limite de valor definido pela gestão exigem aprovação do gestor de assistência farmacêutica.</td>
+<td>Gestão</td>
+<td>Importante</td>
+</tr>
+</tbody></table>
+<hr>
+<h1>3. Diagramas UML</h1>
+<h2>3.1. Diagrama de Casos de Uso</h2>
+<p>O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacionamentos de <strong><code>&lt;&lt;include&gt;&gt;</code></strong> (obrigatório) e <strong><code>&lt;&lt;extend&gt;&gt;</code></strong> (opcional). Todos os casos de uso estão associados a pelo menos um requisito funcional e mantêm linha de interação com o ator.</p>
+<p><strong>Legenda:</strong></p>
+<ul>
+<li><strong>Atores:</strong> representados pelos perfis que interagem com o sistema;</li>
+<li><strong>Retângulo &quot;SIGLoSUS&quot;:</strong> agrupa os casos de uso do sistema (evita poluição visual);</li>
+<li><strong><code>&lt;&lt;include&gt;&gt;</code>:</strong> um caso de uso <strong>dispara obrigatoriamente</strong> outro (dependência);</li>
+<li><strong><code>&lt;&lt;extend&gt;&gt;</code>:</strong> um caso de uso <strong>opcional</strong> ocorre dentro do contexto de outro.</li>
+</ul>
+<p><img src="../imagens/01-casos-de-uso.png" alt="Diagrama de Casos de Uso do SIGLoSUS"></p>
+<p><strong>Figura 1 – Diagrama de Casos de Uso do SIGLoSUS.</strong></p>
+<blockquote>
+<p><strong>Observação sobre as dependências (<code>&lt;&lt;include&gt;&gt;</code>):</strong></p>
+<ul>
+<li><strong>UC13 (Sugerir transferência)</strong> depende de <strong>UC12 (Prever demanda)</strong> — só é possível sugerir a redistribuição conhecendo a demanda futura.</li>
+<li><strong>UC16 (Gerar rota)</strong> depende de <strong>UC09 (Consultar estoque em tempo real)</strong> — a rota é montada a partir da posição consolidada de estoque.</li>
+<li><strong>UC08 (Registrar movimentação)</strong> depende de <strong>UC22 (Controlar lotes e validade)</strong> — toda movimentação respeita a regra FEFO.</li>
+</ul>
+</blockquote>
+<h2>3.2. Especificação dos Casos de Uso</h2>
+<h3>UC01 – Autenticar</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC01 – Autenticar</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Usuário (qualquer perfil)</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve as etapas de acesso do usuário ao sistema por meio de login e senha.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>O usuário deve possuir cadastro ativo e acesso à internet.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>Sendo os dados válidos, o usuário é redirecionado ao painel inicial conforme o seu perfil.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Informar e-mail (ou CPF) e senha</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Validar as credenciais informadas</td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Verificar o perfil de acesso do usuário</td>
+</tr>
+<tr>
+<td>4 – Confirmar o acesso</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>5 – Registrar o acesso no log de auditoria e liberar a aplicação</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Se as credenciais forem inválidas, o acesso não é concedido.</td>
+</tr>
+<tr>
+<td>O acesso é bloqueado temporariamente após 5 tentativas incorretas.</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 1 – Especificação do caso de uso Autenticar.</strong></p>
+<hr>
+<h3>UC07 – Sincronizar com sistemas de origem</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC07 – Sincronizar com sistemas de origem</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Administrador do Sistema</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>Sistema de Saúde Externo (e-SUS APS, HÓRUS/SNA, BNAFAR)</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a integração do SIGLoSUS com os sistemas já utilizados pela rede para importar/exportar dados de estoque e dispensação.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>As integrações devem estar configuradas e os serviços externos disponíveis.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>Os dados de estoque e dispensação são consolidados e ficam disponíveis para consulta em tempo real.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Solicitar a sincronização (manual ou agendada)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Consultar os sistemas externos via API</td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Receber os dados de estoque e dispensação</td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Validar e conciliar os dados recebidos</td>
+</tr>
+<tr>
+<td></td>
+<td>5 – Atualizar a base consolidada de estoque</td>
+</tr>
+<tr>
+<td></td>
+<td>6 – Registrar o resultado e possíveis divergências da sincronização</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Se um sistema externo estiver indisponível, a última sincronização válida é mantida e o erro é registrado.</td>
+</tr>
+<tr>
+<td>Dados divergentes são sinalizados para conferência manual.</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 2 – Especificação do caso de uso Sincronizar com sistemas de origem.</strong></p>
+<hr>
+<h3>UC09 – Consultar estoque em tempo real</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC09 – Consultar estoque em tempo real</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Farmacêutico / Almoxarife / Gestor</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a consulta consolidada da posição de estoque por medicamento e por unidade.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>O usuário deve estar autenticado e possuir dados de estoque sincronizados.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>O sistema apresenta a posição de estoque atualizada e os respectivos alertas.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Selecionar filtros (medicamento, unidade, período)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Recuperar os dados consolidados de estoque</td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Calcular a situação em relação aos níveis mínimo e de segurança</td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Apresentar a posição de estoque e os alertas associados</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A consulta deve refletir a última sincronização realizada.</td>
+</tr>
+<tr>
+<td>Medicamentos abaixo do nível mínimo são destacados visualmente.</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 3 – Especificação do caso de uso Consultar estoque em tempo real.</strong></p>
+<hr>
+<h3>UC13 – Sugerir transferência entre unidades</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC13 – Sugerir transferência entre unidades</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Gestor de Assistência Farmacêutica</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a geração automática de sugestões de redistribuição de medicamentos entre unidades com excedente e unidades com déficit.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>O estoque deve estar sincronizado e a previsão de demanda deve ter sido calculada (UC12).</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>As sugestões de transferência ficam disponíveis para aprovação.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Acessar o painel de redistribuição</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Identificar unidades com excedente e unidades com déficit</td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Verificar as regras de negócio (nível de segurança, FEFO, validade, proximidade)</td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Calcular e apresentar as sugestões de transferência</td>
+</tr>
+<tr>
+<td>5 – Selecionar a sugestão desejada</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>6 – Encaminhar a sugestão para aprovação (UC14)</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Não pode ser sugerida transferência de unidade com estoque abaixo do nível de segurança (RN01).</td>
+</tr>
+<tr>
+<td>Medicamentos com validade inferior a 90 dias não podem ser transferidos (RN03).</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 4 – Especificação do caso de uso Sugerir transferência entre unidades.</strong></p>
+<hr>
+<h3>UC14 – Aprovar transferência</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC14 – Aprovar transferência</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Gestor de Assistência Farmacêutica</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a análise e a aprovação (ou rejeição) de uma transferência sugerida.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>Deve existir ao menos uma sugestão de transferência pendente.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>Aprovada, a transferência é registrada e passa a compor as entregas a serem roteirizadas.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Analisar a sugestão de transferência</td>
+<td></td>
+</tr>
+<tr>
+<td>2 – Aprovar ou rejeitar a sugestão</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Validar as regras de negócio aplicáveis</td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Registrar a decisão e atualizar a situação da transferência</td>
+</tr>
+<tr>
+<td></td>
+<td>5 – Notificar as unidades envolvidas</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A aprovação exige a conferência das regras de negócio (RN01, RN03, RN08).</td>
+</tr>
+<tr>
+<td>Uma transferência rejeitada retorna ao painel com a justificativa.</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 5 – Especificação do caso de uso Aprovar transferência.</strong></p>
+<hr>
+<h3>UC16 – Gerar rota de distribuição</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC16 – Gerar rota de distribuição</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Gestor de Assistência Farmacêutica</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>Almoxarife / CAF</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a geração de uma rota otimizada para a distribuição dos medicamentos até as unidades de destino.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>Deve haver transferências aprovadas ou requisições a entregar; veículo e motorista devem estar definidos.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>A rota é gerada, sequenciando as paradas, e fica disponível para despacho.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Selecionar as unidades de destino e o veículo</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Recuperar a posição de estoque e as prioridades (UC09)</td>
+</tr>
+<tr>
+<td></td>
+<td>3 – Calcular a melhor sequência de paradas (distância, prioridade, capacidade)</td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Apresentar a rota com distância e tempo estimados</td>
+</tr>
+<tr>
+<td>5 – Confirmar a rota</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>6 – Disponibilizar a rota para o despacho (UC17)</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A rota deve respeitar a capacidade de carga do veículo e a jornada do motorista (RN07).</td>
+</tr>
+<tr>
+<td>Unidades com estoque abaixo do mínimo têm prioridade (RN04).</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 6 – Especificação do caso de uso Gerar rota de distribuição.</strong></p>
+<hr>
+<h3>UC18 – Confirmar recebimento</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nome do caso de uso</strong></td>
+<td>UC18 – Confirmar recebimento</td>
+</tr>
+<tr>
+<td><strong>Caso de uso geral</strong></td>
+<td>Fluxo Principal</td>
+</tr>
+<tr>
+<td><strong>Ator principal</strong></td>
+<td>Farmacêutico da Unidade</td>
+</tr>
+<tr>
+<td><strong>Atores secundários</strong></td>
+<td>Motorista / Entregador</td>
+</tr>
+<tr>
+<td><strong>Resumo</strong></td>
+<td>Descreve a conferência e a confirmação de que os medicamentos entregues foram recebidos pela unidade de destino.</td>
+</tr>
+<tr>
+<td><strong>Pré-condições</strong></td>
+<td>Deve existir uma entrega despachada para a unidade.</td>
+</tr>
+<tr>
+<td><strong>Pós-condições</strong></td>
+<td>O recebimento é registrado, o estoque da unidade é atualizado e a entrega é finalizada.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Ações do Ator</th>
+<th>Ações do Sistema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 – Conferir os itens e os lotes entregues</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2 – Apresentar os itens previstos na entrega</td>
+</tr>
+<tr>
+<td>3 – Confirmar o recebimento (ou registrar divergência)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>4 – Atualizar o estoque da unidade de destino</td>
+</tr>
+<tr>
+<td></td>
+<td>5 – Encerrar a entrega e atualizar a situação da rota</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Restrições/Validações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Havendo divergência de itens ou lotes, o recebimento é registrado com pendência e o gestor é notificado.</td>
+</tr>
+</tbody></table>
+<p><strong>Tabela 7 – Especificação do caso de uso Confirmar recebimento.</strong></p>
+<h2>3.3. Diagramas de Sequência</h2>
+<p>Os diagramas de sequência detalham a interação entre os atores e os objetos do sistema nos casos de uso principais, seguindo o padrão <strong>boundary → control → entity</strong>.</p>
+<h3>3.3.1. Sequência – UC01 Autenticar</h3>
+<div class="mermaid">sequenceDiagram
+    autonumber
+    actor U as Usuário
+    participant I as :TelaLogin (boundary)
+    participant C as :ControladorAutenticacao (control)
+    participant U_ as :Usuario (entity)
+    participant L as :LogAuditoria (entity)
+
+    U->>I: Informa e-mail/CPF e senha
+    I->>I: Valida formato dos campos
+    I->>C: Solicita autenticação(credenciais)
+    C->>U_: Consulta usuário por identificador
+    U_-->>C: Retorna usuário e senha (hash)
+    C->>C: Compara hash da senha (SHA-256)
+    alt Credenciais válidas
+        C->>L: Registra acesso bem-sucedido
+        C-->>I: Autenticação aprovada + perfil
+        I-->>U: Redireciona ao painel inicial
+    else Credenciais inválidas
+        C-->>I: Autenticação recusada
+        I-->>U: Exibe mensagem de erro
+    end</div>
+<p><strong>Figura 2 – Sequência Autenticar.</strong></p>
+<h3>3.3.2. Sequência – UC07 Sincronizar com sistemas de origem</h3>
+<div class="mermaid">sequenceDiagram
+    autonumber
+    actor A as Administrador
+    participant I as :TelaIntegracao (boundary)
+    participant C as :ControladorIntegracao (control)
+    participant S as :ServicoExterno (e-SUS/HÓRUS)
+    participant E as :Estoque (entity)
+
+    A->>I: Solicita sincronização
+    I->>C: sincronizar()
+    C->>S: Requisição de dados de estoque/dispensação (API)
+    S-->>C: Retorna dados (JSON/FHIR)
+    C->>C: Valida e concilia os dados
+    loop Para cada item de estoque
+        C->>E: Atualiza posição de estoque
+        E-->>C: Confirmação
+    end
+    C->>C: Registra resultado da sincronização
+    C-->>I: Retorna status da sincronização
+    I-->>A: Exibe resultado (sucesso/divergências)</div>
+<p><strong>Figura 3 – Sequência Sincronizar com sistemas de origem.</strong></p>
+<h3>3.3.3. Sequência – UC13/UC14 Sugerir e Aprovar Transferência</h3>
+<div class="mermaid">sequenceDiagram
+    autonumber
+    actor G as Gestor
+    participant I as :TelaRedistribuicao (boundary)
+    participant C as :ControladorTransferencia (control)
+    participant P as :PrevisaoDemanda (entity)
+    participant E as :Estoque (entity)
+    participant T as :Transferencia (entity)
+
+    G->>I: Acessa painel de redistribuição
+    I->>C: gerarSugestoes()
+    C->>P: Obtém previsão de demanda
+    P-->>C: Quantidades previstas por unidade
+    C->>E: Consulta excedentes e déficits
+    E-->>C: Posição de estoque
+    C->>C: Aplica regras (nível de segurança, FEFO, validade, proximidade)
+    C->>T: Cria sugestões de transferência
+    T-->>C: Sugestões criadas
+    C-->>I: Exibe sugestões
+    G->>I: Seleciona e aprova uma sugestão
+    I->>C: aprovarTransferencia(id)
+    C->>T: Atualiza situação para APROVADA
+    T-->>C: Confirmação
+    C-->>I: Confirma aprovação
+    I-->>G: Exibe confirmação</div>
+<p><strong>Figura 4 – Sequência Sugerir e Aprovar Transferência.</strong></p>
+<h3>3.3.4. Sequência – UC16 Gerar rota de distribuição</h3>
+<div class="mermaid">sequenceDiagram
+    autonumber
+    actor G as Gestor
+    participant I as :TelaRota (boundary)
+    participant C as :ControladorRota (control)
+    participant E as :Estoque (entity)
+    participant V as :Veiculo (entity)
+    participant R as :Rota (entity)
+    participant O as :ServicoRoteirizacao (control)
+
+    G->>I: Seleciona destinos e veículo
+    I->>C: gerarRota(destinos, veiculoId)
+    C->>E: Consulta estoque e prioridades das unidades
+    E-->>C: Posição de estoque
+    C->>V: Consulta capacidade de carga
+    V-->>C: Capacidade disponível
+    C->>O: calcularRotaOtimizada(destinos, prioridades, capacidade)
+    O-->>C: Sequência de paradas + distância + tempo
+    C->>R: Persiste a rota e suas paradas
+    R-->>C: Rota criada
+    C-->>I: Exibe a rota otimizada
+    G->>I: Confirma a rota
+    I->>C: confirmarRota(id)
+    C->>R: Atualiza situação para DISPONÍVEL PARA DESPACHO
+    C-->>I: Confirmação
+    I-->>G: Rota pronta para despacho</div>
+<p><strong>Figura 5 – Sequência Gerar rota de distribuição.</strong></p>
+<h2>3.4. Diagramas de Atividades</h2>
+<h3>3.4.1. Atividade – Monitoramento e reposição de estoque</h3>
+<div class="mermaid">flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1[Sincronizar estoque com sistemas de origem]:::act
+    A1 --> A2[Consolidar posição de estoque]:::act
+    A2 --> D1{Estoque abaixo do nível mínimo?}:::dec
+    D1 -- Não --> A3[Manter monitoramento]:::act --> Fim1((Fim)):::endn
+    D1 -- Sim --> A4[Gerar alerta de desabastecimento]:::act
+    A4 --> A5[Prever demanda da unidade]:::act
+    A5 --> D2{Existe unidade com excedente?}:::dec
+    D2 -- Sim --> A6[Sugerir transferência entre unidades]:::act
+    A6 --> D3{Transferência aprovada?}:::dec
+    D3 -- Não --> A7[Registrar requisição de compra]:::act --> Fim2((Fim)):::endn
+    D3 -- Sim --> A8[Incluir na distribuição]:::act
+    D2 -- Não --> A7
+    A8 --> A9[Gerar rota otimizada]:::act
+    A9 --> A10[Despachar e entregar]:::act
+    A10 --> A11[Confirmar recebimento na unidade]:::act
+    A11 --> A12[Atualizar estoque da unidade]:::act
+    A12 --> Fim3((Fim)):::endn</div>
+<p><strong>Figura 6 – Atividade Monitoramento e reposição de estoque.</strong></p>
+<h3>3.4.2. Atividade – Geração de rota de distribuição</h3>
+<div class="mermaid">flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1[Reunir entregas aprovadas e requisições]:::act
+    A1 --> A2[Identificar prioridade das unidades]:::act
+    A2 --> A3[Verificar capacidade do veículo e jornada do motorista]:::act
+    A3 --> D1{Demanda cabe na capacidade do veículo?}:::dec
+    D1 -- Não --> A4[Dividir em múltiplas rotas]:::act --> A5[Calcular sequência otimizada de paradas]:::act
+    D1 -- Sim --> A5
+    A5 --> A6[Estimar distância e tempo]:::act
+    A6 --> D2{Rota atende às restrições de negócio?}:::dec
+    D2 -- Não --> A5
+    D2 -- Sim --> A7[Disponibilizar rota para despacho]:::act
+    A7 --> Fim((Fim)):::endn</div>
+<p><strong>Figura 7 – Atividade Geração de rota de distribuição.</strong></p>
+<h3>3.4.3. Atividade – Autenticação</h3>
+<div class="mermaid">flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1[Informar e-mail/CPF e senha]:::act
+    A1 --> A2[Validar formato dos campos]:::act
+    A2 --> D1{Credenciais válidas?}:::dec
+    D1 -- Não --> D2{Tentativas excedidas?}:::dec
+    D2 -- Não --> A1
+    D2 -- Sim --> A3[Bloquear acesso temporariamente]:::act --> Fim1((Fim)):::endn
+    D1 -- Sim --> A4[Registrar acesso na auditoria]:::act
+    A4 --> A5[Liberar aplicação conforme perfil]:::act
+    A5 --> Fim2((Fim)):::endn</div>
+<p><strong>Figura 8 – Atividade Autenticação.</strong></p>
+<h2>3.5. Diagrama de Classes</h2>
+<p>O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos.</p>
+<div class="mermaid">classDiagram
+    direction LR
+
+    class Usuario {
+        +int id
+        +String nome
+        +String cpf
+        +String email
+        +String senhaHash
+        +PerfilUsuario perfil
+        +boolean ativo
+        +autenticar() boolean
+        +encerrarSessao() void
+    }
+
+    class UnidadeSaude {
+        +int id
+        +String nome
+        +TipoUnidade tipo
+        +String cnes
+        +Endereco endereco
+        +consultarEstoque() List
+    }
+
+    class Endereco {
+        +String logradouro
+        +String numero
+        +String cidade
+        +String uf
+        +String cep
+        +double latitude
+        +double longitude
+    }
+
+    class Medicamento {
+        +int id
+        +String nome
+        +String principioAtivo
+        +String apresentacao
+        +String codigoCATMAT
+        +boolean controlado
+        +boolean rename
+    }
+
+    class Lote {
+        +int id
+        +String numeroLote
+        +Date validade
+        +int quantidade
+        +estaVencido() boolean
+    }
+
+    class Estoque {
+        +int id
+        +int quantidadeAtual
+        +int nivelMinimo
+        +int nivelSeguranca
+        +DateTime atualizadoEm
+        +abaixoDoMinimo() boolean
+    }
+
+    class MovimentacaoEstoque {
+        +int id
+        +TipoMovimentacao tipo
+        +int quantidade
+        +DateTime dataHora
+        +String observacao
+    }
+
+    class AlertaDesabastecimento {
+        +int id
+        +NivelRisco nivelRisco
+        +DateTime geradoEm
+        +StatusAlerta status
+        +resolver() void
+    }
+
+    class PrevisaoDemanda {
+        +int id
+        +String periodo
+        +int quantidadePrevista
+        +String metodo
+        +double confianca
+    }
+
+    class Transferencia {
+        +int id
+        +int quantidade
+        +StatusTransferencia status
+        +DateTime solicitadaEm
+        +aprovar() void
+        +rejeitar() void
+    }
+
+    class Requisicao {
+        +int id
+        +int quantidade
+        +StatusRequisicao status
+        +DateTime data
+        +aprovar() void
+    }
+
+    class Rota {
+        +int id
+        +Date data
+        +StatusRota status
+        +double distanciaTotalKm
+        +int tempoEstimadoMin
+        +calcularOtimizacao() void
+    }
+
+    class ParadaRota {
+        +int id
+        +int ordem
+        +DateTime janelaInicio
+        +DateTime janelaFim
+        +StatusParada status
+    }
+
+    class Veiculo {
+        +int id
+        +String placa
+        +double capacidadeCargaKg
+        +String tipo
+    }
+
+    class Entrega {
+        +int id
+        +DateTime dataHoraPrevista
+        +DateTime dataHoraReal
+        +StatusEntrega status
+        +confirmarRecebimento() void
+    }
+
+    class IntegracaoExterna {
+        +int id
+        +String sistema
+        +String endpoint
+        +DateTime ultimaSincronizacao
+        +StatusIntegracao status
+        +sincronizar() void
+    }
+
+    class Dispensacao {
+        +int id
+        +int quantidade
+        +DateTime dataHora
+    }
+
+    class Relatorio {
+        +int id
+        +String titulo
+        +String tipo
+        +DateTime geradoEm
+        +gerar() void
+    }
+
+    class PerfilUsuario {
+        <<enumeration>>
+        ADMINISTRADOR
+        GESTOR
+        FARMACEUTICO
+        ALMOXARIFE
+        MOTORISTA
+    }
+    class TipoMovimentacao {
+        <<enumeration>>
+        ENTRADA
+        SAIDA
+        TRANSFERENCIA
+        AJUSTE
+    }
+    class StatusTransferencia {
+        <<enumeration>>
+        SUGERIDA
+        APROVADA
+        REJEITADA
+        CONCLUIDA
+    }
+    class StatusRota {
+        <<enumeration>>
+        PLANEJADA
+        EM_ANDAMENTO
+        CONCLUIDA
+    }
+
+    Usuario "1" --> "0..*" MovimentacaoEstoque : registra
+    Usuario "1" --> "0..*" Rota : conduz
+    Usuario "1" --> "1" PerfilUsuario
+
+    UnidadeSaude "1" --> "1" Endereco
+    UnidadeSaude "1" --> "0..*" Estoque : possui
+    UnidadeSaude "1" --> "0..*" Dispensacao : realiza
+    UnidadeSaude "1" --> "0..*" PrevisaoDemanda : demanda
+
+    Medicamento "1" --> "0..*" Estoque
+    Medicamento "1" --> "0..*" Lote
+    Medicamento "1" --> "0..*" PrevisaoDemanda
+
+    Estoque "1" --> "0..*" Lote : contem
+    Estoque "1" --> "0..*" MovimentacaoEstoque
+    Estoque "1" --> "0..*" AlertaDesabastecimento
+
+    MovimentacaoEstoque "0..*" --> "1" TipoMovimentacao
+    AlertaDesabastecimento "0..*" --> "1" NivelRisco
+
+    Transferencia "0..*" --> "1" UnidadeSaude : origem
+    Transferencia "0..*" --> "1" UnidadeSaude : destino
+    Transferencia "0..*" --> "1" Medicamento
+    Transferencia "0..*" --> "1" StatusTransferencia
+
+    Requisicao "0..*" --> "1" UnidadeSaude
+    Requisicao "0..*" --> "1" Medicamento
+
+    Rota "1" --> "1..*" ParadaRota : possui
+    Rota "0..*" --> "1" Veiculo
+    Rota "0..*" --> "1" StatusRota
+    ParadaRota "0..*" --> "1" UnidadeSaude
+
+    Entrega "0..*" --> "1" Rota
+    Entrega "0..*" --> "1" UnidadeSaude
+    Entrega "1" --> "0..*" Lote
+
+    IntegracaoExterna "0..*" --> "0..*" Estoque : sincroniza
+
+    Relatorio "0..*" --> "1" Usuario : gerado por</div>
+<p><strong>Figura 9 – Diagrama de Classes do SIGLoSUS.</strong></p>
+<hr>
+<p><em>Fim da Parte 1 — Documento de Especificação de Requisitos e Modelagem UML do SIGLoSUS.</em></p>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose', flowchart: { useMaxWidth: true }, class: { useMaxWidth: true } });
+</script>
+</body>
+</html>

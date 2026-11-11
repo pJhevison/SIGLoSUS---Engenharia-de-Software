@@ -1,0 +1,222 @@
+classDiagram
+    direction LR
+
+    class Usuario {
+        +int id
+        +String nome
+        +String cpf
+        +String email
+        +String senhaHash
+        +PerfilUsuario perfil
+        +boolean ativo
+        +autenticar() boolean
+        +encerrarSessao() void
+    }
+
+    class UnidadeSaude {
+        +int id
+        +String nome
+        +TipoUnidade tipo
+        +String cnes
+        +Endereco endereco
+        +consultarEstoque() List
+    }
+
+    class Endereco {
+        +String logradouro
+        +String numero
+        +String cidade
+        +String uf
+        +String cep
+        +double latitude
+        +double longitude
+    }
+
+    class Medicamento {
+        +int id
+        +String nome
+        +String principioAtivo
+        +String apresentacao
+        +String codigoCATMAT
+        +boolean controlado
+        +boolean rename
+    }
+
+    class Lote {
+        +int id
+        +String numeroLote
+        +Date validade
+        +int quantidade
+        +estaVencido() boolean
+    }
+
+    class Estoque {
+        +int id
+        +int quantidadeAtual
+        +int nivelMinimo
+        +int nivelSeguranca
+        +DateTime atualizadoEm
+        +abaixoDoMinimo() boolean
+    }
+
+    class MovimentacaoEstoque {
+        +int id
+        +TipoMovimentacao tipo
+        +int quantidade
+        +DateTime dataHora
+        +String observacao
+    }
+
+    class AlertaDesabastecimento {
+        +int id
+        +NivelRisco nivelRisco
+        +DateTime geradoEm
+        +StatusAlerta status
+        +resolver() void
+    }
+
+    class PrevisaoDemanda {
+        +int id
+        +String periodo
+        +int quantidadePrevista
+        +String metodo
+        +double confianca
+    }
+
+    class Transferencia {
+        +int id
+        +int quantidade
+        +StatusTransferencia status
+        +DateTime solicitadaEm
+        +aprovar() void
+        +rejeitar() void
+    }
+
+    class Requisicao {
+        +int id
+        +int quantidade
+        +StatusRequisicao status
+        +DateTime data
+        +aprovar() void
+    }
+
+    class Rota {
+        +int id
+        +Date data
+        +StatusRota status
+        +double distanciaTotalKm
+        +int tempoEstimadoMin
+        +calcularOtimizacao() void
+    }
+
+    class ParadaRota {
+        +int id
+        +int ordem
+        +DateTime janelaInicio
+        +DateTime janelaFim
+        +StatusParada status
+    }
+
+    class Veiculo {
+        +int id
+        +String placa
+        +double capacidadeCargaKg
+        +String tipo
+    }
+
+    class Entrega {
+        +int id
+        +DateTime dataHoraPrevista
+        +DateTime dataHoraReal
+        +StatusEntrega status
+        +confirmarRecebimento() void
+    }
+
+    class IntegracaoExterna {
+        +int id
+        +String sistema
+        +String endpoint
+        +DateTime ultimaSincronizacao
+        +StatusIntegracao status
+        +sincronizar() void
+    }
+
+    class Dispensacao {
+        +int id
+        +int quantidade
+        +DateTime dataHora
+    }
+
+    class Relatorio {
+        +int id
+        +String titulo
+        +String tipo
+        +DateTime geradoEm
+        +gerar() void
+    }
+
+    class PerfilUsuario {
+        ADMINISTRADOR
+        GESTOR
+        FARMACEUTICO
+        ALMOXARIFE
+        MOTORISTA
+    }
+    class TipoMovimentacao {
+        ENTRADA
+        SAIDA
+        TRANSFERENCIA
+        AJUSTE
+    }
+    class StatusTransferencia {
+        SUGERIDA
+        APROVADA
+        REJEITADA
+        CONCLUIDA
+    }
+    class StatusRota {
+        PLANEJADA
+        EM_ANDAMENTO
+        CONCLUIDA
+    }
+
+    Usuario "1" --> "0..*" MovimentacaoEstoque : registra
+    Usuario "1" --> "0..*" Rota : conduz
+    Usuario "1" --> "1" PerfilUsuario
+
+    UnidadeSaude "1" --> "1" Endereco
+    UnidadeSaude "1" --> "0..*" Estoque : possui
+    UnidadeSaude "1" --> "0..*" Dispensacao : realiza
+    UnidadeSaude "1" --> "0..*" PrevisaoDemanda : demanda
+
+    Medicamento "1" --> "0..*" Estoque
+    Medicamento "1" --> "0..*" Lote
+    Medicamento "1" --> "0..*" PrevisaoDemanda
+
+    Estoque "1" --> "0..*" Lote : contem
+    Estoque "1" --> "0..*" MovimentacaoEstoque
+    Estoque "1" --> "0..*" AlertaDesabastecimento
+
+    MovimentacaoEstoque "0..*" --> "1" TipoMovimentacao
+    AlertaDesabastecimento "0..*" --> "1" NivelRisco
+
+    Transferencia "0..*" --> "1" UnidadeSaude : origem
+    Transferencia "0..*" --> "1" UnidadeSaude : destino
+    Transferencia "0..*" --> "1" Medicamento
+    Transferencia "0..*" --> "1" StatusTransferencia
+
+    Requisicao "0..*" --> "1" UnidadeSaude
+    Requisicao "0..*" --> "1" Medicamento
+
+    Rota "1" --> "1..*" ParadaRota : possui
+    Rota "0..*" --> "1" Veiculo
+    Rota "0..*" --> "1" StatusRota
+    ParadaRota "0..*" --> "1" UnidadeSaude
+
+    Entrega "0..*" --> "1" Rota
+    Entrega "0..*" --> "1" UnidadeSaude
+    Entrega "1" --> "0..*" Lote
+
+    IntegracaoExterna "0..*" --> "0..*" Estoque : sincroniza
+
+    Relatorio "0..*" --> "1" Usuario : gerado por

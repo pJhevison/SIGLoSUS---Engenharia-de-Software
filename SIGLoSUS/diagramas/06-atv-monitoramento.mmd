@@ -1,0 +1,16 @@
+flowchart TD
+    classDef start fill:#111827,stroke:#111827,color:#fff;
+    classDef endn fill:#111827,stroke:#111827,color:#fff;
+    classDef dec fill:#fde68a,stroke:#b45309,color:#713f12;
+    classDef act fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+
+    S((Início)):::start --> A1["Sincronizar estoque e consolidar posição"]:::act
+    A1 --> D1{"Estoque abaixo do nível mínimo?"}:::dec
+    D1 -- Não --> A2["Manter monitoramento"]:::act --> Fim1((Fim)):::endn
+    D1 -- Sim --> A3["Gerar alerta de desabastecimento e prever demanda"]:::act
+    A3 --> D2{"Existe unidade com excedente?"}:::dec
+    D2 -- Não --> A4["Registrar requisição de compra"]:::act --> Fim2((Fim)):::endn
+    D2 -- Sim --> A5["Sugerir transferência e obter aprovação"]:::act
+    A5 --> A6["Gerar rota otimizada e despachar"]:::act
+    A6 --> A7["Confirmar recebimento e atualizar estoque da unidade"]:::act
+    A7 --> Fim3((Fim)):::endn
