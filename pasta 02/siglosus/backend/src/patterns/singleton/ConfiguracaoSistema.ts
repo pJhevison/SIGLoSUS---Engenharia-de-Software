@@ -46,7 +46,7 @@ export class ConfiguracaoSistema {
   private constructor() {
     const ambiente = process.env.NODE_ENV ?? 'development';
     const segredoJwt = this.obterSegredoJwt(ambiente);
-    const origens = (process.env.CORS_ORIGENS ?? '')
+    const origens = (process.env.CORS_ORIGINS ?? '')
       .split(',')
       .map((o) => o.trim())
       .filter(Boolean);
@@ -82,7 +82,7 @@ export class ConfiguracaoSistema {
     if (doAmbiente && doAmbiente.trim().length >= 32) {
       return doAmbiente;
     }
-    if (ambiente === 'producao') {
+    if (ambiente === 'production') {
       throw new Error(
         'JWT_SECRET ausente ou muito curto. Defina a variável de ambiente com ao menos 32 caracteres antes de iniciar em produção.',
       );

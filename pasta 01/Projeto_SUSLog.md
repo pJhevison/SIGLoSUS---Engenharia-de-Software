@@ -2,6 +2,13 @@
 ## Instituto de Ciências Exatas e Tecnologia – ICET
 ### Engenharia de Software
 
+> **Nota de vigência.** Este documento é o **escopo inicial** (Parte 1) do projeto e preserva a
+> numeração original dos requisitos (14 RF, 10 RNF). A especificação **oficial e atualizada**,
+> usada em toda a implementação e nos diagramas das Partes 1 e 2, é o documento consolidado
+> `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md` (seções 1 a 6, versão 2.1.0), que refina
+> e renumera os requisitos (22 RF, 13 RNF, 9 RN). O mapeamento entre as numerações está
+> registrado na seção 2.1 da documentação consolidada.
+
 <br><br><br>
 
 # SUSLog

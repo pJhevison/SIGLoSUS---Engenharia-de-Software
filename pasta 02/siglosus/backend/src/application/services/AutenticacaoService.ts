@@ -1,6 +1,6 @@
-import { Usuario } from '../../domain/entities';
+import { TokenRevogado, Usuario } from '../../domain/entities';
 import { ErroNaoAutenticado } from '../../domain/errors';
-import { UsuarioRepository } from '../../infrastructure/repositories';
+import { TokenRevogadoRepository, UsuarioRepository } from '../../infrastructure/repositories';
 import { ConteudoToken, GerenciadorJWT } from '../../infrastructure/security/GerenciadorJWT';
 import { AuditoriaService } from './AuditoriaService';
 
@@ -32,15 +32,14 @@ export interface ResultadoAutenticacao {
  * Serviço de autenticação (UC01; RF01, RF02, RF03).
  *
  * Emite **JWT assinado** (HMAC-SHA256) com expiração, valida assinatura e
- * expiração, mantém lista de revogação (logout) e invalida tokens emitidos
- * antes de uma troca de senha (via `versaoToken` do usuário).
+ * expiração, mantém a revogação de sessão **persistida** (logout sobrevive ao
+ * reinício do backend) e invalida tokens emitidos antes de uma troca de senha
+ * (via `versaoToken` do usuário).
  */
 export class AutenticacaoService {
-  /** Tokens revogados: identificador (jti) -> instante de expiração (epoch). */
-  private readonly revogados = new Map<string, number>();
-
   constructor(
     private readonly usuarios: UsuarioRepository,
+    private readonly tokensRevogados: TokenRevogadoRepository,
     private readonly auditoria: AuditoriaService,
     private readonly jwt: GerenciadorJWT,
   ) {}
@@ -98,14 +97,14 @@ export class AutenticacaoService {
   }
 
   /**
-   * Valida o token: assinatura, expiração, revogação e estado da conta.
+   * Valida o token: assinatura, expiração, revogação persistente e estado da conta.
    * Devolve o usuário autenticado.
    */
   autenticarToken(token: string): { usuario: Usuario; conteudo: ConteudoToken } {
     const conteudo = this.jwt.validar(token);
-    this.limparRevogados();
 
-    if (this.revogados.has(conteudo.jti)) {
+    this.tokensRevogados.limparExpirados();
+    if (this.tokensRevogados.estaRevogado(conteudo.jti)) {
       throw new ErroNaoAutenticado('Sessão encerrada. Autentique-se novamente.');
     }
 
@@ -120,18 +119,12 @@ export class AutenticacaoService {
     return { usuario, conteudo };
   }
 
-  /** Encerra a sessão, revogando o token informado (RF03). */
+  /** Encerra a sessão, revogando o token de forma persistente (RF03). */
   encerrarSessao(token: string, usuarioId: number): void {
     const conteudo = this.jwt.validar(token);
-    this.revogados.set(conteudo.jti, conteudo.exp);
+    this.tokensRevogados.salvar(
+      new TokenRevogado(this.tokensRevogados.proximoId(), conteudo.jti, usuarioId, conteudo.exp),
+    );
     this.auditoria.registrar(usuarioId, 'LOGOUT', 'autenticacao', 'Sessão encerrada', true);
-  }
-
-  /** Remove da lista de revogação as entradas já expiradas. */
-  private limparRevogados(): void {
-    const agora = Math.floor(Date.now() / 1000);
-    for (const [jti, expiraEm] of this.revogados) {
-      if (expiraEm < agora) this.revogados.delete(jti);
-    }
   }
 }

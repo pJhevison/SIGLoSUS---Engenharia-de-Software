@@ -8,7 +8,7 @@
 **Professor:** Walter Jonas
 **Autor:** Pedro Jhevison Menezes de Souza
 **Documento:** Documentação Completa do Projeto — Partes 1 e 2
-**Extensão:** 41 páginas, 27 figuras e 10 tabelas
+**Extensão:** 42 páginas, 27 figuras e 10 tabelas
 **Local/Ano:** Itacoatiara – Amazonas, 2026
 
 ---
@@ -114,6 +114,30 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 
 ## 2.1. Requisitos Funcionais
 
+> **Evolução da especificação.** O escopo inicial (`pasta 01/Projeto_SUSLog.md`) registrou 14 requisitos funcionais e 10 não funcionais. Durante o detalhamento, o catálogo foi ampliado e renumerado, resultando nos 22 RF e 13 RNF desta documentação consolidada, que é a **especificação oficial** utilizada na implementação, nos diagramas e nos testes. O mapeamento entre as numerações é apresentado abaixo.
+
+**Evolução da numeração dos requisitos funcionais.**
+
+| Escopo inicial | Documentação consolidada | Observação |
+|---|---|---|
+| RF01 — acesso por login e senha | RF01 | sem alteração |
+| RF02 — logout | RF03 | renumerado |
+| RF03 — recuperação de senha | RF02 | renumerado |
+| RF04 — integração com sistema legado | RF07 | renumerado |
+| RF05 — consulta de estoque em tempo real | RF09 | renumerado |
+| RF06 — alertas de estoque | RF11 | renumerado |
+| RF07 — movimentação de estoque | RF08 | renumerado |
+| RF08 — configuração de níveis | RF10 | renumerado |
+| RF09 — sugestão de transferências | RF13 | renumerado |
+| RF10 — aprovação de transferências | RF14 | renumerado |
+| RF11 — geração de rotas | RF15 | renumerado |
+| RF12 — confirmação de recebimento | RF17 | renumerado |
+| RF13 — controle de lotes e validade | RF18 | renumerado |
+| RF14 — relatórios gerenciais | RF21 | renumerado |
+| — | RF04, RF05, RF06, RF16, RF19, RF20, RF22 | requisitos adicionados no detalhamento |
+
+Não foi feita renumeração arbitrária: cada identificador consolidado corresponde a um requisito efetivamente implementado ou parcialmente implementado, com rastreabilidade na Tabela 8 (seção 4.9).
+
 | Identificador | Descrição | Escopo | Prioridade |
 |---|---|---|---|
 | **RF01** | O sistema deve permitir o acesso do usuário por meio de login e senha. | Geral | Essencial |
@@ -169,7 +193,7 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RNF12** | O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade. | Manutenibilidade | Geral | Importante |
 | **RNF13** | O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão. | Disponibilidade | Distribuição | Importante |
 
-**Situação de atendimento dos requisitos não funcionais.** A tabela acima expressa os requisitos **estabelecidos**. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 71 testes, verificação de tipos e compilação) e parcialmente às demais:
+**Situação de atendimento dos requisitos não funcionais.** A tabela acima expressa os requisitos **estabelecidos**. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 72 testes, verificação de tipos e compilação) e parcialmente às demais:
 
 - **Atendidos parcialmente** — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).
 - **Metas não verificadas nesta versão** — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).
@@ -607,7 +631,7 @@ SIGLoSUS---Engenharia-de-Software/
 cd "pasta 02/siglosus/backend"
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 71 testes automatizados
+npm test           # executa os 72 testes automatizados
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`): `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`, `motorista@siglosus.gov.br`, `admin@siglosus.gov.br`.
@@ -784,7 +808,7 @@ export class ConfiguracaoSistema {
 | Observer | `EstoqueSubject`, `AlertaDesabastecimentoObserver`, `NotificacaoEstoqueObserver` | `patterns/observer/*.ts` | RF11 | `padroes-projeto.test.ts`, `servicos.test.ts` |
 | Strategy | `EstrategiaRoteirizacao`, `RotaMenorDistancia`, `RotaPorPrioridade`, `RotaCapacidadeVeiculo`, `Roteirizador` | `patterns/strategy/EstrategiaRoteirizacao.ts` | RF15, RN04, RN07, RN08 | `padroes-projeto.test.ts` |
 
-A suíte de testes (**71 testes** em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):
+A suíte de testes (**72 testes** em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):
 
 | Arquivo de teste | Cobertura |
 |---|---|
@@ -792,7 +816,7 @@ A suíte de testes (**71 testes** em 7 arquivos) comprova o funcionamento das re
 | `tests/padroes-projeto.test.ts` | Singleton, Factory Method, Adapter, Observer e Strategy (7 testes) |
 | `tests/servicos.test.ts` | Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes) |
 | `tests/seguranca.test.ts` | bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes) |
-| `tests/requisitos.test.ts` | RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (11 testes) |
+| `tests/requisitos.test.ts` | RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (12 testes) |
 | `tests/persistencia.test.ts` | Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes) |
 | `tests/api.test.ts` | Endpoints REST, RF19, RF20/RN09, ausência de `senhaHash`, 401/403/404/423 (17 testes) |
 

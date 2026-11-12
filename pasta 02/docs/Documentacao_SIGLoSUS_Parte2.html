@@ -56,7 +56,7 @@
   <p class="capa-sub">Sistema Inteligente de Gestão Logística e Distribuição de Medicamentos do SUS</p>
   <p class="capa-tag">“Logística que salva vidas.”</p>
   <p class="capa-doc">Documentação Completa do Projeto — Partes 1 e 2</p>
-  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Jonas<br><br>Documento completo (seções 1 a 6): 41 páginas, 27 figuras e 10 tabelas<br><br>Itacoatiara — Amazonas<br>2026</p>
+  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Jonas<br><br>Documento completo (seções 1 a 6): 42 páginas, 27 figuras e 10 tabelas<br><br>Itacoatiara — Amazonas<br>2026</p>
 </section>
 <div class="pagina">
 <blockquote>
@@ -201,6 +201,93 @@
 </ul>
 </blockquote>
 <h2>2.1. Requisitos Funcionais</h2>
+<blockquote>
+<p><strong>Evolução da especificação.</strong> O escopo inicial (<code>pasta 01/Projeto_SUSLog.md</code>) registrou 14 requisitos funcionais e 10 não funcionais. Durante o detalhamento, o catálogo foi ampliado e renumerado, resultando nos 22 RF e 13 RNF desta documentação consolidada, que é a <strong>especificação oficial</strong> utilizada na implementação, nos diagramas e nos testes. O mapeamento entre as numerações é apresentado abaixo.</p>
+</blockquote>
+<p><strong>Evolução da numeração dos requisitos funcionais.</strong></p>
+<table>
+<thead><tr>
+<th>Escopo inicial</th>
+<th>Documentação consolidada</th>
+<th>Observação</th>
+</tr></thead><tbody>
+<tr>
+<td>RF01 — acesso por login e senha</td>
+<td>RF01</td>
+<td>sem alteração</td>
+</tr>
+<tr>
+<td>RF02 — logout</td>
+<td>RF03</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF03 — recuperação de senha</td>
+<td>RF02</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF04 — integração com sistema legado</td>
+<td>RF07</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF05 — consulta de estoque em tempo real</td>
+<td>RF09</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF06 — alertas de estoque</td>
+<td>RF11</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF07 — movimentação de estoque</td>
+<td>RF08</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF08 — configuração de níveis</td>
+<td>RF10</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF09 — sugestão de transferências</td>
+<td>RF13</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF10 — aprovação de transferências</td>
+<td>RF14</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF11 — geração de rotas</td>
+<td>RF15</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF12 — confirmação de recebimento</td>
+<td>RF17</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF13 — controle de lotes e validade</td>
+<td>RF18</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>RF14 — relatórios gerenciais</td>
+<td>RF21</td>
+<td>renumerado</td>
+</tr>
+<tr>
+<td>—</td>
+<td>RF04, RF05, RF06, RF16, RF19, RF20, RF22</td>
+<td>requisitos adicionados no detalhamento</td>
+</tr>
+</tbody></table>
+<p>Não foi feita renumeração arbitrária: cada identificador consolidado corresponde a um requisito efetivamente implementado ou parcialmente implementado, com rastreabilidade na Tabela 8 (seção 4.9).</p>
 <table>
 <thead>
 <tr>
@@ -477,7 +564,7 @@
 <td>Importante</td>
 </tr>
 </tbody></table>
-<p><strong>Situação de atendimento dos requisitos não funcionais.</strong> A tabela acima expressa os requisitos <strong>estabelecidos</strong>. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 71 testes, verificação de tipos e compilação) e parcialmente às demais:</p>
+<p><strong>Situação de atendimento dos requisitos não funcionais.</strong> A tabela acima expressa os requisitos <strong>estabelecidos</strong>. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 72 testes, verificação de tipos e compilação) e parcialmente às demais:</p>
 <ul>
 <li><strong>Atendidos parcialmente</strong> — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).</li>
 <li><strong>Metas não verificadas nesta versão</strong> — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).</li>
@@ -1319,7 +1406,7 @@
 cd &quot;pasta 02/siglosus/backend&quot;
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 71 testes automatizados
+npm test           # executa os 72 testes automatizados
 </code></pre>
 <p>Acesse <code>http://localhost:3000/</code> no navegador. Usuários de demonstração (senha <code>siglosus123</code>): <code>gestor@siglosus.gov.br</code>, <code>farmaceutico@siglosus.gov.br</code>, <code>almoxarife@siglosus.gov.br</code>, <code>motorista@siglosus.gov.br</code>, <code>admin@siglosus.gov.br</code>.</p>
 <h2>4.7. Segurança, Autenticação e Autorização</h2>
@@ -1687,7 +1774,7 @@ npm test           # executa os 71 testes automatizados
 <td><code>padroes-projeto.test.ts</code></td>
 </tr>
 </tbody></table>
-<p>A suíte de testes (<strong>71 testes</strong> em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):</p>
+<p>A suíte de testes (<strong>72 testes</strong> em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):</p>
 <table>
 <thead>
 <tr>
@@ -1713,7 +1800,7 @@ npm test           # executa os 71 testes automatizados
 </tr>
 <tr>
 <td><code>tests/requisitos.test.ts</code></td>
-<td>RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (11 testes)</td>
+<td>RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (12 testes)</td>
 </tr>
 <tr>
 <td><code>tests/persistencia.test.ts</code></td>

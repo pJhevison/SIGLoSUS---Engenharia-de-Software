@@ -7,6 +7,7 @@ import {
   DispensacaoRepository,
   EntregaRepository,
   EstoqueRepository,
+  IdempotenciaRepository,
   IntegracaoRepository,
   MedicamentoRepository,
   MovimentacaoRepository,
@@ -16,6 +17,7 @@ import {
   RequisicaoRepository,
   RotaRepository,
   TokenRecuperacaoRepository,
+  TokenRevogadoRepository,
   TransferenciaRepository,
   UnidadeRepository,
   UsuarioRepository,
@@ -84,6 +86,8 @@ export class Container {
   readonly relatorios = new RelatorioRepository(this.db);
   readonly auditoriaRepo = new AuditoriaRepository(this.db);
   readonly tokensRecuperacao = new TokenRecuperacaoRepository(this.db);
+  readonly tokensRevogados = new TokenRevogadoRepository(this.db);
+  readonly idempotencia = new IdempotenciaRepository(this.db);
   readonly posicoes = new PosicaoRotaRepository(this.db);
 
   // Observer (Subject)
@@ -130,7 +134,7 @@ export class Container {
     this.estoqueSubject.registrarObservador(new AlertaDesabastecimentoObserver(this.alerta));
     this.estoqueSubject.registrarObservador(this.notificacaoObserver);
 
-    this.autenticacao = new AutenticacaoService(this.usuarios, this.auditoria, this.jwt);
+    this.autenticacao = new AutenticacaoService(this.usuarios, this.tokensRevogados, this.auditoria, this.jwt);
     this.recuperacaoSenha = new RecuperacaoSenhaService(
       this.usuarios,
       this.tokensRecuperacao,
@@ -207,8 +211,18 @@ export class Container {
     this.persistencia = arquivo ? new PersistenciaJSON(arquivo) : null;
 
     const carregou = this.persistencia && !opcoes.forcarSeed ? this.persistencia.carregar(this.db) : false;
-    if (!carregou) {
+    const ambiente = ConfiguracaoSistema.obterInstancia().obter('ambiente');
+    const permitirSeed =
+      opcoes.forcarSeed === true ||
+      process.env.SIGLOSUS_SEED_DEMO === 'true' ||
+      (ambiente !== 'production' && !carregou);
+
+    if (!carregou && permitirSeed) {
       popularBanco(this.db);
+      this.persistir();
+    } else if (!carregou) {
+      // Em produção não carregamos contas de demonstração: a primeira conta
+      // administrativa deve ser criada por procedimento seguro (ver INSTRUCOES).
       this.persistir();
     }
   }

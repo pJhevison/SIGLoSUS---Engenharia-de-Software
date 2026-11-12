@@ -14,10 +14,12 @@ import {
   ParadaRota,
   PosicaoRota,
   PrevisaoDemanda,
+  ResultadoIdempotencia,
   Relatorio,
   Requisicao,
   Rota,
   TokenRecuperacaoSenha,
+  TokenRevogado,
   Transferencia,
   UnidadeSaude,
   Usuario,
@@ -156,6 +158,12 @@ export class PersistenciaJSON {
     db.auditoria = dados('auditoria').map((l) => restaurar<LogAuditoria>(l, LogAuditoria));
     db.tokensRecuperacao = dados('tokensRecuperacao').map((t) =>
       restaurar<TokenRecuperacaoSenha>(t, TokenRecuperacaoSenha),
+    );
+    db.tokensRevogados = dados('tokensRevogados').map((t) =>
+      restaurar<TokenRevogado>(t, TokenRevogado),
+    );
+    db.resultadosIdempotencia = dados('resultadosIdempotencia').map((r) =>
+      restaurar<ResultadoIdempotencia>(r, ResultadoIdempotencia),
     );
     db.posicoes = dados('posicoes').map((p) => restaurar<PosicaoRota>(p, PosicaoRota));
 

@@ -84,13 +84,14 @@ export function criarRotas(container: Container): Router {
     }),
     (req, res) => {
       const resultado = container.recuperacaoSenha.solicitar(String(req.body?.email ?? ''));
-      // A resposta é a mesma exista ou não a conta, para não revelar cadastros.
+      // A resposta é **idêntica** exista ou não a conta, para não revelar
+      // quais e-mails estão cadastrados (RNF01 — confidencialidade).
       res.json({
         mensagem:
-          'Se houver uma conta ativa para o e-mail informado, um token de recuperação válido foi gerado.',
-        contaEncontrada: resultado.contaEncontrada,
+          'Se houver uma conta ativa para o e-mail informado, um token de recuperação válido foi gerado e enviado ao titular.',
         // Somente fora do ambiente de produção: em produção o token é enviado
-        // por e-mail (serviço externo, fora do escopo do protótipo).
+        // por e-mail (serviço externo, fora do escopo do protótipo) e nunca
+        // aparece na resposta.
         token: resultado.token,
         expiraEm: resultado.expiraEm,
       });

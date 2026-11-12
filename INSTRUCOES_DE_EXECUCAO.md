@@ -65,7 +65,7 @@ npm run build       # compilação para dist/
 
 ## 6. Documentação
 
-- `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` — documento final (41 páginas, 27 figuras, 10 tabelas).
+- `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` — documento final (42 páginas, 27 figuras, 10 tabelas).
 - `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.html` — versão navegável.
 - `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md` — fonte em Markdown.
 - `pasta 01/SIGLoSUS/diagramas/` — fontes Mermaid dos diagramas UML.

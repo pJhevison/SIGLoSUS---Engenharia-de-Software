@@ -73,7 +73,7 @@ cd "pasta 02/siglosus/backend"
 npm install
 cp .env.example .env      # ajuste o JWT_SECRET (obrigatório em produção)
 npm start                  # API e telas em http://localhost:3000
-npm test                   # 71 testes automatizados
+npm test                   # 72 testes automatizados
 npm run build              # compilação TypeScript para dist/
 ```
 

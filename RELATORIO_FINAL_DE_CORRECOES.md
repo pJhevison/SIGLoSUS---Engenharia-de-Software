@@ -87,9 +87,22 @@ A auditoria externa recebida apontava, corretamente, que **o código, a document
 
 - Seções novas na documentação: **4.7 Segurança, Autenticação e Autorização** e **4.8 Persistência de Dados**; renumeração da rastreabilidade para 4.9.
 - Quadros de situação de implementação dos **RF** (19 implementados, 3 parciais, 0 ausentes) e de atendimento dos **RNF** (o que é parcial e o que é meta não verificada).
-- Tabelas de rastreabilidade de endpoints atualizadas; tabela de testes atualizada (71 testes em 7 arquivos).
+- Tabelas de rastreabilidade de endpoints atualizadas; tabela de testes atualizada (72 testes em 7 arquivos).
 - Diagrama de classes atualizado (`EntregaItem`, `TokenRecuperacaoSenha`, `PosicaoRota`, `Usuario.versaoToken`) e re-renderizado em PNG e SVG.
-- PDF regenerado a partir do HTML atualizado: **41 páginas**, 27 figuras e 10 tabelas, com a ficha técnica da capa conferida.
+- PDF regenerado a partir do HTML atualizado: **42 páginas**, 27 figuras e 10 tabelas, com a ficha técnica da capa conferida.
+
+## 3.7. Novas correções da auditoria final (segunda passagem)
+
+A segunda análise externa apontou falhas adicionais. Todas foram corrigidas e verificadas:
+
+1. **Ambiente padronizado** — a aplicação agora trata `production` como ambiente de produção (o código verificava `producao`, incompatível com `NODE_ENV=production` do `.env.example`). A obrigatoriedade de `JWT_SECRET`, a identificação do ambiente no CORS e a entrega do token de recuperação passam a funcionar em produção.
+2. **Seed desligado em produção** — `Container` só carrega as contas de demonstração quando `ambiente !== 'production'` (ou com `SIGLOSUS_SEED_DEMO=true`/`forcarSeed`). Produção inicia sem contas padrão com senha conhecida.
+3. **Recuperação de senha não revela contas** — a resposta não contém mais `contaEncontrada`; mensagens e estrutura são idênticas para e-mails existentes e inexistentes.
+4. **Revogação de sessão persistente** — os tokens revogados (logout) agora são gravados no banco e sobrevivem ao reinício do backend (`TokenRevogado` + `TokenRevogadoRepository` + persistência JSON).
+5. **Variável CORS padronizada** — código e `.env.example` usam `CORS_ORIGINS` (antes havia `CORS_ORIGENS` no código).
+6. **Idempotência no servidor** — cabeçalho `Idempotency-Key` agora é processado pelo backend (`IdempotenciaRepository` + middleware), armazenando o resultado da operação e reutilizando-o em reenvios. Também foi adicionado a `allowedHeaders` do CORS.
+7. **Evolução dos requisitos documentada** — `pasta 01/Projeto_SUSLog.md` recebeu aviso de vigência e a seção 2.1 da documentação consolidada ganhou a tabela de mapeamento entre a numeração do escopo inicial e a numeração oficial.
+8. **Content Security Policy restritiva** — todo o JavaScript é externo (sem scripts inline nem manipuladores `onclick`); a fila offline, o escapamento e a CSP foram testados em navegador real, sem violações.
 
 ## 4. Arquivos modificados
 
@@ -110,7 +123,7 @@ commit `2b4fc8b`).
 
 | Removido | Motivo |
 |---|---|
-| `pasta 01/projeto final.docx` | Documento da Parte 1 em DOCX, superado pelo documento consolidado (PDF de 41 páginas, seções 1 a 6) |
+| `pasta 01/projeto final.docx` | Documento da Parte 1 em DOCX, superado pelo documento consolidado (PDF de 42 páginas, seções 1 a 6) |
 | `pasta 01/Relatorio_Final_SIGLoSUS.html` | HTML antigo da Parte 1, superado pelo HTML consolidado |
 | `pasta 01/SIGLoSUS/docs/` (5 arquivos: DOCX, HTML e MD da Parte 1) | Versões anteriores da documentação, já consolidadas no documento final |
 | `pasta 01/SIGLoSUS/imagens/*.png` (9 arquivos) | PNGs **byte a byte idênticos** aos de `pasta 02/imagens/`; as versões vetoriais (SVG), exclusivas dessa pasta, foram mantidas |
@@ -171,8 +184,8 @@ npm run build       # tsc -p tsconfig.build.json — gera dist/
 | Indicador | Resultado |
 |---|---|
 | Arquivos de teste | 7 |
-| Testes executados | 71 |
-| Testes aprovados | 71 |
+| Testes executados | 72 |
+| Testes aprovados | 72 |
 | Testes reprovados | 0 |
 | Testes ignorados | 0 |
 | Erros de execução | 0 |
@@ -193,7 +206,7 @@ O diagrama de classes (`09-classes.mmd`) foi atualizado com `EntregaItem`, `Toke
 
 ## 15. Situação do PDF
 
-PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**, 27 figuras e 10 tabelas. Verificação por extração de texto: presentes "71 testes", "Segurança, Autenticação e Autorização", "Persistência de Dados", "bcrypt", "JWT", `RecuperacaoSenhaService`, `PosicaoService` e `GerenciadorJWT`; última figura numerada: **Figura 27**.
+PDF regenerado a partir do HTML atualizado com Chrome headless: **42 páginas**, 27 figuras e 10 tabelas. Verificação por extração de texto: presentes "72 testes", "Segurança, Autenticação e Autorização", "Persistência de Dados", "bcrypt", "JWT", `RecuperacaoSenhaService`, `PosicaoService` e `GerenciadorJWT`; última figura numerada: **Figura 27**.
 
 ## 16. Situação do Git e da CI
 
@@ -265,10 +278,10 @@ Release `v2.1.0` publicada, tag `v2.1.0` anotada e branches `develop`/`release/v
 | Regras de negócio | RN01–RN09 aplicadas em fluxos reais | **Mantido** — RN05 e RN09 confirmadas em fluxo; RN02 com baixa em lote específico | `tests/servicos.test.ts`, `tests/requisitos.test.ts` |
 | Persistência | Somente memória (perda ao reiniciar) | **Corrigido** — arquivo JSON atômico, configurável | `src/infrastructure/database/PersistenciaJSON.ts`; `tests/persistencia.test.ts` |
 | Integrações | Adapter implementado, sincronização simulada | **Mantido e declarado** — limitação documentada na seção 2.1 e 6.9 | `src/patterns/adapter/`, seção 6.9 da documentação |
-| Testes | 45 testes em 4 arquivos, execução não comprovada na auditoria | **71 testes em 7 arquivos, 71 aprovados, 0 reprovados** | `npm test` executado; saída registrada |
+| Testes | 45 testes em 4 arquivos, execução não comprovada na auditoria | **72 testes em 7 arquivos, 72 aprovados, 0 reprovados** | `npm test` executado; saída registrada |
 | UML | Diagrama sem `EntregaItem` | **Atualizado** — `EntregaItem`, `TokenRecuperacaoSenha`, `PosicaoRota` | `pasta 01/SIGLoSUS/diagramas/09-classes.mmd` e imagens re-renderizadas |
 | Documentação | RF/RNF afirmados sem evidência; PDF e Markdown divergentes | **Reescrita** — quadros de situação, subseções 4.7 e 4.8, tabelas e sumário revisados | `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md` e `.html` |
-| PDF | 39 páginas, desatualizado frente ao código | **Regenerado** — 41 páginas, 27 figuras, 10 tabelas, conferido | `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` |
+| PDF | 39 páginas, desatualizado frente ao código | **Regenerado** — 42 páginas, 27 figuras, 10 tabelas, conferido | `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` |
 | CI | Presente, sem execução comprovada e sem build | **Revisado e executado** — `npm ci`, `typecheck`, `test` e `build`; execuções concluídas com `success` | `.github/workflows/ci.yml`; aba Actions do repositório |
 
 **Nada foi marcado como concluído sem evidência verificável no repositório.**

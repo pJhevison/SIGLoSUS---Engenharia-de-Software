@@ -18,6 +18,7 @@ import { RegraNegocioError } from '../../domain/rules/RegrasNegocio';
 import { ConfiguracaoSistema } from '../../patterns/singleton/ConfiguracaoSistema';
 import { criarRotas } from './routes';
 import { cabecalhosSeguranca } from './middleware/seguranca';
+import { idempotencia } from './middleware/idempotencia';
 
 /** Origens liberadas quando `CORS_ORIGINS` não é definido. */
 const ORIGENS_PADRAO = ['http://localhost:3000', 'http://127.0.0.1:3000', 'null'];
@@ -30,10 +31,10 @@ const ORIGENS_PADRAO = ['http://localhost:3000', 'http://127.0.0.1:3000', 'null'
  * produção, vale **apenas** a lista `CORS_ORIGINS` configurada por variável de
  * ambiente.
  */
-function origemPermitida(origem: string | undefined, lista: string[], producao: boolean): boolean {
+function origemPermitida(origem: string | undefined, lista: string[], production: boolean): boolean {
   if (!origem) return true; // requisições sem origem (mesma origem, curl, testes)
   if (lista.includes(origem)) return true;
-  if (!producao && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origem)) return true;
+  if (!production && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origem)) return true;
   return false;
 }
 
@@ -83,14 +84,15 @@ export function criarApp(container: Container): Express {
   app.use(
     cors({
       origin: (origem, callback) => {
-        callback(null, origemPermitida(origem, origensPermitidas, configuracao.obter('ambiente') === 'producao'));
+        callback(null, origemPermitida(origem, origensPermitidas, configuracao.obter('ambiente') === 'production'));
       },
       methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
       credentials: false,
     }),
   );
   app.use(express.json({ limit: '256kb' }));
+  app.use(idempotencia(container));
 
   // Persistência: grava o estado após cada operação de escrita bem-sucedida,
   // para que os dados não se percam quando o processo é reiniciado.

@@ -18,7 +18,6 @@ describe('Requisitos funcionais complementares (RF02, RF03, RF04, RF05, RF06, RF
       .post('/api/auth/recuperar-senha')
       .send({ email: 'gestor@siglosus.gov.br' });
     expect(solicitacao.status).toBe(200);
-    expect(solicitacao.body.contaEncontrada).toBe(true);
     expect(solicitacao.body.token).toBeTruthy();
 
     const redefinicao = await request(app)
@@ -65,7 +64,6 @@ describe('Requisitos funcionais complementares (RF02, RF03, RF04, RF05, RF06, RF
       .post('/api/auth/recuperar-senha')
       .send({ email: 'nao-existe@siglosus.gov.br' });
     expect(res.status).toBe(200);
-    expect(res.body.contaEncontrada).toBe(false);
     expect(res.body.token).toBeUndefined();
   });
 
@@ -284,6 +282,42 @@ describe('Requisitos funcionais complementares (RF02, RF03, RF04, RF05, RF06, RF
       .post(`/api/transferencias/${id}/aprovar`)
       .set(comToken(tokenMotorista));
     expect(negado.status).toBe(403);
+  });
+
+  it('Idempotência — reenvio com a mesma chave não duplica a operação', async () => {
+    const app = criarApp(new Container());
+    const token = await tokenDe(app, 'farmaceutico');
+
+    const estoques = await request(app).get('/api/estoque?unidadeId=2').set(comToken(token));
+    const item = estoques.body.find((e: { medicamentoId: number }) => e.medicamentoId === 1);
+    expect(item).toBeDefined();
+
+    const chave = 'mov-unico-idempotencia';
+    const primeira = await request(app)
+      .post('/api/estoque/movimentacoes')
+      .set(comToken(token))
+      .set('Idempotency-Key', chave)
+      .send({ estoqueId: item.estoqueId, tipo: 'SAIDA', quantidade: 3 });
+    expect(primeira.status).toBe(201);
+
+    const estoqueAposPrimeira = await request(app)
+      .get(`/api/estoque?unidadeId=2&medicamentoId=1`)
+      .set(comToken(token));
+    const qtdAposPrimeira = estoqueAposPrimeira.body[0].quantidadeAtual;
+
+    // Reenvio com a mesma chave: deve devolver o mesmo resultado, sem nova movimentação.
+    const segunda = await request(app)
+      .post('/api/estoque/movimentacoes')
+      .set(comToken(token))
+      .set('Idempotency-Key', chave)
+      .send({ estoqueId: item.estoqueId, tipo: 'SAIDA', quantidade: 3 });
+    expect(segunda.status).toBe(201);
+    expect(segunda.body).toEqual(primeira.body);
+
+    const estoqueAposSegunda = await request(app)
+      .get(`/api/estoque?unidadeId=2&medicamentoId=1`)
+      .set(comToken(token));
+    expect(estoqueAposSegunda.body[0].quantidadeAtual).toBe(qtdAposPrimeira);
   });
 
   it('Autorização — o corpo da requisição não define a identidade do usuário', async () => {
