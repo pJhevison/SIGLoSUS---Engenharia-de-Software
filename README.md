@@ -15,7 +15,7 @@ A falta de medicamentos nas unidades de saúde do SUS decorre, em grande parte d
 
 ## A proposta
 
-O SIGLoSUS **integra-se aos sistemas já existentes** (e-SUS APS, HÓRUS/SNA, BNAFAR) para dar visão em tempo real do estoque e, a partir dela, **agir de forma proativa**: prever demanda, alertar sobre risco de desabastecimento, sugerir transferências entre unidades e **gerar rotas de distribuição otimizadas** — para que o medicamento chegue mais rápido e onde é necessário.
+O SIGLoSUS **prevê integração aos sistemas existentes** (e-SUS APS, HÓRUS/SNA, BNAFAR), atualmente simulada em adaptadores locais para dar visão em tempo real do estoque e, a partir dela, **agir de forma proativa**: prever demanda, alertar sobre risco de desabastecimento, sugerir transferências entre unidades e **gerar rotas de distribuição otimizadas** — para que o medicamento chegue mais rápido e onde é necessário.
 
 O objetivo não é apenas uma gestão de estoque eficiente: é **salvar vidas**.
 
@@ -60,7 +60,7 @@ SIGLoSUS---Engenharia-de-Software/
 
 O **documento consolidado** (seções 1 a 6) está em `pasta 02/docs/`:
 
-- `Documentacao_SIGLoSUS_Parte2.pdf` — **documento final para entrega** (ABNT, 27 figuras, 10 tabelas)
+- `Documentacao_SIGLoSUS_Parte2.pdf` — **documento para entrega** (seções 1–6, diagramas e protótipos)
 - `Documentacao_SIGLoSUS_Parte2.html` — versão navegável
 - `Documentacao_SIGLoSUS_Parte2.md` — fonte
 
@@ -70,10 +70,10 @@ O backend (API REST + telas) usa **Node.js 20+**:
 
 ```bash
 cd "pasta 02/siglosus/backend"
-npm install
+npm ci
 cp .env.example .env      # ajuste o JWT_SECRET (obrigatório em produção)
 npm start                  # API e telas em http://localhost:3000
-npm test                   # 72 testes automatizados
+npm test                   # suíte automatizada (inclui testes de idempotência e seed)
 npm run build              # compilação TypeScript para dist/
 ```
 
@@ -156,9 +156,13 @@ Projeto distribuído sob a licença **Apache License 2.0** (arquivo `LICENSE` na
 O material enviado ao professor é o **documento consolidado** e o **software**:
 
 - **Documento (seções 1 a 6, em normas ABNT):** `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf`
-  (41 páginas, 27 figuras e 10 tabelas), com as fontes em `.md` e `.html` na mesma pasta.
+  (48 páginas, 27 figuras e 10 tabelas), com as fontes em `.md` e `.html` na mesma pasta.
 - **Software:** `pasta 02/siglosus/` — backend (API REST) e front-end (telas), com os testes automatizados.
 - **Diagramas:** fontes Mermaid em `pasta 01/SIGLoSUS/diagramas/` (figuras 01–09) e `pasta 02/diagramas/`
   (figuras 10–17), com as figuras renderizadas em `pasta 02/imagens/`.
 - **Relatório de auditoria e correções:** `RELATORIO_FINAL_DE_CORRECOES.md`.
 - **Instruções de execução:** `INSTRUCOES_DE_EXECUCAO.md`.
+
+## Revisão local de 12/11/2026
+
+As correções de segurança foram preparadas na versão local 2.1.1: idempotência após autorização, escopo por usuário e conteúdo, fila offline com chaves únicas e seed de demonstração proibido em produção. O relatório `RELATORIO_FINAL_DE_CORRECOES.md` e o guia `GUIA_PUBLICACAO_GIT.md` explicam as evidências e os passos restantes para sincronização com o GitHub. A versão remota só estará atualizada após a publicação efetiva.
