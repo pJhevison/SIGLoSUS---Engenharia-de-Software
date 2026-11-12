@@ -47,3 +47,7 @@ desktop.ini
 .cache/
 .eslintcache
 .npm/
+
+# Estado persistido do protótipo e pacote de entrega
+data/
+*.zip

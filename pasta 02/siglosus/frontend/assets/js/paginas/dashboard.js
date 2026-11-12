@@ -12,16 +12,17 @@ async function carregarPainel() {
     ]);
 
     const cartoes = [
-      { rotulo: 'Unidades atendidas', valor: painel.unidadesAtendidas, icone: '🏥' },
-      { rotulo: 'Itens monitorados', valor: painel.itensMonitorados, icone: '📦' },
-      { rotulo: 'Itens críticos', valor: painel.itensCriticos, icone: '⚠️', alerta: true },
-      { rotulo: 'Alertas abertos', valor: painel.alertasAbertos, icone: '🚨', alerta: true },
+      { rotulo: 'Unidades atendidas', valor: painel.unidadesAtendidas, icone: 'hospital' },
+      { rotulo: 'Itens monitorados', valor: painel.itensMonitorados, icone: 'estoque' },
+      { rotulo: 'Itens críticos', valor: painel.itensCriticos, icone: 'aviso', alerta: true },
+      { rotulo: 'Alertas abertos', valor: painel.alertasAbertos, icone: 'alertas', alerta: true },
     ];
     kpis.innerHTML = cartoes
       .map(
         (c) =>
           `<div class="card kpi ${c.alerta && c.valor > 0 ? 'alerta' : ''}">` +
-          `<div class="rotulo">${c.icone} ${c.rotulo}</div><div class="valor">${c.valor}</div></div>`,
+          `<div class="rotulo">${iconeSvg(c.icone)}<span>${esc(c.rotulo)}</span></div>` +
+          `<div class="valor">${esc(c.valor)}</div></div>`,
       )
       .join('');
 
@@ -29,19 +30,19 @@ async function carregarPainel() {
       ? criticos
           .map(
             (e) =>
-              `<tr><td>${e.unidadeNome}</td><td>${e.medicamentoNome}</td>` +
-              `<td><strong>${e.quantidadeAtual}</strong></td><td>${e.nivelMinimo}</td>` +
+              `<tr><td>${esc(e.unidadeNome)}</td><td>${esc(e.medicamentoNome)}</td>` +
+              `<td><strong>${esc(e.quantidadeAtual)}</strong></td><td>${esc(e.nivelMinimo)}</td>` +
               `<td>${badgeRisco(e.nivelRisco)}</td></tr>`,
           )
           .join('')
-      : '<tr><td colspan="5" class="vazio">Nenhum item crítico. 👍</td></tr>';
+      : '<tr><td colspan="5" class="vazio">Nenhum item crítico.</td></tr>';
 
     tabelaAlertas.innerHTML = alertas.length
       ? alertas
           .slice(0, 8)
           .map(
             (a) =>
-              `<tr><td>Unidade #${a.unidadeId}</td><td>Medicamento #${a.medicamentoId}</td>` +
+              `<tr><td>Unidade #${esc(a.unidadeId)}</td><td>Medicamento #${esc(a.medicamentoId)}</td>` +
               `<td>${badgeRisco(a.nivelRisco)}</td><td>${formatarData(a.geradoEm)}</td></tr>`,
           )
           .join('')
@@ -56,9 +57,12 @@ document.getElementById('btn-sincronizar').addEventListener('click', async (e) =
   e.target.disabled = true;
   e.target.textContent = 'Sincronizando…';
   try {
-    const resultados = await api.post('/integracoes/sincronizar', { usuarioId: 1 });
+    const resultados = await api.post('/integracoes/sincronizar', {});
     alvo.textContent = resultados
-      .map((r) => `${r.sistema}: ${r.atualizados}/${r.registrosRecebidos} atualizados (${r.divergencias} divergências)`)
+      .map(
+        (r) =>
+          `${r.sistema}: ${r.atualizados}/${r.registrosRecebidos} atualizados (${r.divergencias} divergências)`,
+      )
       .join(' · ');
     toast('Sincronização concluída.');
     carregarPainel();

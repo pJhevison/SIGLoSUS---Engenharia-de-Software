@@ -1,6 +1,7 @@
 import { AlertaDesabastecimento, Estoque, MovimentacaoEstoque } from '../../domain/entities';
 import { NivelRisco, TipoMovimentacao } from '../../domain/enums';
-import { RegrasNegocio } from '../../domain/rules/RegrasNegocio';
+import { ErroNaoEncontrado, ErroValidacao } from '../../domain/errors';
+import { RegraNegocioError, RegrasNegocio } from '../../domain/rules/RegrasNegocio';
 import {
   EstoqueRepository,
   MedicamentoRepository,
@@ -62,6 +63,10 @@ export class EstoqueService {
     return this.estoques.buscarPorId(estoqueId);
   }
 
+  buscarPorUnidadeEMedicamento(unidadeId: number, medicamentoId: number): Estoque | undefined {
+    return this.estoques.buscarPorUnidadeEMedicamento(unidadeId, medicamentoId);
+  }
+
   /** Visão consolidada com nomes de unidade e medicamento (RF09). */
   consolidado(filtro?: { unidadeId?: number; medicamentoId?: number; apenasCriticos?: boolean }): EstoqueConsolidado[] {
     return this.estoques
@@ -98,7 +103,7 @@ export class EstoqueService {
     usuarioId: number,
   ): Estoque {
     const estoque = this.estoques.buscarPorId(estoqueId);
-    if (!estoque) throw new Error('Estoque não encontrado.');
+    if (!estoque) throw new ErroNaoEncontrado('Estoque não encontrado.');
     estoque.nivelMinimo = nivelMinimo;
     estoque.nivelSeguranca = nivelSeguranca;
     this.auditoria.registrar(usuarioId, 'CONFIGURAR_NIVEIS', 'estoque', `Estoque ${estoqueId}`, true);
@@ -110,11 +115,11 @@ export class EstoqueService {
    */
   registrarMovimentacao(dados: DadosMovimentacao): { movimentacao: MovimentacaoEstoque; estoque: Estoque } {
     const estoque = this.estoques.buscarPorId(dados.estoqueId);
-    if (!estoque) throw new Error('Estoque não encontrado.');
+    if (!estoque) throw new ErroNaoEncontrado('Estoque não encontrado.');
 
     const medicamento = this.medicamentos.buscarPorId(estoque.medicamentoId);
     const unidade = this.unidades.buscarPorId(estoque.unidadeId);
-    if (!medicamento || !unidade) throw new Error('Medicamento ou unidade não encontrados.');
+    if (!medicamento || !unidade) throw new ErroNaoEncontrado('Medicamento ou unidade não encontrados.');
 
     switch (dados.tipo) {
       case TipoMovimentacao.ENTRADA:
@@ -123,10 +128,14 @@ export class EstoqueService {
       case TipoMovimentacao.SAIDA:
       case TipoMovimentacao.TRANSFERENCIA:
         if (dados.quantidade > estoque.quantidadeAtual) {
-          throw new Error('Quantidade insuficiente em estoque.');
+          throw new RegraNegocioError('RN02', 'Quantidade insuficiente em estoque.');
+        }
+        if (dados.loteId !== undefined) {
+          this.baixarLoteEspecifico(estoque, dados.loteId, dados.quantidade);
+        } else {
+          this.baixarLotesFEFO(estoque, dados.quantidade);
         }
         estoque.quantidadeAtual -= dados.quantidade;
-        this.baixarLotesFEFO(estoque, dados.quantidade);
         break;
       case TipoMovimentacao.AJUSTE:
         estoque.quantidadeAtual = dados.quantidade;
@@ -178,6 +187,21 @@ export class EstoqueService {
       lote.quantidade -= usar;
       restante -= usar;
     }
+    estoque.lotes = estoque.lotes.filter((l) => l.quantidade > 0);
+  }
+
+  /** Baixa em lote específico (rastreabilidade de controlados — RN05). */
+  private baixarLoteEspecifico(estoque: Estoque, loteId: number, quantidade: number): void {
+    const lote = estoque.lotes.find((l) => l.id === loteId);
+    if (!lote) throw new ErroNaoEncontrado('Lote não encontrado no estoque.');
+    if (lote.estaVencido()) throw new ErroValidacao(`O lote ${lote.numeroLote} está vencido.`);
+    if (lote.quantidade < quantidade) {
+      throw new RegraNegocioError(
+        'RN02',
+        `O lote ${lote.numeroLote} possui apenas ${lote.quantidade} unidade(s).`,
+      );
+    }
+    lote.quantidade -= quantidade;
     estoque.lotes = estoque.lotes.filter((l) => l.quantidade > 0);
   }
 

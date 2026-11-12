@@ -14,9 +14,9 @@ async function carregarTransferencias() {
     ? transferencias
         .map(
           (t) =>
-            `<tr><td>${t.id}</td><td>${nomes.medicamentos[t.medicamentoId] || t.medicamentoId}</td>` +
-            `<td>${nomes.unidades[t.unidadeOrigemId] || t.unidadeOrigemId}</td>` +
-            `<td>${nomes.unidades[t.unidadeDestinoId] || t.unidadeDestinoId}</td>` +
+            `<tr><td>${t.id}</td><td>${esc(nomes.medicamentos[t.medicamentoId] || t.medicamentoId)}</td>` +
+            `<td>${esc(nomes.unidades[t.unidadeOrigemId] || t.unidadeOrigemId)}</td>` +
+            `<td>${esc(nomes.unidades[t.unidadeDestinoId] || t.unidadeDestinoId)}</td>` +
             `<td><strong>${t.quantidade}</strong></td><td>${badgeStatus(t.status)}</td>` +
             `<td>${
               t.status === 'SUGERIDA'
@@ -31,7 +31,7 @@ async function carregarTransferencias() {
 
 async function aprovar(id) {
   try {
-    await api.post(`/transferencias/${id}/aprovar`, { usuarioId: 2 });
+    await api.post(`/transferencias/${id}/aprovar`, {});
     toast(`Transferência ${id} aprovada.`);
     carregarTransferencias();
   } catch (ex) {
@@ -43,7 +43,7 @@ async function rejeitar(id) {
   const justificativa = prompt('Justificativa da rejeição:', 'Sem necessidade no momento');
   if (justificativa === null) return;
   try {
-    await api.post(`/transferencias/${id}/rejeitar`, { usuarioId: 2, justificativa });
+    await api.post(`/transferencias/${id}/rejeitar`, { justificativa });
     toast(`Transferência ${id} rejeitada.`);
     carregarTransferencias();
   } catch (ex) {

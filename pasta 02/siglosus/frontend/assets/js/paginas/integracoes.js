@@ -6,7 +6,7 @@ async function carregarIntegracoes() {
     ? dados.configuradas
         .map(
           (i) =>
-            `<tr><td><strong>${i.sistema}</strong></td><td>${i.endpoint}</td>` +
+            `<tr><td><strong>${esc(i.sistema)}</strong></td><td>${esc(i.endpoint)}</td>` +
             `<td>${badgeStatus(i.status)}</td>` +
             `<td>${i.ultimaSincronizacao ? formatarData(i.ultimaSincronizacao) : '—'}</td></tr>`,
         )
@@ -15,7 +15,7 @@ async function carregarIntegracoes() {
 
   document.getElementById('i-sistema').innerHTML =
     '<option value="">Todos</option>' +
-    dados.adaptadores.map((a) => `<option value="${a}">${a}</option>`).join('');
+    dados.adaptadores.map((a) => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
 }
 
 document.getElementById('btn-sincronizar').addEventListener('click', async (e) => {
@@ -25,14 +25,15 @@ document.getElementById('btn-sincronizar').addEventListener('click', async (e) =
   e.target.textContent = 'Sincronizando…';
   try {
     const resultados = await api.post('/integracoes/sincronizar', {
-      usuarioId: 1,
       sistema: sistema || undefined,
     });
     alvo.innerHTML = resultados
       .map(
         (r) =>
-          `<div>✅ <strong>${r.sistema}</strong>: ${r.atualizados}/${r.registrosRecebidos} registros atualizados` +
-          `${r.divergencias ? ` · <span style="color:var(--vermelho)">${r.divergencias} divergência(s)</span>` : ''}</div>`,
+          `<div class="linha-ok">${iconeSvg('check')}<span><strong>${esc(r.sistema)}</strong>: ` +
+          `${esc(r.atualizados)}/${esc(r.registrosRecebidos)} registros atualizados` +
+          `${r.divergencias ? ` · <span style="color:var(--vermelho)">${esc(r.divergencias)} divergência(s)</span>` : ''}` +
+          `</span></div>`,
       )
       .join('');
     toast('Sincronização concluída.');

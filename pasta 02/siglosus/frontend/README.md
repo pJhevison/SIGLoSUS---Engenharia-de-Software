@@ -8,7 +8,7 @@ são produzidos pelo servidor em execução.
 
 - **Stack:** HTML5 · CSS3 · JavaScript (vanilla, sem framework)
 - **Servido por:** o próprio backend, em `http://localhost:3000/`
-- **Versão:** 2.0.0 (Parte 2)
+- **Versão:** 2.1.0
 
 ## Como executar
 
@@ -24,11 +24,29 @@ npm start        # abre http://localhost:3000/
 > arquivos diretamente via `file://`, o cliente usa `http://localhost:3000/api` como fallback —
 > nesse caso, mantenha o backend rodando.
 
+## Autenticação e segurança do cliente
+
+- O login recebe um **token JWT** (`POST /api/auth/login`), guardado em `localStorage` e enviado
+  em cada requisição no cabeçalho `Authorization: Bearer <token>`.
+- Uma resposta **401** encerra a sessão local e redireciona para a tela de acesso.
+- O **logout** (`POST /api/auth/logout`) revoga o token no servidor antes de limpar a sessão local.
+- Todo dado vindo da API é **escapado** (`esc()` em `assets/js/api.js`) antes de ser inserido no
+  HTML, evitando que nomes, e-mails ou descrições sejam interpretados como marcação.
+- As telas de cadastro enviam somente os dados do formulário: a identidade do usuário é definida
+  pelo token no servidor.
+
+## Operação offline
+
+As confirmações de recebimento de entrega podem ser registradas **sem conexão**: a operação é
+guardada em uma fila local (`localStorage`) com identificador de idempotência e reenviada
+automaticamente quando o evento `online` do navegador é disparado. Operações rejeitadas pelo
+servidor (4xx) são descartadas da fila, evitando repetição indevida.
+
 ## Telas
 
 | Arquivo | Área | Casos de uso / Requisitos |
 |---|---|---|
-| `index.html` | Acesso (login) | UC01 · RF01, RF02, RF03 |
+| `index.html` | Acesso (login e recuperação de senha) | UC01 · RF01, RF02, RF03 |
 | `dashboard.html` | Painel gerencial | UC07, UC09 · RF21, RF09, RF11 |
 | `estoque.html` | Estoque em tempo real | UC08, UC09 · RF08, RF09, RF10, RF18 |
 | `alertas.html` | Alertas de desabastecimento | UC11 · RF11 |
@@ -37,7 +55,7 @@ npm start        # abre http://localhost:3000/
 | `entregas.html` | Entregas | UC17, UC18 · RF16, RF17 |
 | `integracoes.html` | Integrações com sistemas de saúde | UC07 · RF07 |
 | `relatorios.html` | Relatórios e previsão de demanda | UC12 · RF12, RF21 |
-| `cadastros.html` | Cadastros e auditoria | UC01, UC04 · RF04, RF05, RF06, RF22 |
+| `cadastros.html` | Cadastros, manutenção e auditoria | UC01, UC04 · RF04, RF05, RF06, RF22 |
 
 ## Estrutura
 

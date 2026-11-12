@@ -113,8 +113,12 @@ export class RegrasNegocio {
   }
 
   /** RN09 — requisições acima do limite de valor exigem aprovação do gestor. */
-  static validarRN09_AprovacaoGestor(requisicao: Requisicao, limiteValor: number): void {
-    if (requisicao.exigeAprovacaoGestor(limiteValor) && requisicao.status !== 'APROVADA') {
+  static validarRN09_AprovacaoGestor(
+    requisicao: Requisicao,
+    limiteValor: number,
+    aprovadaPorGestor: boolean = requisicao.status === 'APROVADA',
+  ): void {
+    if (requisicao.exigeAprovacaoGestor(limiteValor) && !aprovadaPorGestor) {
       throw new RegraNegocioError(
         'RN09',
         `Requisição de R$ ${requisicao.valorEstimado.toFixed(2)} excede o limite de ` +

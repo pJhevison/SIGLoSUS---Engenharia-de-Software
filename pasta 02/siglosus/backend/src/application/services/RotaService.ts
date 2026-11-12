@@ -1,8 +1,10 @@
 import { ParadaRota, Rota } from '../../domain/entities';
 import { StatusParada, StatusRota } from '../../domain/enums';
+import { ErroNaoEncontrado, ErroValidacao } from '../../domain/errors';
 import { RegrasNegocio } from '../../domain/rules/RegrasNegocio';
 import {
   EstoqueRepository,
+  MedicamentoRepository,
   RotaRepository,
   UnidadeRepository,
   VeiculoRepository,
@@ -39,6 +41,7 @@ export class RotaService {
     private readonly veiculos: VeiculoRepository,
     private readonly unidades: UnidadeRepository,
     private readonly estoques: EstoqueRepository,
+    private readonly medicamentos: MedicamentoRepository,
     private readonly auditoria: AuditoriaService,
   ) {}
 
@@ -56,14 +59,14 @@ export class RotaService {
 
   gerarRota(dados: DadosRota): Rota {
     const veiculo = this.veiculos.buscarPorId(dados.veiculoId);
-    if (!veiculo) throw new Error('Veículo não encontrado.');
+    if (!veiculo) throw new ErroNaoEncontrado('Veículo não encontrado.');
     const origem = this.unidades.centralDeDistribuicao();
-    if (!origem) throw new Error('Central de distribuição não configurada.');
+    if (!origem) throw new ErroValidacao('Central de distribuição não configurada.');
 
     const pesoPorUnidade = dados.pesoPorUnidadeKg ?? 50;
     const pontos: PontoEntrega[] = dados.unidadesDestinoIds.map((id) => {
       const unidade = this.unidades.buscarPorId(id);
-      if (!unidade) throw new Error(`Unidade ${id} não encontrada.`);
+      if (!unidade) throw new ErroNaoEncontrado(`Unidade ${id} não encontrada.`);
       return {
         unidade,
         prioridade: this.calcularPrioridade(id),
@@ -90,7 +93,7 @@ export class RotaService {
     for (const ponto of ordenados) {
       rota.adicionarParada(
         new ParadaRota(
-          this.rotas.proximoId(),
+          this.rotas.proximoIdParada(),
           ordem++,
           ponto.unidade,
           StatusParada.PENDENTE,
@@ -128,10 +131,21 @@ export class RotaService {
     }
   }
 
-  /** RN04 — unidades abaixo do mínimo têm prioridade. */
+  /**
+   * RN04 + RN06 — unidades abaixo do mínimo têm prioridade; dentro do mesmo
+   * nível, o abastecimento de medicamentos da RENAME é desempatado para cima.
+   */
   private calcularPrioridade(unidadeId: number): number {
     const estoques = this.estoques.listarPorUnidade(unidadeId);
     if (estoques.length === 0) return 0;
-    return Math.max(...estoques.map((e) => RegrasNegocio.calcularPrioridadeRecebimento(e)));
+    return Math.max(
+      ...estoques.map((e) => {
+        const prioridadeBase = RegrasNegocio.calcularPrioridadeRecebimento(e);
+        if (e.deficitParaSeguranca() <= 0) return prioridadeBase;
+        const medicamento = this.medicamentos.buscarPorId(e.medicamentoId);
+        const bonusRENAME = RegrasNegocio.prioridadeRENAME(medicamento?.temPrioridadeAbastecimento() ?? false);
+        return prioridadeBase + bonusRENAME * 5;
+      }),
+    );
   }
 }

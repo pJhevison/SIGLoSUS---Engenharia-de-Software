@@ -9,8 +9,31 @@ classDiagram
         +String senhaHash
         +PerfilUsuario perfil
         +boolean ativo
+        +int versaoToken
         +autenticar() boolean
-        +encerrarSessao() void
+        +verificarSenha() boolean
+        +definirSenha() void
+        +inativar() void
+    }
+
+    class TokenRecuperacaoSenha {
+        +int id
+        +int usuarioId
+        +String hashToken
+        +DateTime expiraEm
+        +DateTime usadoEm
+        +ehValido() boolean
+        +marcarUsado() void
+    }
+
+    class PosicaoRota {
+        +int id
+        +int rotaId
+        +double latitude
+        +double longitude
+        +double velocidadeKmh
+        +DateTime dataHora
+        +coordenadasValidas() boolean
     }
 
     class UnidadeSaude {
@@ -95,9 +118,13 @@ classDiagram
     class Requisicao {
         +int id
         +int quantidade
+        +double valorEstimado
         +StatusRequisicao status
         +DateTime data
+        +exigeAprovacaoGestor() boolean
         +aprovar() void
+        +rejeitar() void
+        +atender() void
     }
 
     class Rota {
@@ -129,7 +156,16 @@ classDiagram
         +DateTime dataHoraPrevista
         +DateTime dataHoraReal
         +StatusEntrega status
+        +despachar() void
         +confirmarRecebimento() void
+    }
+
+    class EntregaItem {
+        +int id
+        +int medicamentoId
+        +int quantidade
+        +int transferenciaId
+        +int quantidadeRecebida
     }
 
     class IntegracaoExterna {
@@ -145,6 +181,7 @@ classDiagram
         +int id
         +int quantidade
         +DateTime dataHora
+        +int conferentes
     }
 
     class Relatorio {
@@ -183,6 +220,7 @@ classDiagram
     Usuario "1" --> "0..*" MovimentacaoEstoque : registra
     Usuario "1" --> "0..*" Rota : conduz
     Usuario "1" --> "1" PerfilUsuario
+    Usuario "1" --> "0..*" TokenRecuperacaoSenha : solicita
 
     UnidadeSaude "1" --> "1" Endereco
     UnidadeSaude "1" --> "0..*" Estoque : possui
@@ -192,6 +230,7 @@ classDiagram
     Medicamento "1" --> "0..*" Estoque
     Medicamento "1" --> "0..*" Lote
     Medicamento "1" --> "0..*" PrevisaoDemanda
+    Medicamento "1" --> "0..*" Dispensacao
 
     Estoque "1" --> "0..*" Lote : contem
     Estoque "1" --> "0..*" MovimentacaoEstoque
@@ -212,10 +251,13 @@ classDiagram
     Rota "0..*" --> "1" Veiculo
     Rota "0..*" --> "1" StatusRota
     ParadaRota "0..*" --> "1" UnidadeSaude
+    Rota "1" --> "0..*" PosicaoRota : reporta
 
     Entrega "0..*" --> "1" Rota
     Entrega "0..*" --> "1" UnidadeSaude
-    Entrega "1" --> "0..*" Lote
+    Entrega "1" --> "0..*" EntregaItem : possui
+    EntregaItem "0..*" --> "1" Medicamento
+    EntregaItem "0..*" --> "0..1" Transferencia : origina
 
     IntegracaoExterna "0..*" --> "0..*" Estoque : sincroniza
 

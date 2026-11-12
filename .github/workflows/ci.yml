@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend:
+    name: Backend (Node.js + TypeScript)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pasta 02/siglosus/backend
+    env:
+      NODE_ENV: test
+      # Segredo de teste: em produção o valor vem do ambiente de execução.
+      JWT_SECRET: segredo-ci-siglosus-com-tamanho-minimo-de-32-caracteres
+      BCRYPT_COST: 4
+      LIMITE_LOGIN_POR_MINUTO: 100
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: pasta 02/siglosus/backend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar tipos
+        run: npm run typecheck
+
+      - name: Executar testes
+        run: npm test
+
+      - name: Compilar (build)
+        run: npm run build

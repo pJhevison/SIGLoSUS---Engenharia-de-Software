@@ -14,15 +14,19 @@
       <main class="content">
         <div class="grid cols-2">
           <section class="card">
-            <h2>👤 Usuários (RF04)</h2>
+            <h2>Usuários (RF04)</h2>
             <table>
               <thead><tr><th>#</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th>Ação</th></tr></thead>
               <tbody id="tabela-usuarios"></tbody>
             </table>
+            <div class="legenda">
+              Somente gestores e administradores podem consultar e manter contas.
+              O usuário autenticado pode editar os próprios dados.
+            </div>
           </section>
 
           <section class="card">
-            <h2>➕ Novo usuário</h2>
+            <h2>Novo usuário</h2>
             <div class="form-linha">
               <div><label for="u-nome">Nome</label><input id="u-nome" /></div>
               <div><label for="u-cpf">CPF</label><input id="u-cpf" /></div>
@@ -47,30 +51,77 @@
                 <button class="btn" id="btn-criar-usuario">Cadastrar</button>
               </div>
             </div>
-            <div class="legenda">A senha é armazenada como hash SHA-256 (RNF01) — nunca em texto puro.</div>
+            <div class="legenda">
+              A senha é armazenada com <strong>bcrypt</strong> (salt individual) — nunca em texto puro (RNF01).
+              Mínimo de 8 caracteres.
+            </div>
           </section>
         </div>
 
         <div class="grid cols-2 mt-16">
           <section class="card">
-            <h2>🏥 Unidades de saúde (RF05)</h2>
+            <h2>Unidades de saúde (RF05)</h2>
             <table>
               <thead><tr><th>#</th><th>Nome</th><th>Tipo</th><th>CNES</th><th>Cidade/UF</th></tr></thead>
               <tbody id="tabela-unidades"></tbody>
             </table>
+            <div class="form-linha mt-16">
+              <div><label for="un-nome">Nome da unidade</label><input id="un-nome" /></div>
+              <div>
+                <label for="un-tipo">Tipo</label>
+                <select id="un-tipo">
+                  <option value="UBS">UBS</option>
+                  <option value="HOSPITAL">Hospital</option>
+                  <option value="FARMACIA_POPULAR">Farmácia Popular</option>
+                  <option value="CENTRAL_DISTRIBUICAO">Central de Distribuição</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-linha">
+              <div><label for="un-cnes">CNES</label><input id="un-cnes" /></div>
+              <div><label for="un-cidade">Cidade</label><input id="un-cidade" /></div>
+            </div>
+            <div class="form-linha">
+              <div><label for="un-uf">UF</label><input id="un-uf" maxlength="2" /></div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn" id="btn-criar-unidade">Cadastrar unidade</button>
+              </div>
+            </div>
           </section>
 
           <section class="card">
-            <h2>💊 Medicamentos (RF06)</h2>
+            <h2>Medicamentos (RF06)</h2>
             <table>
               <thead><tr><th>#</th><th>Nome</th><th>Apresentação</th><th>CATMAT</th><th>Controlado</th></tr></thead>
               <tbody id="tabela-medicamentos"></tbody>
             </table>
+            <div class="form-linha mt-16">
+              <div><label for="md-nome">Nome</label><input id="md-nome" /></div>
+              <div><label for="md-principio">Princípio ativo</label><input id="md-principio" /></div>
+            </div>
+            <div class="form-linha">
+              <div><label for="md-apresentacao">Apresentação</label><input id="md-apresentacao" /></div>
+              <div><label for="md-catmat">Código CATMAT</label><input id="md-catmat" /></div>
+            </div>
+            <div class="form-linha">
+              <div>
+                <label for="md-controlado">Controlado (RN05)</label>
+                <select id="md-controlado">
+                  <option value="false">Não</option>
+                  <option value="true">Sim</option>
+                </select>
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn" id="btn-criar-medicamento">Cadastrar medicamento</button>
+              </div>
+            </div>
           </section>
         </div>
 
         <section class="card mt-16">
-          <h2>📋 Trilha de auditoria (RF22 · RNF10)</h2>
+          <h2>Trilha de auditoria (RF22 · RNF10)</h2>
           <table>
             <thead><tr><th>#</th><th>Usuário</th><th>Ação</th><th>Recurso</th><th>Detalhe</th><th>Data/hora</th><th>Resultado</th></tr></thead>
             <tbody id="tabela-auditoria"></tbody>

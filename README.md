@@ -27,6 +27,8 @@ O trabalho está organizado por partes (entregas). Cada parte fica em sua própr
 SIGLoSUS---Engenharia-de-Software/
 ├── README.md                               # Este arquivo
 ├── CONTRIBUTING.md                         # Práticas de versionamento (Git Flow, commits semânticos)
+├── CHANGELOG.md                            # Histórico de versões (Keep a Changelog)
+├── .github/                                # CI (GitHub Actions) e template de pull request
 ├── .gitignore
 ├── pasta 01/                               # Parte 1 — Requisitos e Modelagem UML (seções 1 a 3.5)
 │   ├── projeto final.docx                  # Documento ABNT da Parte 1
@@ -72,13 +74,44 @@ O backend (API REST + telas) usa **Node.js 20+**:
 ```bash
 cd "pasta 02/siglosus/backend"
 npm install
-npm start          # API e telas em http://localhost:3000
-npm test           # 33 testes automatizados
+cp .env.example .env      # ajuste o JWT_SECRET (obrigatório em produção)
+npm start                  # API e telas em http://localhost:3000
+npm test                   # 71 testes automatizados
+npm run build              # compilação TypeScript para dist/
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`):
 `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`,
 `motorista@siglosus.gov.br`, `admin@siglosus.gov.br`.
+
+### Variáveis de ambiente
+
+Todas as variáveis estão documentadas em `pasta 02/siglosus/backend/.env.example`. As principais:
+
+| Variável | Função | Padrão |
+|---|---|---|
+| `JWT_SECRET` | Segredo de assinatura dos tokens (obrigatório em produção, mínimo de 32 caracteres) | gerado aleatoriamente em desenvolvimento |
+| `TOKEN_ACESSO_VALIDADE_MIN` | Validade do token de acesso | 60 |
+| `TOKEN_RECUPERACAO_VALIDIDADE_MIN` | Validade do token de recuperação de senha | 30 |
+| `BCRYPT_COST` | Fator de custo do hash de senha | 10 |
+| `CORS_ORIGINS` | Origens permitidas no CORS | lista local padrão |
+| `LIMITE_LOGIN_POR_MINUTO` | Tentativas de login por minuto e por IP | 10 |
+| `SIGLOSUS_ARQUIVO_PERSISTENCIA` | Arquivo de persistência do estado (vazio = somente memória) | vazio |
+
+### Segurança implementada
+
+- Senhas com **bcrypt** (salt individual) — nunca SHA-256 simples nem texto puro; hashes legados são migrados no primeiro login.
+- Sessão por **JWT assinado** (HMAC-SHA256), com expiração, revogação no logout e invalidação após troca de senha.
+- **Todas as rotas privadas exigem autenticação** e **autorização por perfil**; a identidade vem do token, nunca do corpo da requisição.
+- Respostas de usuário **sem CPF e sem hash**; dados da API escapados antes de irem para o HTML.
+- Limitação de requisições no login (HTTP 429), CORS restrito e cabeçalhos de segurança.
+
+### Limitações conhecidas
+
+- A **persistência é em arquivo JSON** (garante que os dados sobrevivam ao reinício), sem transações ACID nem SGBD relacional.
+- A **sincronização com e-SUS APS, HÓRUS/SNA e BNAFAR é simulada** com dados locais; a integração real depende de credenciais e homologação concedidas por terceiros.
+- O **rastreamento de rota** usa a posição reportada pelo dispositivo; não há integração com hardware GPS dedicado.
+- **Não foram executados ensaios** de desempenho, disponibilidade, escalabilidade ou acessibilidade (WCAG 2.1 AA): esses RNFs permanecem como metas declaradas.
 
 Detalhes em [`pasta 02/siglosus/backend/README.md`](pasta%2002/siglosus/backend/README.md) e
 [`pasta 02/siglosus/frontend/README.md`](pasta%2002/siglosus/frontend/README.md).
@@ -104,8 +137,14 @@ Detalhes em [`pasta 02/siglosus/backend/README.md`](pasta%2002/siglosus/backend/
 
 O projeto adota **Git Flow** (`main`, `develop`, `feature/*`, `release/*`, `hotfix/*`),
 **commits semânticos** (`tipo(escopo): descrição`) e **versionamento semântico** (tags `v1.0.0`
-para a Parte 1 e `v2.0.0` para a Parte 2). As convenções completas estão em
-[`CONTRIBUTING.md`](CONTRIBUTING.md).
+para a Parte 1, `v2.0.0` para a Parte 2 e `v2.1.0` para a versão auditada e corrigida).
+A branch `develop` é a linha de integração contínua, `main` recebe apenas merges de
+`release/*` e `hotfix/*`, e branches `feature/*`, `release/*` e `hotfix/*` são temporárias.
+As convenções completas estão em [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Licença
+
+Projeto distribuído sob a licença **Apache License 2.0** (arquivo `LICENSE` na raiz do repositório).
 
 ## Documentos de referência utilizados
 

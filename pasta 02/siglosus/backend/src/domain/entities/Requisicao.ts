@@ -12,6 +12,7 @@ export class Requisicao {
     public valorEstimado: number,
     public status: StatusRequisicao = StatusRequisicao.PENDENTE,
     public data: Date = new Date(),
+    public justificativa: string = '',
   ) {}
 
   /**
@@ -24,5 +25,18 @@ export class Requisicao {
 
   aprovar(): void {
     this.status = StatusRequisicao.APROVADA;
+  }
+
+  rejeitar(justificativa: string = ''): void {
+    this.status = StatusRequisicao.REJEITADA;
+    this.justificativa = justificativa;
+  }
+
+  atender(): void {
+    this.status = StatusRequisicao.ATENDIDA;
+  }
+
+  estaPendente(): boolean {
+    return this.status === StatusRequisicao.PENDENTE;
   }
 }

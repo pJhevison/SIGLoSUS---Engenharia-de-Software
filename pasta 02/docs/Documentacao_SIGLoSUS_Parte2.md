@@ -8,6 +8,7 @@
 **Professor:** Walter Jonas
 **Autor:** Pedro Jhevison Menezes de Souza
 **Documento:** Documentação Completa do Projeto — Partes 1 e 2
+**Extensão:** 41 páginas, 27 figuras e 10 tabelas
 **Local/Ano:** Itacoatiara – Amazonas, 2026
 
 ---
@@ -34,7 +35,9 @@
    - [4.4. Diagrama de Implantação](#44-diagrama-de-implantação)
    - [4.5. Padrão Repository e Injeção de Dependência](#45-padrão-repository-e-injeção-de-dependência)
    - [4.6. Organização do Repositório](#46-organização-do-repositório)
-   - [4.7. Rastreabilidade: Requisitos × Componentes](#47-rastreabilidade-requisitos--componentes)
+   - [4.7. Segurança, Autenticação e Autorização](#47-segurança-autenticação-e-autorização)
+   - [4.8. Persistência de Dados](#48-persistência-de-dados)
+   - [4.9. Rastreabilidade: Requisitos × Componentes](#49-rastreabilidade-requisitos--componentes)
 5. [Padrões de Projeto](#5-padrões-de-projeto)
    - [5.1. Visão Geral](#51-visão-geral)
    - [5.2. Singleton](#52-singleton)
@@ -136,6 +139,18 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RF21** | O sistema deve emitir relatórios e painéis gerenciais (dashboards) de estoque, consumo, desabastecimento e entregas. | Gestão | Importante |
 | **RF22** | O sistema deve registrar logs de auditoria de todas as operações críticas realizadas pelos usuários. | Segurança | Essencial |
 
+**Situação de implementação dos requisitos funcionais.** A tabela acima registra os requisitos **estabelecidos**. A implementação foi verificada requisito a requisito contra o código-fonte e a suíte de testes:
+
+| Situação | Requisitos | Observação |
+|---|---|---|
+| Implementado | RF01, RF03, RF04, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF17, RF18, RF19, RF20, RF21, RF22 | Funcionalidade correspondente no código, com teste automatizado e endpoint da API. |
+| Parcial | RF02, RF07, RF16 | Detalhadas nas linhas seguintes. |
+| Não implementado | — | Nenhum requisito foi classificado como ausente nesta versão. |
+
+- **RF02 (parcial)** — o fluxo de recuperação existe em código (`RecuperacaoSenhaService`): solicitação, token temporário aleatório de uso único com expiração de 30 minutos, redefinição da senha e invalidação das sessões abertas. A *entrega* do token ao usuário depende de um serviço de e-mail (dependência externa); fora do ambiente de produção o token é devolvido na resposta, para demonstração.
+- **RF07 (parcial)** — o padrão Adapter, o contrato de integração e o serviço de sincronização estão implementados, mas a sincronização consome dados locais de demonstração. A conexão com as APIs oficiais de e-SUS APS, HÓRUS/SNA e BNAFAR exige credenciais e ambiente de homologação concedidos por terceiros.
+- **RF16 (parcial)** — despacho, acompanhamento por situação e rastreamento de posição estão implementados (`PosicaoService`). O protótipo **não** integra hardware GPS: as coordenadas informadas provêm do dispositivo que reportou a posição, e não de um módulo de posicionamento dedicado.
+
 ## 2.2. Requisitos Não-Funcionais
 
 | Identificador | Descrição | Categoria | Escopo | Prioridade |
@@ -154,6 +169,13 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RNF12** | O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade. | Manutenibilidade | Geral | Importante |
 | **RNF13** | O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão. | Disponibilidade | Distribuição | Importante |
 
+**Situação de atendimento dos requisitos não funcionais.** A tabela acima expressa os requisitos **estabelecidos**. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 71 testes, verificação de tipos e compilação) e parcialmente às demais:
+
+- **Atendidos parcialmente** — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).
+- **Metas não verificadas nesta versão** — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).
+
+O documento **não afirma medições inexistentes**: nenhuma das metas acima foi aferida em ambiente de produção.
+
 ## 2.3. Regras de Negócio
 
 | Identificador | Descrição | Escopo | Prioridade |
@@ -167,6 +189,8 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RN07** | As rotas de entrega devem respeitar a capacidade de carga do veículo e a jornada de trabalho do motorista. | Distribuição | Essencial |
 | **RN08** | Transferências entre unidades devem priorizar as unidades mais próximas, a fim de reduzir custo e tempo de entrega. | Distribuição | Importante |
 | **RN09** | Requisições acima do limite de valor definido pela gestão exigem aprovação do gestor de assistência farmacêutica. | Gestão | Importante |
+
+As nove regras estão implementadas em `RegrasNegocio` e aplicadas em fluxos reais: RN01/RN03 na aprovação de transferências; RN02 na baixa de estoque; RN04/RN06 na priorização de rotas; RN05 na dispensação de controlados; RN07 na validação da rota; RN08 na sugestão de transferências; e RN09 na aprovação de requisições.
 
 ---
 
@@ -320,14 +344,14 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 | **Atores secundários** | N/A |
 | **Resumo** | Descreve a análise e a aprovação (ou rejeição) de uma transferência sugerida. |
 | **Pré-condições** | Deve existir ao menos uma sugestão de transferência pendente. |
-| **Pós-condições** | Aprovada, a transferência é registrada e passa a compor as entregas a serem roteirizadas. |
+| **Pós-condições** | Aprovada, a transferência é registrada, a quantidade é baixada do estoque de origem (mercadoria em trânsito) e passa a compor as entregas a serem roteirizadas. O crédito no destino ocorre na confirmação de recebimento (UC18). |
 
 | Ações do Ator | Ações do Sistema |
 |---|---|
 | 1 – Analisar a sugestão de transferência | |
 | 2 – Aprovar ou rejeitar a sugestão | |
 | | 3 – Validar as regras de negócio aplicáveis |
-| | 4 – Registrar a decisão e atualizar a situação da transferência |
+| | 4 – Registrar a decisão, atualizar a situação da transferência e dar baixa na origem |
 | | 5 – Notificar as unidades envolvidas |
 
 | Restrições/Validações |
@@ -364,6 +388,7 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 |---|
 | A rota deve respeitar a capacidade de carga do veículo e a jornada do motorista (RN07). |
 | Unidades com estoque abaixo do mínimo têm prioridade (RN04). |
+| Em empate de prioridade, o abastecimento de medicamentos da RENAME é priorizado (RN06). |
 
 **Tabela 6 – Especificação do caso de uso Gerar rota de distribuição.**
 
@@ -383,10 +408,10 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 
 | Ações do Ator | Ações do Sistema |
 |---|---|
-| 1 – Conferir os itens e os lotes entregues | |
-| | 2 – Apresentar os itens previstos na entrega |
+| | 1 – Apresentar os itens previstos na entrega, gerados a partir das transferências aprovadas |
+| 2 – Conferir os itens e os lotes entregues | |
 | 3 – Confirmar o recebimento (ou registrar divergência) | |
-| | 4 – Atualizar o estoque da unidade de destino |
+| | 4 – Creditar o estoque da unidade de destino e concluir as transferências vinculadas |
 | | 5 – Encerrar a entrega e atualizar a situação da rota |
 
 | Restrições/Validações |
@@ -445,7 +470,7 @@ Os diagramas de sequência detalham a interação entre os atores e os objetos d
 
 ## 3.5. Diagrama de Classes
 
-O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos. A implementação em TypeScript (seção 4) materializa exatamente estas classes no pacote `src/domain/entities`.
+O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos. A implementação em TypeScript (seção 4) materializa essas classes no pacote `src/domain/entities`, acrescentando apenas classes de apoio de granularidade menor (por exemplo, `EntregaItem`) e as enumerações centralizadas em `domain/enums.ts`.
 
 ![Diagrama de Classes](../imagens/09-classes.png)
 
@@ -495,7 +520,7 @@ A Figura 11 mostra os principais componentes de software e suas interfaces.
 Os componentes centrais são:
 
 - **Rotas REST (`infrastructure/http/routes.ts`)** — expõe os endpoints `/api/*` que traduzem as operações em chamadas aos serviços;
-- **Serviços de Aplicação** — `EstoqueService`, `TransferenciaService`, `RotaService`, `EntregaService`, `IntegracaoService`, `PrevisaoDemandaService`, `RelatorioService`, `AutenticacaoService`, `UsuarioService` e `AuditoriaService`;
+- **Serviços de Aplicação** — `EstoqueService`, `TransferenciaService`, `RequisicaoService`, `RotaService`, `EntregaService`, `IntegracaoService`, `PrevisaoDemandaService`, `RelatorioService`, `AutenticacaoService`, `UsuarioService` e `AuditoriaService`;
 - **Domínio** — entidades e `RegrasNegocio` (RN01 a RN09);
 - **Padrões de Projeto** — `patterns/*`, consumidos pelos serviços;
 - **Repositórios** — `UsuarioRepository`, `EstoqueRepository`, `RotaRepository`, entre outros, sobre o `DatabaseMemoria`.
@@ -578,12 +603,53 @@ SIGLoSUS---Engenharia-de-Software/
 cd "pasta 02/siglosus/backend"
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 33 testes automatizados
+npm test           # executa os 71 testes automatizados
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`): `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`, `motorista@siglosus.gov.br`, `admin@siglosus.gov.br`.
 
-## 4.7. Rastreabilidade: Requisitos × Componentes
+## 4.7. Segurança, Autenticação e Autorização
+
+A segurança do SIGLoSUS é implementada na camada de domínio (hash de senha), na infraestrutura (emissão e validação de tokens, limitação de requisições, cabeçalhos) e na camada de apresentação (proteção do DOM). Os mecanismos employed são:
+
+| Mecanismo | Implementação | Requisito |
+|---|---|---|
+| Armazenamento de senhas | bcrypt com salt individual e fator de custo configurável (`BCRYPT_COST`), com comparação em tempo constante. Hashes legados em SHA-256 são aceitos na leitura e migrados para bcrypt no primeiro login bem-sucedido. | RNF01, RF01 |
+| Emissão de sessão | Token JWT assinado com HMAC-SHA256, expiração configurável (`TOKEN_ACESSO_VALIDADE_MIN`), emissor verificado e identificador único (`jti`) para revogação. O segredo vem da variável de ambiente `JWT_SECRET` e é obrigatório em produção. | RF01, RNF01 |
+| Revogação de sessão | O logout revoga o token no servidor; a troca ou a recuperação de senha invalida todas as sessões abertas do usuário. | RF02, RF03 |
+| Autenticação das rotas | Middleware aplicado a todas as rotas privadas: token ausente, inválido, expirado ou adulterado resulta em HTTP 401. | RNF01 |
+| Autorização por perfil | Permissões declarativas por endpoint; perfil insuficiente resulta em HTTP 403. A identidade do usuário é obtida **do token**, nunca do corpo da requisição. | RNF01, RN09 |
+| Proteção de dados pessoais | As respostas de usuários não expõem CPF nem hash de senha (`usuarioDTO`); a trilha de auditoria registra ações sem credenciais. | RNF02 |
+| Proteção do navegador | Todo dado oriundo da API é escapado antes de ser inserido no HTML (`esc()`), reduzindo a superfície de XSS. | RNF01 |
+| Endpoints sensíveis | Limitação de requisições por endereço IP no login e na recuperação de senha, com resposta HTTP 429. | RNF01 |
+| Transporte e cabeçalhos | CORS restrito às origens configuradas e cabeçalhos `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` e `Content-Security-Policy`. | RNF01 |
+
+**Perfis autorizados por operação.**
+
+| Operação | Perfis autorizados |
+|---|---|
+| Consultar cadastros, estoque, alertas, rotas, entregas e relatórios | Todos os perfis autenticados |
+| Criar usuários, cadastrar unidades e medicamentos | GESTOR, ADMINISTRADOR |
+| Editar conta de terceiros | GESTOR (perfis operacionais), ADMINISTRADOR (todas) |
+| Inativar ou reativar conta | ADMINISTRADOR |
+| Aprovar ou rejeitar transferências | GESTOR, ADMINISTRADOR |
+| Registrar movimentação de estoque | FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR |
+| Dispensar ao paciente | FARMACEUTICO, GESTOR, ADMINISTRADOR |
+| Aprovar requisições (RN09) | GESTOR, ADMINISTRADOR |
+| Gerar rotas e despachar | ALMOXARIFE, GESTOR, ADMINISTRADOR |
+| Confirmar recebimento de entrega | FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR |
+| Reportar posição de rota | MOTORISTA, ALMOXARIFE, GESTOR, ADMINISTRADOR |
+| Sincronizar integrações e consultar auditoria | GESTOR, ADMINISTRADOR |
+
+## 4.8. Persistência de Dados
+
+O protótipo opera sobre um banco em memória (`DatabaseMemoria`) **com persistência em arquivo** (`PersistenciaJSON`). O estado completo — usuários, unidades, medicamentos, estoques, lotes, movimentações, transferências, requisições, rotas, entregas, dispensações, relatórios, auditoria, tokens de recuperação e posições de rota — é gravado em JSON após cada operação de escrita bem-sucedida e restaurado no arranque do processo. A gravação é atômica: o estado é escrito em arquivo temporário e, em seguida, renomeado.
+
+O arquivo é configurado pela variável de ambiente `SIGLOSUS_ARQUIVO_PERSISTENCIA`; sem ela, o sistema opera somente em memória (comportamento usado nos testes). O teste `tests/persistencia.test.ts` comprova que uma movimentação registrada pela API é preservada após a criação de uma nova instância do contêiner, e que datas e métodos das entidades são restaurados corretamente.
+
+**Limitações assumidas:** a persistência em arquivo atende ao requisito de não perder dados no protótipo, mas não oferece transações ACID, controle de concorrência entre processos nem consultas em SQL — o que também elimina a superfície de injeção de SQL. A migração para um SGBD (PostgreSQL, por exemplo) ocorre atrás das mesmas interfaces de repositório, sem alteração do domínio. A afirmação de integridade transacional (RNF09) permanece, portanto, como meta não verificada nesta versão.
+
+## 4.9. Rastreabilidade: Requisitos × Componentes
 
 A Tabela 8 relaciona os requisitos funcionais aos componentes de software que os implementam, evidenciando a **compatibilidade entre a documentação e o software**.
 
@@ -591,22 +657,24 @@ A Tabela 8 relaciona os requisitos funcionais aos componentes de software que os
 
 | Requisito | Componente / Classe | Endpoint (API) |
 |---|---|---|
-| RF01, RF02, RF03 | `AutenticacaoService`, `Usuario` | `POST /api/auth/login` |
-| RF04 | `UsuarioService`, `UsuarioRepository` | `GET/POST /api/usuarios`, `PATCH /api/usuarios/:id/inativar` |
-| RF05 | `UnidadeSaude`, `UnidadeRepository` | `GET /api/unidades` |
-| RF06 | `Medicamento`, `MedicamentoRepository` | `GET /api/medicamentos` |
+| RF01 | `AutenticacaoService`, `GerenciadorJWT`, `Usuario` | `POST /api/auth/login`, `GET /api/auth/eu` |
+| RF02 | `RecuperacaoSenhaService`, `TokenRecuperacaoSenha` | `POST /api/auth/recuperar-senha`, `POST /api/auth/redefinir-senha`, `POST /api/auth/trocar-senha` |
+| RF03 | `AutenticacaoService.encerrarSessao()` | `POST /api/auth/logout` |
+| RF04 | `UsuarioService`, `UsuarioRepository` | `GET/POST /api/usuarios`, `PATCH /api/usuarios/:id`, `PATCH /api/usuarios/:id/inativar` |
+| RF05 | `UnidadeService`, `UnidadeSaude`, `UnidadeRepository` | `GET/POST /api/unidades`, `PATCH /api/unidades/:id` |
+| RF06 | `MedicamentoService`, `Medicamento`, `MedicamentoRepository` | `GET/POST /api/medicamentos`, `PATCH /api/medicamentos/:id` |
 | RF07 | `IntegracaoService` + Adapters (e-SUS, HÓRUS, BNAFAR) | `GET /api/integracoes`, `POST /api/integracoes/sincronizar` |
 | RF08 | `EstoqueService`, `MovimentacaoEstoque` | `POST /api/estoque/movimentacoes` |
 | RF09 | `EstoqueService.consolidado()` | `GET /api/estoque` |
 | RF10 | `EstoqueService.configurarNiveis()` | `PATCH /api/estoque/:id/niveis` |
 | RF11 | `AlertaService` + `AlertaDesabastecimentoObserver` (Observer) | `GET /api/alertas`, `PATCH /api/alertas/:id/resolver` |
 | RF12 | `PrevisaoDemandaService` | `POST /api/previsoes/gerar`, `GET /api/previsoes` |
-| RF13, RF14 | `TransferenciaService` | `POST /api/transferencias/sugerir`, `POST /api/transferencias/:id/aprovar` |
-| RF15, RF16 | `RotaService` + Strategy | `POST /api/rotas`, `POST /api/rotas/:id/despachar` |
-| RF17 | `EntregaService` | `POST /api/entregas/:id/confirmar` |
+| RF13, RF14 | `TransferenciaService`, `EstoqueService` | `POST /api/transferencias/sugerir`, `POST /api/transferencias/:id/aprovar` |
+| RF15, RF16 | `RotaService` + Strategy, `PosicaoService` | `POST /api/rotas`, `POST /api/rotas/:id/despachar`, `GET/POST /api/rotas/:id/posicoes` |
+| RF17 | `EntregaService`, `EntregaItem` | `GET /api/entregas`, `POST /api/entregas/:id/confirmar` |
 | RF18 | `Lote`, `RegrasNegocio` (RN02 FEFO) | (interno ao `EstoqueService`) |
-| RF19 | `Dispensacao`, `DispensacaoRepository` | (domínio) |
-| RF20 | `Requisicao`, `RequisicaoRepository` | (domínio) |
+| RF19 | `DispensacaoService`, `Dispensacao` (RN05) | `GET/POST /api/dispensacoes` |
+| RF20 | `RequisicaoService`, `Requisicao` (RN09) | `GET/POST /api/requisicoes`, `POST /api/requisicoes/:id/aprovar`, `POST /api/requisicoes/:id/rejeitar` |
 | RF21 | `RelatorioService` | `GET /api/relatorios/dashboard`, `POST /api/relatorios` |
 | RF22 | `AuditoriaService`, `LogAuditoria` | `GET /api/auditoria` |
 
@@ -712,14 +780,17 @@ export class ConfiguracaoSistema {
 | Observer | `EstoqueSubject`, `AlertaDesabastecimentoObserver`, `NotificacaoEstoqueObserver` | `patterns/observer/*.ts` | RF11 | `padroes-projeto.test.ts`, `servicos.test.ts` |
 | Strategy | `EstrategiaRoteirizacao`, `RotaMenorDistancia`, `RotaPorPrioridade`, `RotaCapacidadeVeiculo`, `Roteirizador` | `patterns/strategy/EstrategiaRoteirizacao.ts` | RF15, RN04, RN07, RN08 | `padroes-projeto.test.ts` |
 
-A suíte de testes (**33 testes** em 4 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação e da API REST:
+A suíte de testes (**71 testes** em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):
 
 | Arquivo de teste | Cobertura |
 |---|---|
 | `tests/regras-negocio.test.ts` | RN01 a RN09 (10 testes) |
 | `tests/padroes-projeto.test.ts` | Singleton, Factory Method, Adapter, Observer e Strategy (7 testes) |
-| `tests/servicos.test.ts` | Autenticação, estoque, transferências, rotas, entregas, integração, previsão e painel (9 testes) |
-| `tests/api.test.ts` | Endpoints REST principais (7 testes) |
+| `tests/servicos.test.ts` | Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes) |
+| `tests/seguranca.test.ts` | bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes) |
+| `tests/requisitos.test.ts` | RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (11 testes) |
+| `tests/persistencia.test.ts` | Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes) |
+| `tests/api.test.ts` | Endpoints REST, RF19, RF20/RN09, ausência de `senhaHash`, 401/403/404/423 (17 testes) |
 
 ---
 
@@ -733,7 +804,7 @@ O layout é composto por um **menu lateral fixo** com as nove áreas funcionais,
 
 ## 6.2. Tela de Acesso
 
-Tela de login (UC01 / RF01). O usuário informa e-mail (ou CPF) e senha; as credenciais são validadas no backend e, em caso de sucesso, o usuário é direcionado ao painel conforme o seu perfil. Após cinco tentativas incorretas, o acesso é bloqueado temporariamente.
+Tela de login (UC01 / RF01). O usuário informa e-mail (ou CPF) e senha; as credenciais são validadas no backend e, em caso de sucesso, é emitido um token JWT e o usuário é direcionado ao painel conforme o seu perfil. Após cinco tentativas incorretas, o acesso é bloqueado temporariamente. A mesma tela oferece a **recuperação de senha** (RF02): o usuário informa o e-mail cadastrado e recebe um token temporário de uso único, com expiração, para redefinir a senha.
 
 ![Tela de acesso (login)](../imagens/telas/01-login.png)
 
@@ -765,7 +836,7 @@ Lista os alertas gerados automaticamente (RF11), classificados por nível de ris
 
 ## 6.6. Redistribuição entre Unidades
 
-Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugestões*, o sistema identifica unidades com excedente e unidades com déficit e propõe transferências, respeitando RN01 (nível de segurança), RN03 (validade ≥ 90 dias) e RN08 (proximidade). O gestor pode aprovar ou rejeitar cada sugestão.
+Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugestões*, o sistema identifica unidades com excedente e unidades com déficit e propõe transferências, respeitando RN01 (nível de segurança), RN03 (validade ≥ 90 dias) e RN08 (proximidade). O gestor pode aprovar ou rejeitar cada sugestão. A aprovação dá baixa imediata no estoque de origem (mercadoria em trânsito); o crédito no destino ocorre quando a entrega é recebida.
 
 ![Redistribuição entre unidades](../imagens/telas/05-redistribuicao.png)
 
@@ -773,7 +844,7 @@ Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugest�
 
 ## 6.7. Rotas de Distribuição
 
-Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as unidades de destino e a **estratégia** (padrão Strategy: menor distância, prioridade ou capacidade do veículo). O sistema apresenta a sequência de paradas, a distância total e o tempo estimado, e permite despachar a rota (UC17).
+Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as unidades de destino e a **estratégia** (padrão Strategy: menor distância, prioridade ou capacidade do veículo). O sistema apresenta a sequência de paradas, a distância total e o tempo estimado, e permite despachar a rota (UC17). Na estratégia por prioridade, unidades com medicamentos da RENAME em déficit recebem desempate favorável (RN06).
 
 ![Rotas de distribuição](../imagens/telas/06-rotas.png)
 
@@ -781,7 +852,7 @@ Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as 
 
 ## 6.8. Entregas
 
-Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao confirmar, o estoque da unidade de destino é atualizado; havendo divergência, o recebimento é registrado com pendência e o gestor é notificado.
+Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao despachar a rota, o sistema gera os itens previstos a partir das transferências aprovadas para cada unidade. Ao confirmar, o estoque da unidade de destino é creditado com esses itens (o servidor não confia em quantidades enviadas pelo cliente), as transferências vinculadas são concluídas e a rota é encerrada quando todas as paradas terminam; havendo divergência, o recebimento é registrado com pendência e o gestor é notificado.
 
 ![Entregas](../imagens/telas/07-entregas.png)
 
@@ -789,7 +860,7 @@ Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao co
 
 ## 6.9. Integrações
 
-Configuração e execução da sincronização com os sistemas de saúde externos (UC07 · RF07), evidenciando o padrão **Adapter**. A tela mostra os sistemas configurados, a situação de cada integração, a última sincronização e o resultado da sincronização (registros atualizados e divergências).
+Configuração e execução da sincronização com os sistemas de saúde externos (UC07 · RF07), evidenciando o padrão **Adapter**. A tela mostra os sistemas configurados, a situação de cada integração, a última sincronização e o resultado da sincronização (registros atualizados e divergências). **Limite declarado:** a sincronização executada no protótipo consome dados locais de demonstração; a conexão com as APIs oficiais depende de credenciais e homologação concedidas por terceiros.
 
 ![Integrações](../imagens/telas/08-integracoes.png)
 
@@ -805,7 +876,7 @@ Indicadores gerenciais (RF21) e geração de previsões de demanda (RF12). O usu
 
 ## 6.11. Cadastros
 
-Cadastros e administração: usuários e perfis (RF04), unidades de saúde (RF05), catálogo de medicamentos (RF06) e a trilha de auditoria das operações críticas (RF22 · RNF10).
+Cadastros e administração: usuários e perfis (RF04), unidades de saúde (RF05), catálogo de medicamentos (RF06) e a trilha de auditoria das operações críticas (RF22 · RNF10). A tela permite **cadastrar** usuários, **editar** contas (inclusive os próprios dados), **inativar e reativar** usuários, **cadastrar** unidades de saúde e **cadastrar** medicamentos do catálogo, com validação no servidor (unicidade de e-mail, CPF, CNES e código CATMAT) e registro das operações na trilha de auditoria.
 
 ![Cadastros](../imagens/telas/10-cadastros.png)
 
@@ -824,13 +895,15 @@ A Tabela 10 relaciona cada tela prototipada aos casos de uso e requisitos corres
 | Estoque | UC08, UC09 | RF08, RF09, RF10, RF18 | RN01, RN02 | Observer |
 | Alertas | UC11 | RF11 | — | Observer, Factory Method |
 | Redistribuição | UC13, UC14 | RF13, RF14 | RN01, RN03, RN08 | — |
-| Rotas | UC16 | RF15, RF16 | RN04, RN07, RN08 | Strategy |
+| Rotas | UC16 | RF15, RF16 | RN04, RN06, RN07, RN08 | Strategy |
 | Entregas | UC17, UC18 | RF16, RF17 | RN02 | Observer |
 | Integrações | UC07 | RF07 | — | Adapter |
 | Relatórios | UC12 | RF12, RF21 | — | — |
-| Cadastros | UC01, UC04 | RF04, RF05, RF06, RF22 | RN05, RN06 | Singleton |
+| Cadastros | UC01, UC04 | RF04, RF05, RF06, RF22 | — | Singleton |
 
 **Navegação:** todas as telas são acessíveis a partir do menu lateral; a tela de login é a porta de entrada. O menu é composto por: **Painel · Estoque · Alertas · Redistribuição · Rotas · Entregas · Integrações · Relatórios · Cadastros**.
+
+**Observação sobre RF19 e RF20:** a dispensação ao paciente (`/api/dispensacoes`, RF19/RN05) e a gestão de requisições (`/api/requisicoes`, RF20/RN09) estão implementadas como API REST e podem ser operadas por requisição HTTP autenticada. Nesta entrega não foram criadas telas dedicadas para esses dois fluxos; a prototipação cobre o caminho operacional de redistribuição entre unidades (RF13/RF14), que dialoga diretamente com a distribuição demonstrada nas telas de rotas e entregas.
 
 ---
 

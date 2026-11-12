@@ -1,4 +1,5 @@
 import { Entrega, Requisicao, Rota, Transferencia, Veiculo } from '../../domain/entities';
+import { StatusTransferencia } from '../../domain/enums';
 import { DatabaseMemoria } from '../database/DatabaseMemoria';
 import { RepositorioBase } from './RepositorioBase';
 
@@ -8,6 +9,12 @@ export class TransferenciaRepository extends RepositorioBase<Transferencia> {
   }
   listarSugeridas(): Transferencia[] {
     return this.listar().filter((t) => t.estaPendente());
+  }
+
+  listarAprovadasPorDestino(unidadeDestinoId: number): Transferencia[] {
+    return this.listar().filter(
+      (t) => t.status === StatusTransferencia.APROVADA && t.unidadeDestinoId === unidadeDestinoId,
+    );
   }
 }
 
@@ -20,6 +27,14 @@ export class RequisicaoRepository extends RepositorioBase<Requisicao> {
 export class RotaRepository extends RepositorioBase<Rota> {
   constructor(db: DatabaseMemoria) {
     super(db, 'rotas', () => db.rotas);
+  }
+
+  /**
+   * Identificador de parada em sequência própria. Antes, o serviço reutilizava
+   * a sequência de rotas, consumindo ids e confundindo a rastreabilidade.
+   */
+  proximoIdParada(): number {
+    return this.db.proximoId('paradas');
   }
 }
 
