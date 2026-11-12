@@ -1,0 +1,64 @@
+classDiagram
+    direction LR
+
+    class SistemaSaudeAdapter {
+        <<interface>>
+        +String nome
+        +obterEstoque() RegistroEstoqueExterno[]
+        +exportarEstoque(registros) int
+    }
+
+    class RegistroEstoqueExterno {
+        +String codigoCATMAT
+        +String cnesUnidade
+        +int quantidade
+        +String numeroLote
+        +Date validade
+    }
+
+    class ESUSAPSAdapter {
+        -ESUSAPSClient cliente
+        +obterEstoque()
+        +exportarEstoque(registros)
+    }
+    class HorusAdapter {
+        -HorusClient cliente
+        +obterEstoque()
+        +exportarEstoque(registros)
+    }
+    class BnafarAdapter {
+        -BnafarClient cliente
+        +obterEstoque()
+        +exportarEstoque(registros)
+    }
+
+    class ESUSAPSClient {
+        +obterPosicaoEstoque()
+        +enviarEstoque(payload)
+    }
+    class HorusClient {
+        +buscarSaldo()
+        +postSaldo(body)
+    }
+    class BnafarClient {
+        +listar()
+        +sincronizar(dados)
+    }
+
+    class IntegracaoService {
+        -SistemaSaudeAdapter[] adapters
+        +sincronizar(usuarioId, sistema)
+    }
+
+    ESUSAPSAdapter ..|> SistemaSaudeAdapter
+    HorusAdapter ..|> SistemaSaudeAdapter
+    BnafarAdapter ..|> SistemaSaudeAdapter
+
+    ESUSAPSAdapter --> ESUSAPSClient : adapta
+    HorusAdapter --> HorusClient : adapta
+    BnafarAdapter --> BnafarClient : adapta
+
+    SistemaSaudeAdapter ..> RegistroEstoqueExterno : produz
+    IntegracaoService --> SistemaSaudeAdapter : usa
+
+    note for SistemaSaudeAdapter "Adapter: interface-alvo conhecida pelo dominio. Cada adaptador traduz o formato do sistema legado."

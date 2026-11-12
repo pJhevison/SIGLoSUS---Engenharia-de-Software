@@ -1,0 +1,30 @@
+flowchart TB
+    subgraph CLI["Estacao de trabalho do usuario"]
+        NAV["Navegador web<br/>Chrome / Edge / Firefox"]
+    end
+
+    subgraph SRV["Servidor de aplicacao"]
+        NODE["Node.js 20+<br/>API REST Express (porta 3000)"]
+        STATIC["Arquivos estaticos<br/>telas do front-end"]
+        MEM[("Banco de dados<br/>em memoria (demonstracao)")]
+        NODE --- STATIC
+        NODE --- MEM
+    end
+
+    subgraph REDE["Rede da Secretaria de Saude"]
+        ESUS["e-SUS APS"]
+        HORUS["HORUS / SNA"]
+        BNAFAR["BNAFAR"]
+    end
+
+    NAV -->|"HTTPS<br/>API REST + telas"| NODE
+    NODE -->|"HTTPS / JSON (Adapter)"| ESUS
+    NODE -->|"HTTPS / JSON (Adapter)"| HORUS
+    NODE -->|"HTTPS / JSON (Adapter)"| BNAFAR
+
+    classDef cli fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+    classDef srv fill:#dcfce7,stroke:#15803d,color:#14532d;
+    classDef rede fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
+    class NAV cli;
+    class NODE,STATIC,MEM srv;
+    class ESUS,HORUS,BNAFAR rede;

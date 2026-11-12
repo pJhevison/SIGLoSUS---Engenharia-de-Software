@@ -1,0 +1,46 @@
+classDiagram
+    direction TB
+
+    class ConfiguracaoSistema {
+        -static ConfiguracaoSistema instancia
+        -ParametrosSistema parametros
+        -ConfiguracaoSistema()
+        +static obterInstancia() ConfiguracaoSistema
+        +obter(chave) valor
+        +definir(chave, valor) void
+        +todos() ParametrosSistema
+        +static reiniciar() void
+    }
+
+    class ParametrosSistema {
+        <<interface>>
+        +String ambiente
+        +int porta
+        +double limiteAprovacaoGestor
+        +int validadeMinimaTransferenciaDias
+        +int jornadaMaximaMin
+        +String versao
+    }
+
+    class EstoqueService {
+        +registrarMovimentacao(dados)
+    }
+    class RotaService {
+        +gerarRota(dados)
+    }
+    class TransferenciaService {
+        +aprovar(id, usuarioId)
+    }
+    class IntegracaoService {
+        +sincronizar(usuarioId)
+    }
+    class server_ts {
+        <<modulo>>
+    }
+
+    ConfiguracaoSistema --> ParametrosSistema : usa
+    EstoqueService ..> ConfiguracaoSistema : obterInstancia()
+    RotaService ..> ConfiguracaoSistema : obterInstancia()
+    TransferenciaService ..> ConfiguracaoSistema : obterInstancia()
+    IntegracaoService ..> ConfiguracaoSistema : obterInstancia()
+    server_ts ..> ConfiguracaoSistema : obterInstancia()

@@ -1,0 +1,42 @@
+flowchart LR
+    subgraph FRONT["Front-end (navegador)"]
+        UI["Telas (10 paginas HTML)"]
+        JS["Cliente REST - api.js"]
+        UI --> JS
+    end
+
+    subgraph API["Backend Node.js / TypeScript"]
+        ROUTES["Rotas REST<br/>infrastructure/http/routes.ts"]
+        APP["Servicos de Aplicacao<br/>application/services/*"]
+        DOM["Dominio<br/>entidades + RegrasNegocio"]
+        PAT["Padroes de Projeto<br/>patterns/*"]
+        REPO["Repositorios<br/>infrastructure/repositories/*"]
+        DB[("Banco em memoria<br/>DatabaseMemoria")]
+        AUD["Auditoria<br/>LogAuditoria"]
+
+        ROUTES --> APP
+        APP --> DOM
+        APP --> PAT
+        APP --> REPO
+        APP --> AUD
+        REPO --> DB
+        PAT -.-> REPO
+    end
+
+    subgraph EXTERNOS["Sistemas externos de saude"]
+        ESUS["e-SUS APS"]
+        HORUS["HORUS / SNA"]
+        BNAFAR["BNAFAR"]
+    end
+
+    JS -->|"HTTPS / JSON"| ROUTES
+    PAT -->|"Adapter"| ESUS
+    PAT -->|"Adapter"| HORUS
+    PAT -->|"Adapter"| BNAFAR
+
+    classDef front fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+    classDef back fill:#dcfce7,stroke:#15803d,color:#14532d;
+    classDef ext fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
+    class UI,JS front;
+    class ROUTES,APP,DOM,PAT,REPO,DB,AUD back;
+    class ESUS,HORUS,BNAFAR ext;
