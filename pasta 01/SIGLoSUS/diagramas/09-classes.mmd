@@ -9,8 +9,31 @@ classDiagram
         +String senhaHash
         +PerfilUsuario perfil
         +boolean ativo
+        +int versaoToken
         +autenticar() boolean
-        +encerrarSessao() void
+        +verificarSenha() boolean
+        +definirSenha() void
+        +inativar() void
+    }
+
+    class TokenRecuperacaoSenha {
+        +int id
+        +int usuarioId
+        +String hashToken
+        +DateTime expiraEm
+        +DateTime usadoEm
+        +ehValido() boolean
+        +marcarUsado() void
+    }
+
+    class PosicaoRota {
+        +int id
+        +int rotaId
+        +double latitude
+        +double longitude
+        +double velocidadeKmh
+        +DateTime dataHora
+        +coordenadasValidas() boolean
     }
 
     class UnidadeSaude {
@@ -197,6 +220,7 @@ classDiagram
     Usuario "1" --> "0..*" MovimentacaoEstoque : registra
     Usuario "1" --> "0..*" Rota : conduz
     Usuario "1" --> "1" PerfilUsuario
+    Usuario "1" --> "0..*" TokenRecuperacaoSenha : solicita
 
     UnidadeSaude "1" --> "1" Endereco
     UnidadeSaude "1" --> "0..*" Estoque : possui
@@ -227,6 +251,7 @@ classDiagram
     Rota "0..*" --> "1" Veiculo
     Rota "0..*" --> "1" StatusRota
     ParadaRota "0..*" --> "1" UnidadeSaude
+    Rota "1" --> "0..*" PosicaoRota : reporta
 
     Entrega "0..*" --> "1" Rota
     Entrega "0..*" --> "1" UnidadeSaude

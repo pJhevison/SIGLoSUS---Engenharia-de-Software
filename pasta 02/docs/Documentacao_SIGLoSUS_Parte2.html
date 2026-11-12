@@ -56,7 +56,7 @@
   <p class="capa-sub">Sistema Inteligente de Gestão Logística e Distribuição de Medicamentos do SUS</p>
   <p class="capa-tag">“Logística que salva vidas.”</p>
   <p class="capa-doc">Documentação Completa do Projeto — Partes 1 e 2</p>
-  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Jonas<br><br>Itacoatiara – Amazonas<br>2026</p>
+  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Jonas<br><br>Documento completo (seções 1 a 6): 41 páginas, 27 figuras e 10 tabelas<br><br>Itacoatiara — Amazonas<br>2026</p>
 </section>
 <div class="pagina">
 <blockquote>
@@ -91,7 +91,9 @@
 <li>4.4. Diagrama de Implantação</li>
 <li>4.5. Padrão Repository e Injeção de Dependência</li>
 <li>4.6. Organização do Repositório</li>
-<li>4.7. Rastreabilidade: Requisitos × Componentes</li>
+<li>4.7. Segurança, Autenticação e Autorização</li>
+<li>4.8. Persistência de Dados</li>
+<li>4.9. Rastreabilidade: Requisitos × Componentes</li>
 </ul>
 </li>
 <li>Padrões de Projeto<ul>
@@ -341,6 +343,37 @@
 <td>Essencial</td>
 </tr>
 </tbody></table>
+<p><strong>Situação de implementação dos requisitos funcionais.</strong> A tabela acima registra os requisitos <strong>estabelecidos</strong>. A implementação foi verificada requisito a requisito contra o código-fonte e a suíte de testes:</p>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Requisitos</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Implementado</td>
+<td>RF01, RF03, RF04, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF17, RF18, RF19, RF20, RF21, RF22</td>
+<td>Funcionalidade correspondente no código, com teste automatizado e endpoint da API.</td>
+</tr>
+<tr>
+<td>Parcial</td>
+<td>RF02, RF07, RF16</td>
+<td>Detalhadas nas linhas seguintes.</td>
+</tr>
+<tr>
+<td>Não implementado</td>
+<td>—</td>
+<td>Nenhum requisito foi classificado como ausente nesta versão.</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>RF02 (parcial)</strong> — o fluxo de recuperação existe em código (<code>RecuperacaoSenhaService</code>): solicitação, token temporário aleatório de uso único com expiração de 30 minutos, redefinição da senha e invalidação das sessões abertas. A *entrega* do token ao usuário depende de um serviço de e-mail (dependência externa); fora do ambiente de produção o token é devolvido na resposta, para demonstração.</li>
+<li><strong>RF07 (parcial)</strong> — o padrão Adapter, o contrato de integração e o serviço de sincronização estão implementados, mas a sincronização consome dados locais de demonstração. A conexão com as APIs oficiais de e-SUS APS, HÓRUS/SNA e BNAFAR exige credenciais e ambiente de homologação concedidos por terceiros.</li>
+<li><strong>RF16 (parcial)</strong> — despacho, acompanhamento por situação e rastreamento de posição estão implementados (<code>PosicaoService</code>). O protótipo <strong>não</strong> integra hardware GPS: as coordenadas informadas provêm do dispositivo que reportou a posição, e não de um módulo de posicionamento dedicado.</li>
+</ul>
 <h2>2.2. Requisitos Não-Funcionais</h2>
 <table>
 <thead>
@@ -444,6 +477,12 @@
 <td>Importante</td>
 </tr>
 </tbody></table>
+<p><strong>Situação de atendimento dos requisitos não funcionais.</strong> A tabela acima expressa os requisitos <strong>estabelecidos</strong>. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 71 testes, verificação de tipos e compilação) e parcialmente às demais:</p>
+<ul>
+<li><strong>Atendidos parcialmente</strong> — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).</li>
+<li><strong>Metas não verificadas nesta versão</strong> — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).</li>
+</ul>
+<p>O documento <strong>não afirma medições inexistentes</strong>: nenhuma das metas acima foi aferida em ambiente de produção.</p>
 <h2>2.3. Regras de Negócio</h2>
 <table>
 <thead>
@@ -1276,10 +1315,129 @@
 cd &quot;pasta 02/siglosus/backend&quot;
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 45 testes automatizados
+npm test           # executa os 71 testes automatizados
 </code></pre>
 <p>Acesse <code>http://localhost:3000/</code> no navegador. Usuários de demonstração (senha <code>siglosus123</code>): <code>gestor@siglosus.gov.br</code>, <code>farmaceutico@siglosus.gov.br</code>, <code>almoxarife@siglosus.gov.br</code>, <code>motorista@siglosus.gov.br</code>, <code>admin@siglosus.gov.br</code>.</p>
-<h2>4.7. Rastreabilidade: Requisitos × Componentes</h2>
+<h2>4.7. Segurança, Autenticação e Autorização</h2>
+<p>A segurança do SIGLoSUS é implementada na camada de domínio (hash de senha), na infraestrutura (emissão e validação de tokens, limitação de requisições, cabeçalhos) e na camada de apresentação (proteção do DOM). Os mecanismos employed são:</p>
+<table>
+<thead>
+<tr>
+<th>Mecanismo</th>
+<th>Implementação</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Armazenamento de senhas</td>
+<td>bcrypt com salt individual e fator de custo configurável (<code>BCRYPT_COST</code>), com comparação em tempo constante. Hashes legados em SHA-256 são aceitos na leitura e migrados para bcrypt no primeiro login bem-sucedido.</td>
+<td>RNF01, RF01</td>
+</tr>
+<tr>
+<td>Emissão de sessão</td>
+<td>Token JWT assinado com HMAC-SHA256, expiração configurável (<code>TOKEN_ACESSO_VALIDADE_MIN</code>), emissor verificado e identificador único (<code>jti</code>) para revogação. O segredo vem da variável de ambiente <code>JWT_SECRET</code> e é obrigatório em produção.</td>
+<td>RF01, RNF01</td>
+</tr>
+<tr>
+<td>Revogação de sessão</td>
+<td>O logout revoga o token no servidor; a troca ou a recuperação de senha invalida todas as sessões abertas do usuário.</td>
+<td>RF02, RF03</td>
+</tr>
+<tr>
+<td>Autenticação das rotas</td>
+<td>Middleware aplicado a todas as rotas privadas: token ausente, inválido, expirado ou adulterado resulta em HTTP 401.</td>
+<td>RNF01</td>
+</tr>
+<tr>
+<td>Autorização por perfil</td>
+<td>Permissões declarativas por endpoint; perfil insuficiente resulta em HTTP 403. A identidade do usuário é obtida <strong>do token</strong>, nunca do corpo da requisição.</td>
+<td>RNF01, RN09</td>
+</tr>
+<tr>
+<td>Proteção de dados pessoais</td>
+<td>As respostas de usuários não expõem CPF nem hash de senha (<code>usuarioDTO</code>); a trilha de auditoria registra ações sem credenciais.</td>
+<td>RNF02</td>
+</tr>
+<tr>
+<td>Proteção do navegador</td>
+<td>Todo dado oriundo da API é escapado antes de ser inserido no HTML (<code>esc()</code>), reduzindo a superfície de XSS.</td>
+<td>RNF01</td>
+</tr>
+<tr>
+<td>Endpoints sensíveis</td>
+<td>Limitação de requisições por endereço IP no login e na recuperação de senha, com resposta HTTP 429.</td>
+<td>RNF01</td>
+</tr>
+<tr>
+<td>Transporte e cabeçalhos</td>
+<td>CORS restrito às origens configuradas e cabeçalhos <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Referrer-Policy</code> e <code>Content-Security-Policy</code>.</td>
+<td>RNF01</td>
+</tr>
+</tbody></table>
+<p><strong>Perfis autorizados por operação.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Perfis autorizados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consultar cadastros, estoque, alertas, rotas, entregas e relatórios</td>
+<td>Todos os perfis autenticados</td>
+</tr>
+<tr>
+<td>Criar usuários, cadastrar unidades e medicamentos</td>
+<td>GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Editar conta de terceiros</td>
+<td>GESTOR (perfis operacionais), ADMINISTRADOR (todas)</td>
+</tr>
+<tr>
+<td>Inativar ou reativar conta</td>
+<td>ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Aprovar ou rejeitar transferências</td>
+<td>GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Registrar movimentação de estoque</td>
+<td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Dispensar ao paciente</td>
+<td>FARMACEUTICO, GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Aprovar requisições (RN09)</td>
+<td>GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Gerar rotas e despachar</td>
+<td>ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Confirmar recebimento de entrega</td>
+<td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Reportar posição de rota</td>
+<td>MOTORISTA, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+</tr>
+<tr>
+<td>Sincronizar integrações e consultar auditoria</td>
+<td>GESTOR, ADMINISTRADOR</td>
+</tr>
+</tbody></table>
+<h2>4.8. Persistência de Dados</h2>
+<p>O protótipo opera sobre um banco em memória (<code>DatabaseMemoria</code>) <strong>com persistência em arquivo</strong> (<code>PersistenciaJSON</code>). O estado completo — usuários, unidades, medicamentos, estoques, lotes, movimentações, transferências, requisições, rotas, entregas, dispensações, relatórios, auditoria, tokens de recuperação e posições de rota — é gravado em JSON após cada operação de escrita bem-sucedida e restaurado no arranque do processo. A gravação é atômica: o estado é escrito em arquivo temporário e, em seguida, renomeado.</p>
+<p>O arquivo é configurado pela variável de ambiente <code>SIGLOSUS_ARQUIVO_PERSISTENCIA</code>; sem ela, o sistema opera somente em memória (comportamento usado nos testes). O teste <code>tests/persistencia.test.ts</code> comprova que uma movimentação registrada pela API é preservada após a criação de uma nova instância do contêiner, e que datas e métodos das entidades são restaurados corretamente.</p>
+<p><strong>Limitações assumidas:</strong> a persistência em arquivo atende ao requisito de não perder dados no protótipo, mas não oferece transações ACID, controle de concorrência entre processos nem consultas em SQL — o que também elimina a superfície de injeção de SQL. A migração para um SGBD (PostgreSQL, por exemplo) ocorre atrás das mesmas interfaces de repositório, sem alteração do domínio. A afirmação de integridade transacional (RNF09) permanece, portanto, como meta não verificada nesta versão.</p>
+<h2>4.9. Rastreabilidade: Requisitos × Componentes</h2>
 <p>A Tabela 8 relaciona os requisitos funcionais aos componentes de software que os implementam, evidenciando a <strong>compatibilidade entre a documentação e o software</strong>.</p>
 <p><strong>Tabela 8 – Rastreabilidade entre requisitos funcionais e componentes do software.</strong></p>
 <table>
@@ -1291,24 +1449,34 @@ npm test           # executa os 45 testes automatizados
 </tr>
 </thead>
 <tbody><tr>
-<td>RF01, RF02, RF03</td>
-<td><code>AutenticacaoService</code>, <code>Usuario</code></td>
-<td><code>POST /api/auth/login</code></td>
+<td>RF01</td>
+<td><code>AutenticacaoService</code>, <code>GerenciadorJWT</code>, <code>Usuario</code></td>
+<td><code>POST /api/auth/login</code>, <code>GET /api/auth/eu</code></td>
+</tr>
+<tr>
+<td>RF02</td>
+<td><code>RecuperacaoSenhaService</code>, <code>TokenRecuperacaoSenha</code></td>
+<td><code>POST /api/auth/recuperar-senha</code>, <code>POST /api/auth/redefinir-senha</code>, <code>POST /api/auth/trocar-senha</code></td>
+</tr>
+<tr>
+<td>RF03</td>
+<td><code>AutenticacaoService.encerrarSessao()</code></td>
+<td><code>POST /api/auth/logout</code></td>
 </tr>
 <tr>
 <td>RF04</td>
 <td><code>UsuarioService</code>, <code>UsuarioRepository</code></td>
-<td><code>GET/POST /api/usuarios</code>, <code>PATCH /api/usuarios/:id/inativar</code></td>
+<td><code>GET/POST /api/usuarios</code>, <code>PATCH /api/usuarios/:id</code>, <code>PATCH /api/usuarios/:id/inativar</code></td>
 </tr>
 <tr>
 <td>RF05</td>
-<td><code>UnidadeSaude</code>, <code>UnidadeRepository</code></td>
-<td><code>GET /api/unidades</code></td>
+<td><code>UnidadeService</code>, <code>UnidadeSaude</code>, <code>UnidadeRepository</code></td>
+<td><code>GET/POST /api/unidades</code>, <code>PATCH /api/unidades/:id</code></td>
 </tr>
 <tr>
 <td>RF06</td>
-<td><code>Medicamento</code>, <code>MedicamentoRepository</code></td>
-<td><code>GET /api/medicamentos</code></td>
+<td><code>MedicamentoService</code>, <code>Medicamento</code>, <code>MedicamentoRepository</code></td>
+<td><code>GET/POST /api/medicamentos</code>, <code>PATCH /api/medicamentos/:id</code></td>
 </tr>
 <tr>
 <td>RF07</td>
@@ -1347,8 +1515,8 @@ npm test           # executa os 45 testes automatizados
 </tr>
 <tr>
 <td>RF15, RF16</td>
-<td><code>RotaService</code> + Strategy</td>
-<td><code>POST /api/rotas</code>, <code>POST /api/rotas/:id/despachar</code></td>
+<td><code>RotaService</code> + Strategy, <code>PosicaoService</code></td>
+<td><code>POST /api/rotas</code>, <code>POST /api/rotas/:id/despachar</code>, <code>GET/POST /api/rotas/:id/posicoes</code></td>
 </tr>
 <tr>
 <td>RF17</td>
@@ -1515,7 +1683,7 @@ npm test           # executa os 45 testes automatizados
 <td><code>padroes-projeto.test.ts</code></td>
 </tr>
 </tbody></table>
-<p>A suíte de testes (<strong>45 testes</strong> em 4 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST e dos códigos de status HTTP:</p>
+<p>A suíte de testes (<strong>71 testes</strong> em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):</p>
 <table>
 <thead>
 <tr>
@@ -1536,8 +1704,20 @@ npm test           # executa os 45 testes automatizados
 <td>Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes)</td>
 </tr>
 <tr>
+<td><code>tests/seguranca.test.ts</code></td>
+<td>bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes)</td>
+</tr>
+<tr>
+<td><code>tests/requisitos.test.ts</code></td>
+<td>RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (11 testes)</td>
+</tr>
+<tr>
+<td><code>tests/persistencia.test.ts</code></td>
+<td>Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes)</td>
+</tr>
+<tr>
 <td><code>tests/api.test.ts</code></td>
-<td>Endpoints REST, RF19, RF20/RN09, ausência de <code>senhaHash</code>, 401/404/423 (14 testes)</td>
+<td>Endpoints REST, RF19, RF20/RN09, ausência de <code>senhaHash</code>, 401/403/404/423 (17 testes)</td>
 </tr>
 </tbody></table>
 <hr>
@@ -1546,7 +1726,7 @@ npm test           # executa os 45 testes automatizados
 <p>As telas do SIGLoSUS foram prototipadas como <strong>aplicação web navegável</strong> e estão implementadas em <code>pasta 02/siglosus/frontend</code>. Diferentemente de um protótipo estático, estas telas <strong>consomem a API REST real</strong> (seção 4), de modo que os dados exibidos (estoque, alertas, rotas, entregas) são produzidos pelo backend em execução — o que reforça a compatibilidade entre documentação, arquitetura, padrões e software.</p>
 <p>O layout é composto por um <strong>menu lateral fixo</strong> com as nove áreas funcionais, uma <strong>barra superior</strong> com o título da tela e o usuário autenticado, e uma <strong>área de conteúdo</strong> com cartões, tabelas e formulários. A paleta de cores (azul/teal) e os ícones remetem ao contexto de saúde pública. A interface é responsiva e foi projetada buscando o nível AA das diretrizes WCAG 2.1 (RNF06).</p>
 <h2>6.2. Tela de Acesso</h2>
-<p>Tela de login (UC01 / RF01). O usuário informa e-mail (ou CPF) e senha; as credenciais são validadas no backend e, em caso de sucesso, o usuário é direcionado ao painel conforme o seu perfil. Após cinco tentativas incorretas, o acesso é bloqueado temporariamente.</p>
+<p>Tela de login (UC01 / RF01). O usuário informa e-mail (ou CPF) e senha; as credenciais são validadas no backend e, em caso de sucesso, é emitido um token JWT e o usuário é direcionado ao painel conforme o seu perfil. Após cinco tentativas incorretas, o acesso é bloqueado temporariamente. A mesma tela oferece a <strong>recuperação de senha</strong> (RF02): o usuário informa o e-mail cadastrado e recebe um token temporário de uso único, com expiração, para redefinir a senha.</p>
 <p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/01-login.png" alt="Tela de acesso (login)"></p>
 <p><strong>Figura 18 – Tela de acesso (login).</strong></p>
 <h2>6.3. Painel Gerencial</h2>
@@ -1574,7 +1754,7 @@ npm test           # executa os 45 testes automatizados
 <p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/07-entregas.png" alt="Entregas"></p>
 <p><strong>Figura 24 – Tela de entregas.</strong></p>
 <h2>6.9. Integrações</h2>
-<p>Configuração e execução da sincronização com os sistemas de saúde externos (UC07 · RF07), evidenciando o padrão <strong>Adapter</strong>. A tela mostra os sistemas configurados, a situação de cada integração, a última sincronização e o resultado da sincronização (registros atualizados e divergências).</p>
+<p>Configuração e execução da sincronização com os sistemas de saúde externos (UC07 · RF07), evidenciando o padrão <strong>Adapter</strong>. A tela mostra os sistemas configurados, a situação de cada integração, a última sincronização e o resultado da sincronização (registros atualizados e divergências). <strong>Limite declarado:</strong> a sincronização executada no protótipo consome dados locais de demonstração; a conexão com as APIs oficiais depende de credenciais e homologação concedidas por terceiros.</p>
 <p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/08-integracoes.png" alt="Integrações"></p>
 <p><strong>Figura 25 – Tela de integrações com sistemas de saúde.</strong></p>
 <h2>6.10. Relatórios</h2>
@@ -1582,7 +1762,7 @@ npm test           # executa os 45 testes automatizados
 <p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/09-relatorios.png" alt="Relatórios"></p>
 <p><strong>Figura 26 – Tela de relatórios e previsão de demanda.</strong></p>
 <h2>6.11. Cadastros</h2>
-<p>Cadastros e administração: usuários e perfis (RF04), unidades de saúde (RF05), catálogo de medicamentos (RF06) e a trilha de auditoria das operações críticas (RF22 · RNF10).</p>
+<p>Cadastros e administração: usuários e perfis (RF04), unidades de saúde (RF05), catálogo de medicamentos (RF06) e a trilha de auditoria das operações críticas (RF22 · RNF10). A tela permite <strong>cadastrar</strong> usuários, <strong>editar</strong> contas (inclusive os próprios dados), <strong>inativar e reativar</strong> usuários, <strong>cadastrar</strong> unidades de saúde e <strong>cadastrar</strong> medicamentos do catálogo, com validação no servidor (unicidade de e-mail, CPF, CNES e código CATMAT) e registro das operações na trilha de auditoria.</p>
 <p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/10-cadastros.png" alt="Cadastros"></p>
 <p><strong>Figura 27 – Tela de cadastros e auditoria.</strong></p>
 <h2>6.12. Mapa de Navegação e Rastreabilidade</h2>
@@ -1670,7 +1850,7 @@ npm test           # executa os 45 testes automatizados
 </tr>
 </tbody></table>
 <p><strong>Navegação:</strong> todas as telas são acessíveis a partir do menu lateral; a tela de login é a porta de entrada. O menu é composto por: <strong>Painel · Estoque · Alertas · Redistribuição · Rotas · Entregas · Integrações · Relatórios · Cadastros</strong>.</p>
-<p><strong>Observação sobre RF19 e RF20:</strong> a dispensação ao paciente (<code>/api/dispensacoes</code>, RF19/RN05) e a gestão de requisições (<code>/api/requisicoes</code>, RF20/RN09) estão implementadas como API REST. Nesta entrega não foram criadas telas dedicadas para esses dois fluxos; a prototipação cobre o caminho operacional de redistribuição entre unidades (RF13/RF14), que dialoga diretamente com a distribuição demonstrada nas telas de rotas e entregas.</p>
+<p><strong>Observação sobre RF19 e RF20:</strong> a dispensação ao paciente (<code>/api/dispensacoes</code>, RF19/RN05) e a gestão de requisições (<code>/api/requisicoes</code>, RF20/RN09) estão implementadas como API REST e podem ser operadas por requisição HTTP autenticada. Nesta entrega não foram criadas telas dedicadas para esses dois fluxos; a prototipação cobre o caminho operacional de redistribuição entre unidades (RF13/RF14), que dialoga diretamente com a distribuição demonstrada nas telas de rotas e entregas.</p>
 <hr>
 <h2>Referências</h2>
 <p>BRASIL. Ministério da Saúde. <strong>Materiais de referência da disciplina de Engenharia de Software</strong>. Itacoatiara: UFAM/ICET, 2026.</p>

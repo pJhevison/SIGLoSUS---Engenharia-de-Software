@@ -8,7 +8,7 @@
 
 ---
 
-## Status de execução (atualizado em 12/11/2026)
+## Status de execução (atualizado em 12/11/2026 — versão 2.1.0)
 
 | Item do plano P0 | Situação |
 |---|---|
@@ -19,8 +19,23 @@
 | RN05 — conferência dupla de controlados | Implementado no fluxo real de dispensação (RF19), com lote obrigatório e baixa no lote informado |
 | `senhaHash` nas respostas da API | Corrigido no DTO de usuários |
 | Status HTTP (401/423/404/409) | Corrigidos com erros tipados e handler 404 |
+| Senhas em SHA-256 simples | **Corrigido**: bcrypt com salt individual, com migração automática de hashes legados |
+| Token Base64 sem assinatura | **Corrigido**: JWT assinado (HMAC-SHA256), com expiração, revogação e segredo por variável de ambiente |
+| Rotas privadas sem autenticação / `usuarioId` do corpo | **Corrigido**: middleware de autenticação e autorização por perfil; identidade obtida do token |
+| RF02 — recuperação de senha | **Implementado**: token temporário de uso único com expiração e redefinição |
+| RF03 — logout | **Implementado**: revogação do token no servidor |
+| RF04 — edição de usuários | **Implementado**: edição, ativação e inativação com regras de permissão |
+| RF05 / RF06 — manutenção de cadastros | **Implementado**: CRUD de unidades e de medicamentos, com validações |
+| RF16 — rastreamento | **Parcial**: posição reportada pelo dispositivo (sem hardware GPS dedicado) |
+| Perda de dados ao reiniciar o backend | **Corrigido**: persistência em arquivo JSON, configurável por `SIGLOSUS_ARQUIVO_PERSISTENCIA` |
+| XSS no front-end | **Corrigido**: escapamento dos dados da API antes da inserção no HTML |
+| Limites de requisição e CORS | **Corrigido**: limitação por IP no login (429) e CORS restrito às origens configuradas |
 | CI, CHANGELOG e template de PR | Adicionados; Pull Requests dependem de `push` ao GitHub |
-| Suíte de testes | 45 testes passando (eram 33) |
+| Suíte de testes | **71 testes passando** em 7 arquivos (eram 33) |
+| Documentação e PDF | Revisados (situação dos RF/RNF, segurança, persistência) e PDF regenerado com 41 páginas |
+
+O detalhamento completo das correções, dos testes executados e das limitações remanescentes está em
+`RELATORIO_FINAL_DE_CORRECOES.md`.
 
 ---
 
