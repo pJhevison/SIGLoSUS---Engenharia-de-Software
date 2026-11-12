@@ -108,8 +108,16 @@ const FilaOffline = {
     let enviadas = 0;
     const restantes = [];
     for (const operacao of operacoes) {
+      // Uma fila de outro usuário nunca deve ser enviada com a sessão atual.
+      const usuarioAtual = Sessao.obter()?.usuario?.id;
+      if (!usuarioAtual || operacao.usuarioId !== usuarioAtual) {
+        restantes.push(operacao);
+        continue;
+      }
       try {
-        await requisicao(operacao.metodo, operacao.caminho, operacao.corpo, { semFila: true });
+        await requisicao(operacao.metodo, operacao.caminho, operacao.corpo, {
+          semFila: true, idem: operacao.idem,
+        });
         enviadas += 1;
       } catch (erro) {
         if (erro.status && erro.status >= 400 && erro.status < 500) {
@@ -131,11 +139,20 @@ window.addEventListener('online', () => {
 });
 
 /* ---------------------------- Requisições -------------------------------- */
+function novaChaveIdempotencia() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function requisicao(metodo, caminho, corpo, opcoes = {}) {
   const sessao = Sessao.obter();
+  // Uma operação nova recebe chave única; os reenvios reutilizam a mesma chave.
+  const idem = metodo !== 'GET' ? (opcoes.idem || novaChaveIdempotencia()) : undefined;
   const cabecalhos = { 'Content-Type': 'application/json' };
   if (sessao && sessao.token) cabecalhos.Authorization = `Bearer ${sessao.token}`;
-  if (corpo !== undefined) cabecalhos['Idempotency-Key'] = opcoes.idem || caminho;
+  if (idem) cabecalhos['Idempotency-Key'] = idem;
 
   let resposta;
   try {
@@ -147,7 +164,7 @@ async function requisicao(metodo, caminho, corpo, opcoes = {}) {
   } catch (erro) {
     // Falha de rede: a operação entra na fila offline (quando permitido).
     if (!opcoes.semFila && metodo !== 'GET') {
-      FilaOffline.enfileirar({ metodo, caminho, corpo, idem: opcoes.idem || caminho });
+      FilaOffline.enfileirar({ metodo, caminho, corpo, idem, usuarioId: sessao?.usuario?.id });
       return { offline: true, mensagem: 'Operação registrada na fila offline.' };
     }
     throw new Error(

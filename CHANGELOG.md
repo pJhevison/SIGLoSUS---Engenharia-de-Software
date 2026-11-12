@@ -1,3 +1,16 @@
+## [2.1.1] - 2026-11-12 (revisão local, publicação pendente)
+
+### Corrigido
+- Idempotência aplicada após autenticação e autorização, isolada por usuário, método, rota e conteúdo; conflito 409.
+- Chave única por operação no navegador; reenvio offline com a chave original e isolamento entre contas.
+- Proibição de seed de demonstração em produção mesmo quando explicitamente solicitado.
+- Bootstrap seguro do administrador inicial sem contas ou senhas públicas.
+- Correções na documentação, variáveis de ambiente e instruções de versionamento Git Flow.
+
+### Verificação
+- TypeScript: typecheck e build locais aprovados.
+- 10 verificações funcionais direcionadas aprovadas; suíte Vitest completa ainda não reproduzida nesta máquina.
+
 # Changelog
 
 Todas as mudanças relevantes do SIGLoSUS são registradas neste arquivo.

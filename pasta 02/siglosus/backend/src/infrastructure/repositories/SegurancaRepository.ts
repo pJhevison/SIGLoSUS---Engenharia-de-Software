@@ -67,8 +67,13 @@ export class IdempotenciaRepository extends RepositorioBase<ResultadoIdempotenci
     super(db, 'resultadosIdempotencia', () => db.resultadosIdempotencia);
   }
 
-  buscarPorChave(chave: string): ResultadoIdempotencia | undefined {
-    return this.listar().find((r) => r.chave === chave);
+  buscarPorChave(chave: string, usuarioId: number): ResultadoIdempotencia | undefined {
+    return this.listar().find((r) => r.chave === chave && r.usuarioId === usuarioId);
+  }
+
+  /** Entradas da versão antiga, sem escopo autenticado, não podem ser reproduzidas com segurança. */
+  existeChaveLegada(chave: string): boolean {
+    return this.listar().some((r) => r.chave === chave && r.usuarioId === undefined);
   }
 
   limparAntigos(idadeMaximaMs: number = 24 * 60 * 60 * 1000): number {

@@ -14,5 +14,9 @@ export class ResultadoIdempotencia {
     public readonly status: number,
     public readonly corpo: unknown,
     public readonly criadoEm: Date = new Date(),
+    /** Identidade autenticada que originou a operação; entradas antigas sem usuário nunca são reproduzidas. */
+    public readonly usuarioId?: number,
+    /** SHA-256 da requisição original: método, rota e corpo. */
+    public readonly hashRequisicao?: string,
   ) {}
 }

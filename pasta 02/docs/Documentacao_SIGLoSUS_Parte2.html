@@ -8,8 +8,8 @@
   :root { --azul:#1e3a8a; --cinza:#555; }
   * { box-sizing: border-box; }
   html, body { margin:0; padding:0; }
-  body { font-family: Arial, 'Segoe UI', sans-serif; color:#111827; font-size:12pt; line-height:1.5; }
-  .pagina { max-width: 17cm; margin: 0 auto; padding: 1.2cm 0.5cm 2cm; }
+  body { font-family: Arial, 'Segoe UI', sans-serif; color:#111827; font-size:10.5pt; line-height:1.35; }
+  .pagina { max-width: 17cm; margin: 0 auto; padding: 1.0cm 0.5cm 1.3cm; }
 
   /* Capa */
   .capa { min-height: 24cm; padding: 2cm 2cm 1.5cm; display:flex; flex-direction:column; text-align:center; page-break-after: always; }
@@ -21,12 +21,12 @@
   .capa-doc { font-size:12pt; font-weight:bold; margin:0 0 auto; }
   .capa-rodape { font-size:11pt; margin-top:auto; }
 
-  h1 { color: var(--azul); border-bottom: 2px solid var(--azul); padding-bottom: 6px; margin-top: 30px; font-size:18pt; page-break-after: avoid; }
-  h2 { color:#1f2937; margin-top: 24px; font-size:15pt; page-break-after: avoid; }
-  h3 { color:#374151; margin-top: 18px; font-size:13pt; page-break-after: avoid; }
+  h1 { color: var(--azul); border-bottom: 2px solid var(--azul); padding-bottom: 6px; margin-top: 30px; font-size:16pt; page-break-after: avoid; }
+  h2 { color:#1f2937; margin-top: 24px; font-size:11.5pt; page-break-after: avoid; }
+  h3 { color:#374151; margin-top: 18px; font-size:11.5pt; page-break-after: avoid; }
   p { text-align: justify; }
-  table { border-collapse: collapse; width: 100%; margin: 10px 0 18px; font-size:10.5pt; page-break-inside: avoid; }
-  th, td { border: 1px solid #c7cdd6; padding: 5px 7px; vertical-align: top; text-align: left; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 18px; font-size:9pt; page-break-inside: auto; }
+  th, td { border: 1px solid #c7cdd6; padding: 3px 5px; vertical-align: top; text-align: left; }
   th { background: #d9e2f3; }
   .tabela-cap, .figura-cap { font-style: italic; color: var(--cinza); text-align: center; font-size:10.5pt; margin-top: -6px; }
   img { max-width: 100%; height: auto; display:block; margin: 12px auto; page-break-inside: avoid; }
@@ -37,16 +37,41 @@
   ul, ol { margin-top: 6px; }
   hr { border:none; border-top:1px solid #e5e7eb; margin: 26px 0; }
 
-  @page { size: A4; }
+  @page { size: A4; margin: 1.0cm 1.8cm 1.7cm 2.4cm; @bottom-center { content: counter(page); font-size: 9pt; color: #475569; } }
+  @page:first { @bottom-center { content: none; } }
+  img { max-height: 16.5cm; object-fit: contain; }
+  p, li { orphans: 2; widows: 2; }
   @media print {
     .capa { min-height: 25cm; }
     table, img, pre, blockquote { page-break-inside: avoid; }
     a { color:#1e3a8a; text-decoration:none; }
   }
 </style>
-</head>
+<style>
+.capa { break-after: page; }
+table { break-inside: auto; }
+tr { break-inside: avoid; }
+img { width: auto; height: auto; }
+pre { white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; font-size: 8.3pt; }
+@media print { .pagina { max-width: none; } }
+</style><style>
+.capa { break-after: page; }
+table { break-inside: auto; }
+tr { break-inside: avoid; }
+img { width: auto; height: auto; }
+pre { white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; font-size: 8.3pt; }
+@media print { .pagina { max-width: none; } }
+</style><style>
+.capa { break-after: page; }
+table { break-inside: auto; table-layout: fixed; width: 100%; }
+th, td { overflow-wrap: anywhere; word-break: break-word; }
+td code { white-space: normal; overflow-wrap: anywhere; }
+tr { break-inside: avoid; }
+img { width: auto; height: auto; }
+pre { white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; font-size: 8.3pt; }
+@media print { .pagina { max-width: none; } }
+</style></head>
 <body>
-
 <section class="capa">
   <p class="capa-inst">UNIVERSIDADE FEDERAL DO AMAZONAS – UFAM<br>
      INSTITUTO DE CIÊNCIAS EXATAS E TECNOLOGIA – ICET<br>
@@ -56,83 +81,81 @@
   <p class="capa-sub">Sistema Inteligente de Gestão Logística e Distribuição de Medicamentos do SUS</p>
   <p class="capa-tag">“Logística que salva vidas.”</p>
   <p class="capa-doc">Documentação Completa do Projeto — Partes 1 e 2</p>
-  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Jonas<br><br>Documento completo (seções 1 a 6): 42 páginas, 27 figuras e 10 tabelas<br><br>Itacoatiara — Amazonas<br>2026</p>
+  <p class="capa-rodape">Disciplina: Engenharia de Software B<br>Professor: Walter Viana<br><br>Documento completo (seções 1 a 6): 27 figuras e diagramas — versão revisada em 12/11/2026<br><br>Itacoatiara — Amazonas<br>2026</p>
 </section>
 <div class="pagina">
-<blockquote>
-<p><em>&quot;Logística que salva vidas.&quot;</em></p>
-</blockquote>
-<hr>
 <h2>Sumário</h2>
 <ol>
-<li>Introdução<ul>
-<li>1.1. Descrição Geral do Sistema</li>
-<li>1.2. Descrição dos Usuários</li>
+<li><a href="#1-introdu%C3%A7%C3%A3o">Introdução</a><ul>
+<li><a href="#11-descri%C3%A7%C3%A3o-geral-do-sistema">1.1. Descrição Geral do Sistema</a></li>
+<li><a href="#12-descri%C3%A7%C3%A3o-dos-usu%C3%A1rios">1.2. Descrição dos Usuários</a></li>
 </ul>
 </li>
-<li>Requisitos Gerais do Sistema<ul>
-<li>2.1. Requisitos Funcionais</li>
-<li>2.2. Requisitos Não-Funcionais</li>
-<li>2.3. Regras de Negócio</li>
+<li><a href="#2-requisitos-gerais-do-sistema">Requisitos Gerais do Sistema</a><ul>
+<li><a href="#21-requisitos-funcionais">2.1. Requisitos Funcionais</a></li>
+<li><a href="#22-requisitos-n%C3%A3o-funcionais">2.2. Requisitos Não-Funcionais</a></li>
+<li><a href="#23-regras-de-neg%C3%B3cio">2.3. Regras de Negócio</a></li>
 </ul>
 </li>
-<li>Diagramas UML<ul>
-<li>3.1. Diagrama de Casos de Uso</li>
-<li>3.2. Especificação dos Casos de Uso</li>
-<li>3.3. Diagramas de Sequência</li>
-<li>3.4. Diagramas de Atividades</li>
-<li>3.5. Diagrama de Classes</li>
+<li><a href="#3-diagramas-uml">Diagramas UML</a><ul>
+<li><a href="#31-diagrama-de-casos-de-uso">3.1. Diagrama de Casos de Uso</a></li>
+<li><a href="#32-especifica%C3%A7%C3%A3o-dos-casos-de-uso">3.2. Especificação dos Casos de Uso</a></li>
+<li><a href="#33-diagramas-de-sequ%C3%AAncia">3.3. Diagramas de Sequência</a></li>
+<li><a href="#34-diagramas-de-atividades">3.4. Diagramas de Atividades</a></li>
+<li><a href="#35-diagrama-de-classes">3.5. Diagrama de Classes</a></li>
 </ul>
 </li>
-<li>Arquitetura<ul>
-<li>4.1. Visão Geral da Arquitetura</li>
-<li>4.2. Arquitetura em Camadas</li>
-<li>4.3. Diagrama de Componentes</li>
-<li>4.4. Diagrama de Implantação</li>
-<li>4.5. Padrão Repository e Injeção de Dependência</li>
-<li>4.6. Organização do Repositório</li>
-<li>4.7. Segurança, Autenticação e Autorização</li>
-<li>4.8. Persistência de Dados</li>
-<li>4.9. Rastreabilidade: Requisitos × Componentes</li>
+<li><a href="#4-arquitetura">Arquitetura</a><ul>
+<li><a href="#41-vis%C3%A3o-geral-da-arquitetura">4.1. Visão Geral da Arquitetura</a></li>
+<li><a href="#42-arquitetura-em-camadas">4.2. Arquitetura em Camadas</a></li>
+<li><a href="#43-diagrama-de-componentes">4.3. Diagrama de Componentes</a></li>
+<li><a href="#44-diagrama-de-implanta%C3%A7%C3%A3o">4.4. Diagrama de Implantação</a></li>
+<li><a href="#45-padr%C3%A3o-repository-e-inje%C3%A7%C3%A3o-de-depend%C3%AAncia">4.5. Padrão Repository e Injeção de Dependência</a></li>
+<li><a href="#46-organiza%C3%A7%C3%A3o-do-reposit%C3%B3rio">4.6. Organização do Repositório</a></li>
+<li><a href="#47-seguran%C3%A7a-autentica%C3%A7%C3%A3o-e-autoriza%C3%A7%C3%A3o">4.7. Segurança, Autenticação e Autorização</a></li>
+<li><a href="#48-persist%C3%AAncia-de-dados">4.8. Persistência de Dados</a></li>
+<li><a href="#49-rastreabilidade-requisitos--componentes">4.9. Rastreabilidade: Requisitos × Componentes</a></li>
+<li><a href="#410-ger%C3%AAncia-de-configura%C3%A7%C3%A3o-e-versionamento">4.10. Gerência de Configuração e Versionamento</a></li>
+<li><a href="#411-valida%C3%A7%C3%A3o-e-limita%C3%A7%C3%B5es-da-entrega">4.11. Validação e Limitações da Entrega</a></li>
 </ul>
 </li>
-<li>Padrões de Projeto<ul>
-<li>5.1. Visão Geral</li>
-<li>5.2. Singleton</li>
-<li>5.3. Factory Method</li>
-<li>5.4. Adapter</li>
-<li>5.5. Observer</li>
-<li>5.6. Strategy</li>
-<li>5.7. Resumo e Rastreabilidade dos Padrões</li>
+<li><a href="#5-padr%C3%B5es-de-projeto">Padrões de Projeto</a><ul>
+<li><a href="#51-vis%C3%A3o-geral">5.1. Visão Geral</a></li>
+<li><a href="#52-singleton">5.2. Singleton</a></li>
+<li><a href="#53-factory-method">5.3. Factory Method</a></li>
+<li><a href="#54-adapter">5.4. Adapter</a></li>
+<li><a href="#55-observer">5.5. Observer</a></li>
+<li><a href="#56-strategy">5.6. Strategy</a></li>
+<li><a href="#57-resumo-e-rastreabilidade-dos-padr%C3%B5es">5.7. Resumo e Rastreabilidade dos Padrões</a></li>
 </ul>
 </li>
-<li>Prototipação das Telas<ul>
-<li>6.1. Considerações Gerais</li>
-<li>6.2. Tela de Acesso</li>
-<li>6.3. Painel Gerencial</li>
-<li>6.4. Estoque em Tempo Real</li>
-<li>6.5. Alertas de Desabastecimento</li>
-<li>6.6. Redistribuição entre Unidades</li>
-<li>6.7. Rotas de Distribuição</li>
-<li>6.8. Entregas</li>
-<li>6.9. Integrações</li>
-<li>6.10. Relatórios</li>
-<li>6.11. Cadastros</li>
-<li>6.12. Mapa de Navegação e Rastreabilidade</li>
+<li><a href="#6-prototipa%C3%A7%C3%A3o-das-telas">Prototipação das Telas</a><ul>
+<li><a href="#61-considera%C3%A7%C3%B5es-gerais">6.1. Considerações Gerais</a></li>
+<li><a href="#62-tela-de-acesso">6.2. Tela de Acesso</a></li>
+<li><a href="#63-painel-gerencial">6.3. Painel Gerencial</a></li>
+<li><a href="#64-estoque-em-tempo-real">6.4. Estoque em Tempo Real</a></li>
+<li><a href="#65-alertas-de-desabastecimento">6.5. Alertas de Desabastecimento</a></li>
+<li><a href="#66-redistribui%C3%A7%C3%A3o-entre-unidades">6.6. Redistribuição entre Unidades</a></li>
+<li><a href="#67-rotas-de-distribui%C3%A7%C3%A3o">6.7. Rotas de Distribuição</a></li>
+<li><a href="#68-entregas">6.8. Entregas</a></li>
+<li><a href="#69-integra%C3%A7%C3%B5es">6.9. Integrações</a></li>
+<li><a href="#610-relat%C3%B3rios">6.10. Relatórios</a></li>
+<li><a href="#611-cadastros">6.11. Cadastros</a></li>
+<li><a href="#612-mapa-de-navega%C3%A7%C3%A3o-e-rastreabilidade">6.12. Mapa de Navegação e Rastreabilidade</a></li>
 </ul>
 </li>
 </ol>
-<hr>
+<hr />
 <h1>1. Introdução</h1>
 <h2>1.1. Descrição Geral do Sistema</h2>
 <p>O <strong>SIGLoSUS</strong> é um sistema de informação voltado à <strong>gestão logística e à distribuição de medicamentos no âmbito do Sistema Único de Saúde (SUS)</strong>. Ele nasce de um problema concreto e recorrente na rede pública: a <strong>falta de medicamentos nas farmácias</strong> (desabastecimento), causada, entre outros fatores, pela <strong>ausência de visão consolidada do estoque</strong> entre as unidades, por <strong>processos manuais e descentralizados</strong>, pela <strong>dificuldade de prever a demanda</strong> e por <strong>rotas de distribuição ineficientes</strong>.</p>
-<p>O sistema <strong>não substitui</strong> as ferramentas já utilizadas pela gestão de saúde — ele <strong>integra-se a elas</strong> (por exemplo, <strong>e-SUS APS</strong>, <strong>HÓRUS/SNA</strong> e <strong>BNAFAR</strong>) para consolidar dados de estoque e dispensação em uma <strong>única visão em tempo real</strong>. A partir dessa visão, o SIGLoSUS passa a agir de forma <strong>proativa</strong>:</p>
+<p>O SIGLoSUS <strong>não pretende substituir</strong> as ferramentas utilizadas pela gestão de saúde. A arquitetura disponibiliza adaptadores para futura integração com <strong>e-SUS APS</strong>, <strong>HÓRUS/SNA</strong> e <strong>BNAFAR</strong>; <strong>na versão acadêmica, essas integrações são simuladas com dados locais e não realizam consultas a serviços oficiais</strong>. O protótipo consolida os registros disponíveis na sua própria API e permite operações de consulta e atualização no ambiente local. A partir desses registros, o SIGLoSUS oferece:</p>
 <ul>
 <li><strong>Prevê a demanda</strong> de cada medicamento por unidade, com base no histórico de consumo;</li>
 <li><strong>Antecipa o risco de desabastecimento</strong> e emite alertas antes que a falta aconteça;</li>
 <li><strong>Sugere transferências</strong> entre unidades com excedente e unidades com déficit;</li>
 <li><strong>Gera rotas de distribuição otimizadas</strong>, para que o medicamento chegue mais rápido e a um custo menor;</li>
-<li><strong>Rastreia as entregas</strong> até a confirmação de recebimento na ponta.</li>
+<li><strong>Registra posições reportadas pelo dispositivo</strong> e acompanha as entregas até a confirmação de recebimento; o envio automático de coordenadas depende do dispositivo e de conectividade.</li>
 </ul>
 <p>O objetivo final não é apenas ter uma gestão de estoque eficiente: é <strong>garantir que o medicamento esteja disponível quando e onde o paciente precisa</strong>, reduzindo a falta de remédios nas farmácias e, com isso, <strong>salvando vidas</strong>.</p>
 <p><strong>Escopo do sistema (o que está contemplado):</strong></p>
@@ -154,43 +177,45 @@
 <table>
 <thead>
 <tr>
-<th>Perfil (Ator)</th>
-<th>Descrição</th>
-<th>Principais responsabilidades no sistema</th>
+  <th>Perfil (Ator)</th>
+  <th>Descrição</th>
+  <th>Principais responsabilidades no sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Gestor de Assistência Farmacêutica</strong></td>
-<td>Profissional responsável pela gestão da assistência farmacêutica na região de saúde.</td>
-<td>Acompanha painéis, aprova transferências e requisições, configura parâmetros de estoque, analisa previsões e relatórios.</td>
+<tbody>
+<tr>
+  <td><strong>Gestor de Assistência Farmacêutica</strong></td>
+  <td>Profissional responsável pela gestão da assistência farmacêutica na região de saúde.</td>
+  <td>Acompanha painéis, aprova transferências e requisições, configura parâmetros de estoque, analisa previsões e relatórios.</td>
 </tr>
 <tr>
-<td><strong>Farmacêutico da Unidade</strong></td>
-<td>Farmacêutico responsável pelo estoque e pela dispensação em uma unidade de saúde (UBS/hospital).</td>
-<td>Consulta o estoque da unidade, registra movimentações e dispensações, confirma recebimentos e sinaliza necessidades.</td>
+  <td><strong>Farmacêutico da Unidade</strong></td>
+  <td>Farmacêutico responsável pelo estoque e pela dispensação em uma unidade de saúde (UBS/hospital).</td>
+  <td>Consulta o estoque da unidade, registra movimentações e dispensações, confirma recebimentos e sinaliza necessidades.</td>
 </tr>
 <tr>
-<td><strong>Almoxarife / Responsável pela CAF</strong></td>
-<td>Profissional que opera a Central de Abastecimento Farmacêutico.</td>
-<td>Registra entradas e saídas, atende requisições, prepara e despacha entregas, controla lotes e validade.</td>
+  <td><strong>Almoxarife / Responsável pela CAF</strong></td>
+  <td>Profissional que opera a Central de Abastecimento Farmacêutico.</td>
+  <td>Registra entradas e saídas, atende requisições, prepara e despacha entregas, controla lotes e validade.</td>
 </tr>
 <tr>
-<td><strong>Motorista / Entregador</strong></td>
-<td>Profissional que realiza a distribuição física dos medicamentos.</td>
-<td>Visualiza a rota, confirma a saída, registra a entrega e reporta ocorrências; opera em modo offline.</td>
+  <td><strong>Motorista / Entregador</strong></td>
+  <td>Profissional que realiza a distribuição física dos medicamentos.</td>
+  <td>Visualiza a rota, confirma a saída, registra a entrega e reporta ocorrências; possui fila local experimental para operações offline e sincronização na reconexão.</td>
 </tr>
 <tr>
-<td><strong>Administrador do Sistema</strong></td>
-<td>Profissional de TI responsável pela manutenção técnica e pela configuração do sistema.</td>
-<td>Gerencia usuários e perfis, configura integrações, monitora sincronizações e a auditoria.</td>
+  <td><strong>Administrador do Sistema</strong></td>
+  <td>Profissional de TI responsável pela manutenção técnica e pela configuração do sistema.</td>
+  <td>Gerencia usuários e perfis, configura integrações, monitora sincronizações e a auditoria.</td>
 </tr>
 <tr>
-<td><strong>Sistema de Saúde Externo</strong> <em>(ator secundário)</em></td>
-<td>Sistemas já utilizados pela rede (e-SUS APS, HÓRUS/SNA, BNAFAR).</td>
-<td>Fornecem e recebem dados de estoque e dispensação por meio de integração/API.</td>
+  <td><strong>Sistema de Saúde Externo</strong> <em>(ator secundário)</em></td>
+  <td>Sistemas já utilizados pela rede (e-SUS APS, HÓRUS/SNA, BNAFAR).</td>
+  <td>Fornecem e recebem dados de estoque e dispensação por meio de integração/API.</td>
 </tr>
-</tbody></table>
-<hr>
+</tbody>
+</table>
+<hr />
 <h1>2. Requisitos Gerais do Sistema</h1>
 <blockquote>
 <p><strong>Convenções de escrita (conforme material de referência):</strong></p>
@@ -206,258 +231,265 @@
 </blockquote>
 <p><strong>Evolução da numeração dos requisitos funcionais.</strong></p>
 <table>
-<thead><tr>
-<th>Escopo inicial</th>
-<th>Documentação consolidada</th>
-<th>Observação</th>
-</tr></thead><tbody>
-<tr>
-<td>RF01 — acesso por login e senha</td>
-<td>RF01</td>
-<td>sem alteração</td>
-</tr>
-<tr>
-<td>RF02 — logout</td>
-<td>RF03</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF03 — recuperação de senha</td>
-<td>RF02</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF04 — integração com sistema legado</td>
-<td>RF07</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF05 — consulta de estoque em tempo real</td>
-<td>RF09</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF06 — alertas de estoque</td>
-<td>RF11</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF07 — movimentação de estoque</td>
-<td>RF08</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF08 — configuração de níveis</td>
-<td>RF10</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF09 — sugestão de transferências</td>
-<td>RF13</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF10 — aprovação de transferências</td>
-<td>RF14</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF11 — geração de rotas</td>
-<td>RF15</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF12 — confirmação de recebimento</td>
-<td>RF17</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF13 — controle de lotes e validade</td>
-<td>RF18</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>RF14 — relatórios gerenciais</td>
-<td>RF21</td>
-<td>renumerado</td>
-</tr>
-<tr>
-<td>—</td>
-<td>RF04, RF05, RF06, RF16, RF19, RF20, RF22</td>
-<td>requisitos adicionados no detalhamento</td>
-</tr>
-</tbody></table>
-<p>Não foi feita renumeração arbitrária: cada identificador consolidado corresponde a um requisito efetivamente implementado ou parcialmente implementado, com rastreabilidade na Tabela 8 (seção 4.9).</p>
-<table>
 <thead>
 <tr>
-<th>Identificador</th>
-<th>Descrição</th>
-<th>Escopo</th>
-<th>Prioridade</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>RF01</strong></td>
-<td>O sistema deve permitir o acesso do usuário por meio de login e senha.</td>
-<td>Geral</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF02</strong></td>
-<td>O sistema deve permitir que o usuário recupere a senha esquecida.</td>
-<td>Geral</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF03</strong></td>
-<td>O sistema deve permitir a saída do usuário (logout).</td>
-<td>Geral</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF04</strong></td>
-<td>O sistema deve permitir o cadastro, a edição e a inativação de usuários, atribuindo-lhes perfis de acesso.</td>
-<td>Administração</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF05</strong></td>
-<td>O sistema deve permitir o cadastro e a manutenção das unidades de saúde (UBS, hospitais e centros de distribuição).</td>
-<td>Cadastros</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF06</strong></td>
-<td>O sistema deve permitir o cadastro e a manutenção do catálogo de medicamentos (nome, princípio ativo, apresentação, código CATMAT e indicação de controlado).</td>
-<td>Cadastros</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF07</strong></td>
-<td>O sistema deve integrar-se, por meio de API, aos sistemas de saúde já utilizados (e-SUS APS, HÓRUS/SNA e BNAFAR) para importar e exportar dados de estoque e de dispensação.</td>
-<td>Integração</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF08</strong></td>
-<td>O sistema deve registrar todas as movimentações de estoque (entradas, saídas, transferências e ajustes), vinculando o lote e o usuário responsável.</td>
-<td>Estoque</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF09</strong></td>
-<td>O sistema deve consolidar e apresentar, em tempo real, a posição de estoque de cada medicamento em cada unidade.</td>
-<td>Estoque</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF10</strong></td>
-<td>O sistema deve permitir a configuração dos níveis mínimo e de segurança de estoque por medicamento e por unidade.</td>
-<td>Estoque</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF11</strong></td>
-<td>O sistema deve gerar alertas automáticos de risco de desabastecimento quando o estoque atingir o nível mínimo configurado.</td>
-<td>Monitoramento</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF12</strong></td>
-<td>O sistema deve prever a demanda de cada medicamento por unidade e por período, com base no histórico de consumo.</td>
-<td>Inteligência</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF13</strong></td>
-<td>O sistema deve sugerir transferências de medicamentos entre unidades com excedente e unidades com déficit.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF14</strong></td>
-<td>O sistema deve permitir que o gestor aprove ou rejeite as transferências sugeridas.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF15</strong></td>
-<td>O sistema deve gerar rotas de distribuição otimizadas, considerando a distância, a prioridade das unidades e a capacidade do veículo.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF16</strong></td>
-<td>O sistema deve permitir o despacho e o acompanhamento das entregas em tempo real.</td>
-<td>Distribuição</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF17</strong></td>
-<td>O sistema deve permitir a confirmação de recebimento da entrega pela unidade de destino.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF18</strong></td>
-<td>O sistema deve controlar lotes e datas de validade, aplicando a regra de saída por validade.</td>
-<td>Estoque</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF19</strong></td>
-<td>O sistema deve permitir o registro da dispensação de medicamentos ao paciente.</td>
-<td>Assistência</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF20</strong></td>
-<td>O sistema deve gerenciar as requisições de medicamentos enviadas pelas unidades ao centro de distribuição.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
-</tr>
-<tr>
-<td><strong>RF21</strong></td>
-<td>O sistema deve emitir relatórios e painéis gerenciais (dashboards) de estoque, consumo, desabastecimento e entregas.</td>
-<td>Gestão</td>
-<td>Importante</td>
-</tr>
-<tr>
-<td><strong>RF22</strong></td>
-<td>O sistema deve registrar logs de auditoria de todas as operações críticas realizadas pelos usuários.</td>
-<td>Segurança</td>
-<td>Essencial</td>
-</tr>
-</tbody></table>
-<p><strong>Situação de implementação dos requisitos funcionais.</strong> A tabela acima registra os requisitos <strong>estabelecidos</strong>. A implementação foi verificada requisito a requisito contra o código-fonte e a suíte de testes:</p>
-<table>
-<thead>
-<tr>
-<th>Situação</th>
-<th>Requisitos</th>
-<th>Observação</th>
+  <th>Escopo inicial</th>
+  <th>Documentação consolidada</th>
+  <th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Implementado</td>
-<td>RF01, RF03, RF04, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF17, RF18, RF19, RF20, RF21, RF22</td>
-<td>Funcionalidade correspondente no código, com teste automatizado e endpoint da API.</td>
+  <td>RF01 — acesso por login e senha</td>
+  <td>RF01</td>
+  <td>sem alteração</td>
 </tr>
 <tr>
-<td>Parcial</td>
-<td>RF02, RF07, RF16</td>
-<td>Detalhadas nas linhas seguintes.</td>
+  <td>RF02 — logout</td>
+  <td>RF03</td>
+  <td>renumerado</td>
 </tr>
 <tr>
-<td>Não implementado</td>
-<td>—</td>
-<td>Nenhum requisito foi classificado como ausente nesta versão.</td>
+  <td>RF03 — recuperação de senha</td>
+  <td>RF02</td>
+  <td>renumerado</td>
 </tr>
-</tbody></table>
+<tr>
+  <td>RF04 — integração com sistema legado</td>
+  <td>RF07</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF05 — consulta de estoque em tempo real</td>
+  <td>RF09</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF06 — alertas de estoque</td>
+  <td>RF11</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF07 — movimentação de estoque</td>
+  <td>RF08</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF08 — configuração de níveis</td>
+  <td>RF10</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF09 — sugestão de transferências</td>
+  <td>RF13</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF10 — aprovação de transferências</td>
+  <td>RF14</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF11 — geração de rotas</td>
+  <td>RF15</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF12 — confirmação de recebimento</td>
+  <td>RF17</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF13 — controle de lotes e validade</td>
+  <td>RF18</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>RF14 — relatórios gerenciais</td>
+  <td>RF21</td>
+  <td>renumerado</td>
+</tr>
+<tr>
+  <td>—</td>
+  <td>RF04, RF05, RF06, RF16, RF19, RF20, RF22</td>
+  <td>requisitos adicionados no detalhamento</td>
+</tr>
+</tbody>
+</table>
+<p>Não foi feita renumeração arbitrária: cada identificador consolidado corresponde a um requisito efetivamente implementado ou parcialmente implementado, com rastreabilidade na Tabela 8 (seção 4.9).</p>
+<table>
+<thead>
+<tr>
+  <th>Identificador</th>
+  <th>Descrição</th>
+  <th>Escopo</th>
+  <th>Prioridade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>RF01</strong></td>
+  <td>O sistema deve permitir o acesso do usuário por meio de login e senha.</td>
+  <td>Geral</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF02</strong></td>
+  <td>O sistema deve permitir que o usuário recupere a senha esquecida.</td>
+  <td>Geral</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF03</strong></td>
+  <td>O sistema deve permitir a saída do usuário (logout).</td>
+  <td>Geral</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF04</strong></td>
+  <td>O sistema deve permitir o cadastro, a edição e a inativação de usuários, atribuindo-lhes perfis de acesso.</td>
+  <td>Administração</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF05</strong></td>
+  <td>O sistema deve permitir o cadastro e a manutenção das unidades de saúde (UBS, hospitais e centros de distribuição).</td>
+  <td>Cadastros</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF06</strong></td>
+  <td>O sistema deve permitir o cadastro e a manutenção do catálogo de medicamentos (nome, princípio ativo, apresentação, código CATMAT e indicação de controlado).</td>
+  <td>Cadastros</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF07</strong></td>
+  <td>O sistema deve integrar-se, por meio de API, aos sistemas de saúde já utilizados (e-SUS APS, HÓRUS/SNA e BNAFAR) para importar e exportar dados de estoque e de dispensação.</td>
+  <td>Integração</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF08</strong></td>
+  <td>O sistema deve registrar todas as movimentações de estoque (entradas, saídas, transferências e ajustes), vinculando o lote e o usuário responsável.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF09</strong></td>
+  <td>O sistema deve consolidar e apresentar, em tempo real, a posição de estoque de cada medicamento em cada unidade.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF10</strong></td>
+  <td>O sistema deve permitir a configuração dos níveis mínimo e de segurança de estoque por medicamento e por unidade.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF11</strong></td>
+  <td>O sistema deve gerar alertas automáticos de risco de desabastecimento quando o estoque atingir o nível mínimo configurado.</td>
+  <td>Monitoramento</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF12</strong></td>
+  <td>O sistema deve prever a demanda de cada medicamento por unidade e por período, com base no histórico de consumo.</td>
+  <td>Inteligência</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF13</strong></td>
+  <td>O sistema deve sugerir transferências de medicamentos entre unidades com excedente e unidades com déficit.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF14</strong></td>
+  <td>O sistema deve permitir que o gestor aprove ou rejeite as transferências sugeridas.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF15</strong></td>
+  <td>O sistema deve gerar rotas de distribuição otimizadas, considerando a distância, a prioridade das unidades e a capacidade do veículo.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF16</strong></td>
+  <td>O sistema deve permitir o despacho e o acompanhamento das entregas em tempo real.</td>
+  <td>Distribuição</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF17</strong></td>
+  <td>O sistema deve permitir a confirmação de recebimento da entrega pela unidade de destino.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF18</strong></td>
+  <td>O sistema deve controlar lotes e datas de validade, aplicando a regra de saída por validade.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF19</strong></td>
+  <td>O sistema deve permitir o registro da dispensação de medicamentos ao paciente.</td>
+  <td>Assistência</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF20</strong></td>
+  <td>O sistema deve gerenciar as requisições de medicamentos enviadas pelas unidades ao centro de distribuição.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
+</tr>
+<tr>
+  <td><strong>RF21</strong></td>
+  <td>O sistema deve emitir relatórios e painéis gerenciais (dashboards) de estoque, consumo, desabastecimento e entregas.</td>
+  <td>Gestão</td>
+  <td>Importante</td>
+</tr>
+<tr>
+  <td><strong>RF22</strong></td>
+  <td>O sistema deve registrar logs de auditoria de todas as operações críticas realizadas pelos usuários.</td>
+  <td>Segurança</td>
+  <td>Essencial</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Situação de implementação dos requisitos funcionais.</strong> A tabela acima registra os requisitos <strong>estabelecidos</strong>. A implementação foi verificada requisito a requisito contra o código-fonte e a suíte de testes:</p>
+<table>
+<thead>
+<tr>
+  <th>Situação</th>
+  <th>Requisitos</th>
+  <th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Implementado</td>
+  <td>RF01, RF03, RF04, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF17, RF18, RF19, RF20, RF21, RF22</td>
+  <td>Funcionalidade correspondente no código, com teste automatizado e endpoint da API.</td>
+</tr>
+<tr>
+  <td>Parcial</td>
+  <td>RF02, RF07, RF16</td>
+  <td>Detalhadas nas linhas seguintes.</td>
+</tr>
+<tr>
+  <td>Não implementado</td>
+  <td>—</td>
+  <td>Nenhum requisito foi classificado como ausente nesta versão.</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><strong>RF02 (parcial)</strong> — o fluxo de recuperação existe em código (<code>RecuperacaoSenhaService</code>): solicitação, token temporário aleatório de uso único com expiração de 30 minutos, redefinição da senha e invalidação das sessões abertas. A *entrega* do token ao usuário depende de um serviço de e-mail (dependência externa); fora do ambiente de produção o token é devolvido na resposta, para demonstração.</li>
+<li><strong>RF02 (parcial)</strong> — o fluxo de recuperação existe em código (<code>RecuperacaoSenhaService</code>): solicitação, token temporário aleatório de uso único com expiração de 30 minutos, redefinição da senha e invalidação das sessões abertas. A <em>entrega</em> do token ao usuário depende de um serviço de e-mail (dependência externa); fora do ambiente de produção o token é devolvido na resposta, para demonstração.</li>
 <li><strong>RF07 (parcial)</strong> — o padrão Adapter, o contrato de integração e o serviço de sincronização estão implementados, mas a sincronização consome dados locais de demonstração. A conexão com as APIs oficiais de e-SUS APS, HÓRUS/SNA e BNAFAR exige credenciais e ambiente de homologação concedidos por terceiros.</li>
 <li><strong>RF16 (parcial)</strong> — despacho, acompanhamento por situação e rastreamento de posição estão implementados (<code>PosicaoService</code>). O protótipo <strong>não</strong> integra hardware GPS: as coordenadas informadas provêm do dispositivo que reportou a posição, e não de um módulo de posicionamento dedicado.</li>
 </ul>
@@ -465,106 +497,108 @@
 <table>
 <thead>
 <tr>
-<th>Identificador</th>
-<th>Descrição</th>
-<th>Categoria</th>
-<th>Escopo</th>
-<th>Prioridade</th>
+  <th>Identificador</th>
+  <th>Descrição</th>
+  <th>Categoria</th>
+  <th>Escopo</th>
+  <th>Prioridade</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>RNF01</strong></td>
-<td>O sistema deve criptografar as senhas dos usuários e os dados sensíveis, tanto em trânsito (TLS) quanto em repouso.</td>
-<td>Segurança</td>
-<td>Geral</td>
-<td>Essencial</td>
+<tbody>
+<tr>
+  <td><strong>RNF01</strong></td>
+  <td>O sistema deve criptografar as senhas dos usuários e os dados sensíveis, tanto em trânsito (TLS) quanto em repouso.</td>
+  <td>Segurança</td>
+  <td>Geral</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF02</strong></td>
-<td>O sistema deve tratar os dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD).</td>
-<td>Segurança / Conformidade</td>
-<td>Geral</td>
-<td>Essencial</td>
+  <td><strong>RNF02</strong></td>
+  <td>O sistema deve tratar os dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD).</td>
+  <td>Segurança / Conformidade</td>
+  <td>Geral</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF03</strong></td>
-<td>O sistema deve responder às consultas de estoque em tempo real em até 2 segundos.</td>
-<td>Desempenho</td>
-<td>Estoque</td>
-<td>Essencial</td>
+  <td><strong>RNF03</strong></td>
+  <td>O sistema deve responder às consultas de estoque em tempo real em até 2 segundos.</td>
+  <td>Desempenho</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF04</strong></td>
-<td>O sistema deve calcular e apresentar uma rota otimizada em até 60 segundos.</td>
-<td>Desempenho</td>
-<td>Distribuição</td>
-<td>Importante</td>
+  <td><strong>RNF04</strong></td>
+  <td>O sistema deve calcular e apresentar uma rota otimizada em até 60 segundos.</td>
+  <td>Desempenho</td>
+  <td>Distribuição</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF05</strong></td>
-<td>O sistema deve estar disponível 99,5% do tempo, de forma contínua (24 horas por dia, 7 dias por semana).</td>
-<td>Disponibilidade</td>
-<td>Geral</td>
-<td>Essencial</td>
+  <td><strong>RNF05</strong></td>
+  <td>O sistema deve estar disponível 99,5% do tempo, de forma contínua (24 horas por dia, 7 dias por semana).</td>
+  <td>Disponibilidade</td>
+  <td>Geral</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF06</strong></td>
-<td>O sistema deve apresentar interface responsiva, de fácil uso e acessível, atendendo ao nível AA das diretrizes WCAG 2.1.</td>
-<td>Usabilidade / Acessibilidade</td>
-<td>Geral</td>
-<td>Importante</td>
+  <td><strong>RNF06</strong></td>
+  <td>O sistema deve apresentar interface responsiva, de fácil uso e acessível, atendendo ao nível AA das diretrizes WCAG 2.1.</td>
+  <td>Usabilidade / Acessibilidade</td>
+  <td>Geral</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF07</strong></td>
-<td>O sistema deve disponibilizar interfaces de programação (APIs REST) e adotar o padrão HL7 FHIR para interoperabilidade com os sistemas de saúde.</td>
-<td>Interoperabilidade</td>
-<td>Integração</td>
-<td>Essencial</td>
+  <td><strong>RNF07</strong></td>
+  <td>O sistema deve disponibilizar interfaces de programação (APIs REST) e adotar o padrão HL7 FHIR para interoperabilidade com os sistemas de saúde.</td>
+  <td>Interoperabilidade</td>
+  <td>Integração</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF08</strong></td>
-<td>O sistema deve suportar, no mínimo, 500 unidades de saúde e 5.000 usuários simultâneos sem degradação.</td>
-<td>Escalabilidade</td>
-<td>Geral</td>
-<td>Importante</td>
+  <td><strong>RNF08</strong></td>
+  <td>O sistema deve suportar, no mínimo, 500 unidades de saúde e 5.000 usuários simultâneos sem degradação.</td>
+  <td>Escalabilidade</td>
+  <td>Geral</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF09</strong></td>
-<td>O sistema deve garantir a integridade das operações de estoque por meio de transações consistentes (tudo ou nada).</td>
-<td>Confiabilidade</td>
-<td>Estoque</td>
-<td>Essencial</td>
+  <td><strong>RNF09</strong></td>
+  <td>O sistema deve garantir a integridade das operações de estoque por meio de transações consistentes (tudo ou nada).</td>
+  <td>Confiabilidade</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RNF10</strong></td>
-<td>O sistema deve manter os registros de auditoria por, no mínimo, 5 anos.</td>
-<td>Auditabilidade</td>
-<td>Segurança</td>
-<td>Importante</td>
+  <td><strong>RNF10</strong></td>
+  <td>O sistema deve manter os registros de auditoria por, no mínimo, 5 anos.</td>
+  <td>Auditabilidade</td>
+  <td>Segurança</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF11</strong></td>
-<td>O sistema deve funcionar nos principais navegadores modernos e em dispositivos móveis.</td>
-<td>Portabilidade</td>
-<td>Geral</td>
-<td>Importante</td>
+  <td><strong>RNF11</strong></td>
+  <td>O sistema deve funcionar nos principais navegadores modernos e em dispositivos móveis.</td>
+  <td>Portabilidade</td>
+  <td>Geral</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF12</strong></td>
-<td>O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade.</td>
-<td>Manutenibilidade</td>
-<td>Geral</td>
-<td>Importante</td>
+  <td><strong>RNF12</strong></td>
+  <td>O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade.</td>
+  <td>Manutenibilidade</td>
+  <td>Geral</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RNF13</strong></td>
-<td>O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão.</td>
-<td>Disponibilidade</td>
-<td>Distribuição</td>
-<td>Importante</td>
+  <td><strong>RNF13</strong></td>
+  <td>O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão.</td>
+  <td>Disponibilidade</td>
+  <td>Distribuição</td>
+  <td>Importante</td>
 </tr>
-</tbody></table>
-<p><strong>Situação de atendimento dos requisitos não funcionais.</strong> A tabela acima expressa os requisitos <strong>estabelecidos</strong>. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 72 testes, verificação de tipos e compilação) e parcialmente às demais:</p>
+</tbody>
+</table>
+<p><strong>Situação de atendimento dos requisitos não funcionais.</strong> A tabela acima expressa os requisitos <strong>estabelecidos</strong>. O protótipo apresenta mecanismos de teste para RNF12 (76 casos definidos em 8 arquivos, além do teste de regressão independente; execução completa em Vitest ainda não reproduzida nesta auditoria) e parcialmente às demais:</p>
 <ul>
 <li><strong>Atendidos parcialmente</strong> — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).</li>
 <li><strong>Metas não verificadas nesta versão</strong> — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).</li>
@@ -574,69 +608,71 @@
 <table>
 <thead>
 <tr>
-<th>Identificador</th>
-<th>Descrição</th>
-<th>Escopo</th>
-<th>Prioridade</th>
+  <th>Identificador</th>
+  <th>Descrição</th>
+  <th>Escopo</th>
+  <th>Prioridade</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>RN01</strong></td>
-<td>Um medicamento só pode ser transferido de uma unidade que possua estoque acima do seu nível de segurança.</td>
-<td>Estoque</td>
-<td>Essencial</td>
+<tbody>
+<tr>
+  <td><strong>RN01</strong></td>
+  <td>Um medicamento só pode ser transferido de uma unidade que possua estoque acima do seu nível de segurança.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RN02</strong></td>
-<td>A distribuição e a dispensação de medicamentos devem seguir a regra FEFO (<em>First Expired, First Out</em>): o primeiro que expira é o primeiro que sai.</td>
-<td>Estoque</td>
-<td>Essencial</td>
+  <td><strong>RN02</strong></td>
+  <td>A distribuição e a dispensação de medicamentos devem seguir a regra FEFO (<em>First Expired, First Out</em>): o primeiro que expira é o primeiro que sai.</td>
+  <td>Estoque</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RN03</strong></td>
-<td>Medicamentos com validade inferior a 90 dias não podem ser transferidos entre unidades.</td>
-<td>Estoque</td>
-<td>Importante</td>
+  <td><strong>RN03</strong></td>
+  <td>Medicamentos com validade inferior a 90 dias não podem ser transferidos entre unidades.</td>
+  <td>Estoque</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RN04</strong></td>
-<td>Unidades com estoque abaixo do nível mínimo têm prioridade no recebimento de entregas.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
+  <td><strong>RN04</strong></td>
+  <td>Unidades com estoque abaixo do nível mínimo têm prioridade no recebimento de entregas.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RN05</strong></td>
-<td>Medicamentos sujeitos a controle especial (Portaria SVS/MS nº 344/98) exigem rastreabilidade por lote e conferência por dois responsáveis.</td>
-<td>Assistência</td>
-<td>Essencial</td>
+  <td><strong>RN05</strong></td>
+  <td>Medicamentos sujeitos a controle especial (Portaria SVS/MS nº 344/98) exigem rastreabilidade por lote e conferência por dois responsáveis.</td>
+  <td>Assistência</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RN06</strong></td>
-<td>O abastecimento deve priorizar os medicamentos da RENAME (componente básico da assistência farmacêutica).</td>
-<td>Distribuição</td>
-<td>Importante</td>
+  <td><strong>RN06</strong></td>
+  <td>O abastecimento deve priorizar os medicamentos da RENAME (componente básico da assistência farmacêutica).</td>
+  <td>Distribuição</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RN07</strong></td>
-<td>As rotas de entrega devem respeitar a capacidade de carga do veículo e a jornada de trabalho do motorista.</td>
-<td>Distribuição</td>
-<td>Essencial</td>
+  <td><strong>RN07</strong></td>
+  <td>As rotas de entrega devem respeitar a capacidade de carga do veículo e a jornada de trabalho do motorista.</td>
+  <td>Distribuição</td>
+  <td>Essencial</td>
 </tr>
 <tr>
-<td><strong>RN08</strong></td>
-<td>Transferências entre unidades devem priorizar as unidades mais próximas, a fim de reduzir custo e tempo de entrega.</td>
-<td>Distribuição</td>
-<td>Importante</td>
+  <td><strong>RN08</strong></td>
+  <td>Transferências entre unidades devem priorizar as unidades mais próximas, a fim de reduzir custo e tempo de entrega.</td>
+  <td>Distribuição</td>
+  <td>Importante</td>
 </tr>
 <tr>
-<td><strong>RN09</strong></td>
-<td>Requisições acima do limite de valor definido pela gestão exigem aprovação do gestor de assistência farmacêutica.</td>
-<td>Gestão</td>
-<td>Importante</td>
+  <td><strong>RN09</strong></td>
+  <td>Requisições acima do limite de valor definido pela gestão exigem aprovação do gestor de assistência farmacêutica.</td>
+  <td>Gestão</td>
+  <td>Importante</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>As nove regras estão implementadas em <code>RegrasNegocio</code> e aplicadas em fluxos reais: RN01/RN03 na aprovação de transferências; RN02 na baixa de estoque; RN04/RN06 na priorização de rotas; RN05 na dispensação de controlados; RN07 na validação da rota; RN08 na sugestão de transferências; e RN09 na aprovação de requisições.</p>
-<hr>
+<hr />
 <h1>3. Diagramas UML</h1>
 <h2>3.1. Diagrama de Casos de Uso</h2>
 <p>O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacionamentos de <strong><code>&lt;&lt;include&gt;&gt;</code></strong> (obrigatório) e <strong><code>&lt;&lt;extend&gt;&gt;</code></strong> (opcional). Todos os casos de uso estão associados a pelo menos um requisito funcional e mantêm linha de interação com o ator.</p>
@@ -647,7 +683,7 @@
 <li><strong><code>&lt;&lt;include&gt;&gt;</code>:</strong> um caso de uso <strong>dispara obrigatoriamente</strong> outro (dependência);</li>
 <li><strong><code>&lt;&lt;extend&gt;&gt;</code>:</strong> um caso de uso <strong>opcional</strong> ocorre dentro do contexto de outro.</li>
 </ul>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/01-casos-de-uso.png" alt="Diagrama de Casos de Uso do SIGLoSUS"></p>
+<p><img src="../imagens/01-casos-de-uso.png" alt="Diagrama de Casos de Uso do SIGLoSUS" /></p>
 <p><strong>Figura 1 – Diagrama de Casos de Uso do SIGLoSUS.</strong></p>
 <blockquote>
 <p><strong>Observação sobre as dependências (<code>&lt;&lt;include&gt;&gt;</code>):</strong></p>
@@ -662,598 +698,640 @@
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC01 – Autenticar</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC01 – Autenticar</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Usuário (qualquer perfil)</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Usuário (qualquer perfil)</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>N/A</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>N/A</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve as etapas de acesso do usuário ao sistema por meio de login e senha.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve as etapas de acesso do usuário ao sistema por meio de login e senha.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>O usuário deve possuir cadastro ativo e acesso à internet.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>O usuário deve possuir cadastro ativo e acesso à internet.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>Sendo os dados válidos, o usuário é redirecionado ao painel inicial conforme o seu perfil.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>Sendo os dados válidos, o usuário é redirecionado ao painel inicial conforme o seu perfil.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Informar e-mail (ou CPF) e senha</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Informar e-mail (ou CPF) e senha</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>2 – Validar as credenciais informadas</td>
+  <td></td>
+  <td>2 – Validar as credenciais informadas</td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Verificar o perfil de acesso do usuário</td>
+  <td></td>
+  <td>3 – Verificar o perfil de acesso do usuário</td>
 </tr>
 <tr>
-<td>4 – Confirmar o acesso</td>
-<td></td>
+  <td>4 – Confirmar o acesso</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>5 – Registrar o acesso no log de auditoria e liberar a aplicação</td>
+  <td></td>
+  <td>5 – Registrar o acesso no log de auditoria e liberar a aplicação</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Se as credenciais forem inválidas, o acesso não é concedido.</td>
+<tbody>
+<tr>
+  <td>Se as credenciais forem inválidas, o acesso não é concedido.</td>
 </tr>
 <tr>
-<td>O acesso é bloqueado temporariamente após 5 tentativas incorretas.</td>
+  <td>O acesso é bloqueado temporariamente após 5 tentativas incorretas.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 1 – Especificação do caso de uso Autenticar.</strong></p>
-<hr>
+<hr />
 <h3>UC07 – Sincronizar com sistemas de origem</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC07 – Sincronizar com sistemas de origem</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC07 – Sincronizar com sistemas de origem</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Administrador do Sistema</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Administrador do Sistema</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>Sistema de Saúde Externo (e-SUS APS, HÓRUS/SNA, BNAFAR)</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>Sistema de Saúde Externo (e-SUS APS, HÓRUS/SNA, BNAFAR)</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a integração do SIGLoSUS com os sistemas já utilizados pela rede para importar/exportar dados de estoque e dispensação.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a integração do SIGLoSUS com os sistemas já utilizados pela rede para importar/exportar dados de estoque e dispensação.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>As integrações devem estar configuradas e os serviços externos disponíveis.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>As integrações devem estar configuradas e os serviços externos disponíveis.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>Os dados de estoque e dispensação são consolidados e ficam disponíveis para consulta em tempo real.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>Na demonstração, os dados simulados são registrados na base local e ficam disponíveis para consulta pela API; a integração com sistemas oficiais ainda depende de homologação.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Solicitar a sincronização (manual ou agendada)</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Solicitar a sincronização (manual ou agendada)</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>2 – Consultar os sistemas externos via API</td>
+  <td></td>
+  <td>2 – Consultar os sistemas externos via API</td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Receber os dados de estoque e dispensação</td>
+  <td></td>
+  <td>3 – Receber os dados de estoque e dispensação</td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Validar e conciliar os dados recebidos</td>
+  <td></td>
+  <td>4 – Validar e conciliar os dados recebidos</td>
 </tr>
 <tr>
-<td></td>
-<td>5 – Atualizar a base consolidada de estoque</td>
+  <td></td>
+  <td>5 – Atualizar a base consolidada de estoque</td>
 </tr>
 <tr>
-<td></td>
-<td>6 – Registrar o resultado e possíveis divergências da sincronização</td>
+  <td></td>
+  <td>6 – Registrar o resultado e possíveis divergências da sincronização</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Se um sistema externo estiver indisponível, a última sincronização válida é mantida e o erro é registrado.</td>
+<tbody>
+<tr>
+  <td>Se um sistema externo estiver indisponível, a última sincronização válida é mantida e o erro é registrado.</td>
 </tr>
 <tr>
-<td>Dados divergentes são sinalizados para conferência manual.</td>
+  <td>Dados divergentes são sinalizados para conferência manual.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 2 – Especificação do caso de uso Sincronizar com sistemas de origem.</strong></p>
-<hr>
+<hr />
 <h3>UC09 – Consultar estoque em tempo real</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC09 – Consultar estoque em tempo real</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC09 – Consultar estoque em tempo real</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Farmacêutico / Almoxarife / Gestor</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Farmacêutico / Almoxarife / Gestor</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>N/A</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>N/A</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a consulta consolidada da posição de estoque por medicamento e por unidade.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a consulta consolidada da posição de estoque por medicamento e por unidade.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>O usuário deve estar autenticado e possuir dados de estoque sincronizados.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>O usuário deve estar autenticado e possuir dados de estoque sincronizados.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>O sistema apresenta a posição de estoque atualizada e os respectivos alertas.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>O sistema apresenta a posição de estoque atualizada e os respectivos alertas.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Selecionar filtros (medicamento, unidade, período)</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Selecionar filtros (medicamento, unidade, período)</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>2 – Recuperar os dados consolidados de estoque</td>
+  <td></td>
+  <td>2 – Recuperar os dados consolidados de estoque</td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Calcular a situação em relação aos níveis mínimo e de segurança</td>
+  <td></td>
+  <td>3 – Calcular a situação em relação aos níveis mínimo e de segurança</td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Apresentar a posição de estoque e os alertas associados</td>
+  <td></td>
+  <td>4 – Apresentar a posição de estoque e os alertas associados</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>A consulta deve refletir a última sincronização realizada.</td>
+<tbody>
+<tr>
+  <td>A consulta deve refletir a última sincronização realizada.</td>
 </tr>
 <tr>
-<td>Medicamentos abaixo do nível mínimo são destacados visualmente.</td>
+  <td>Medicamentos abaixo do nível mínimo são destacados visualmente.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 3 – Especificação do caso de uso Consultar estoque em tempo real.</strong></p>
-<hr>
+<hr />
 <h3>UC13 – Sugerir transferência entre unidades</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC13 – Sugerir transferência entre unidades</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC13 – Sugerir transferência entre unidades</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Gestor de Assistência Farmacêutica</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Gestor de Assistência Farmacêutica</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>N/A</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>N/A</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a geração automática de sugestões de redistribuição de medicamentos entre unidades com excedente e unidades com déficit.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a geração automática de sugestões de redistribuição de medicamentos entre unidades com excedente e unidades com déficit.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>O estoque deve estar sincronizado e a previsão de demanda deve ter sido calculada (UC12).</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>O estoque deve estar sincronizado e a previsão de demanda deve ter sido calculada (UC12).</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>As sugestões de transferência ficam disponíveis para aprovação.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>As sugestões de transferência ficam disponíveis para aprovação.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Acessar o painel de redistribuição</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Acessar o painel de redistribuição</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>2 – Identificar unidades com excedente e unidades com déficit</td>
+  <td></td>
+  <td>2 – Identificar unidades com excedente e unidades com déficit</td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Verificar as regras de negócio (nível de segurança, FEFO, validade, proximidade)</td>
+  <td></td>
+  <td>3 – Verificar as regras de negócio (nível de segurança, FEFO, validade, proximidade)</td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Calcular e apresentar as sugestões de transferência</td>
+  <td></td>
+  <td>4 – Calcular e apresentar as sugestões de transferência</td>
 </tr>
 <tr>
-<td>5 – Selecionar a sugestão desejada</td>
-<td></td>
+  <td>5 – Selecionar a sugestão desejada</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>6 – Encaminhar a sugestão para aprovação (UC14)</td>
+  <td></td>
+  <td>6 – Encaminhar a sugestão para aprovação (UC14)</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Não pode ser sugerida transferência de unidade com estoque abaixo do nível de segurança (RN01).</td>
+<tbody>
+<tr>
+  <td>Não pode ser sugerida transferência de unidade com estoque abaixo do nível de segurança (RN01).</td>
 </tr>
 <tr>
-<td>Medicamentos com validade inferior a 90 dias não podem ser transferidos (RN03).</td>
+  <td>Medicamentos com validade inferior a 90 dias não podem ser transferidos (RN03).</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 4 – Especificação do caso de uso Sugerir transferência entre unidades.</strong></p>
-<hr>
+<hr />
 <h3>UC14 – Aprovar transferência</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC14 – Aprovar transferência</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC14 – Aprovar transferência</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Gestor de Assistência Farmacêutica</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Gestor de Assistência Farmacêutica</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>N/A</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>N/A</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a análise e a aprovação (ou rejeição) de uma transferência sugerida.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a análise e a aprovação (ou rejeição) de uma transferência sugerida.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>Deve existir ao menos uma sugestão de transferência pendente.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>Deve existir ao menos uma sugestão de transferência pendente.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>Aprovada, a transferência é registrada, a quantidade é baixada do estoque de origem (mercadoria em trânsito) e passa a compor as entregas a serem roteirizadas. O crédito no destino ocorre na confirmação de recebimento (UC18).</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>Aprovada, a transferência é registrada, a quantidade é baixada do estoque de origem (mercadoria em trânsito) e passa a compor as entregas a serem roteirizadas. O crédito no destino ocorre na confirmação de recebimento (UC18).</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Analisar a sugestão de transferência</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Analisar a sugestão de transferência</td>
+  <td></td>
 </tr>
 <tr>
-<td>2 – Aprovar ou rejeitar a sugestão</td>
-<td></td>
+  <td>2 – Aprovar ou rejeitar a sugestão</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Validar as regras de negócio aplicáveis</td>
+  <td></td>
+  <td>3 – Validar as regras de negócio aplicáveis</td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Registrar a decisão, atualizar a situação da transferência e dar baixa na origem</td>
+  <td></td>
+  <td>4 – Registrar a decisão, atualizar a situação da transferência e dar baixa na origem</td>
 </tr>
 <tr>
-<td></td>
-<td>5 – Notificar as unidades envolvidas</td>
+  <td></td>
+  <td>5 – Notificar as unidades envolvidas</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>A aprovação exige a conferência das regras de negócio (RN01, RN03, RN08).</td>
+<tbody>
+<tr>
+  <td>A aprovação exige a conferência das regras de negócio (RN01, RN03, RN08).</td>
 </tr>
 <tr>
-<td>Uma transferência rejeitada retorna ao painel com a justificativa.</td>
+  <td>Uma transferência rejeitada retorna ao painel com a justificativa.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 5 – Especificação do caso de uso Aprovar transferência.</strong></p>
-<hr>
+<hr />
 <h3>UC16 – Gerar rota de distribuição</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC16 – Gerar rota de distribuição</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC16 – Gerar rota de distribuição</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Gestor de Assistência Farmacêutica</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Gestor de Assistência Farmacêutica</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>Almoxarife / CAF</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>Almoxarife / CAF</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a geração de uma rota otimizada para a distribuição dos medicamentos até as unidades de destino.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a geração de uma rota otimizada para a distribuição dos medicamentos até as unidades de destino.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>Deve haver transferências aprovadas ou requisições a entregar; veículo e motorista devem estar definidos.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>Deve haver transferências aprovadas ou requisições a entregar; veículo e motorista devem estar definidos.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>A rota é gerada, sequenciando as paradas, e fica disponível para despacho.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>A rota é gerada, sequenciando as paradas, e fica disponível para despacho.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1 – Selecionar as unidades de destino e o veículo</td>
-<td></td>
+<tbody>
+<tr>
+  <td>1 – Selecionar as unidades de destino e o veículo</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>2 – Recuperar a posição de estoque e as prioridades (UC09)</td>
+  <td></td>
+  <td>2 – Recuperar a posição de estoque e as prioridades (UC09)</td>
 </tr>
 <tr>
-<td></td>
-<td>3 – Calcular a melhor sequência de paradas (distância, prioridade, capacidade)</td>
+  <td></td>
+  <td>3 – Calcular a melhor sequência de paradas (distância, prioridade, capacidade)</td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Apresentar a rota com distância e tempo estimados</td>
+  <td></td>
+  <td>4 – Apresentar a rota com distância e tempo estimados</td>
 </tr>
 <tr>
-<td>5 – Confirmar a rota</td>
-<td></td>
+  <td>5 – Confirmar a rota</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>6 – Disponibilizar a rota para o despacho (UC17)</td>
+  <td></td>
+  <td>6 – Disponibilizar a rota para o despacho (UC17)</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>A rota deve respeitar a capacidade de carga do veículo e a jornada do motorista (RN07).</td>
+<tbody>
+<tr>
+  <td>A rota deve respeitar a capacidade de carga do veículo e a jornada do motorista (RN07).</td>
 </tr>
 <tr>
-<td>Unidades com estoque abaixo do mínimo têm prioridade (RN04).</td>
+  <td>Unidades com estoque abaixo do mínimo têm prioridade (RN04).</td>
 </tr>
 <tr>
-<td>Em empate de prioridade, o abastecimento de medicamentos da RENAME é priorizado (RN06).</td>
+  <td>Em empate de prioridade, o abastecimento de medicamentos da RENAME é priorizado (RN06).</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 6 – Especificação do caso de uso Gerar rota de distribuição.</strong></p>
-<hr>
+<hr />
 <h3>UC18 – Confirmar recebimento</h3>
 <table>
 <thead>
 <tr>
-<th>Campo</th>
-<th>Descrição</th>
+  <th>Campo</th>
+  <th>Descrição</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Nome do caso de uso</strong></td>
-<td>UC18 – Confirmar recebimento</td>
+<tbody>
+<tr>
+  <td><strong>Nome do caso de uso</strong></td>
+  <td>UC18 – Confirmar recebimento</td>
 </tr>
 <tr>
-<td><strong>Caso de uso geral</strong></td>
-<td>Fluxo Principal</td>
+  <td><strong>Caso de uso geral</strong></td>
+  <td>Fluxo Principal</td>
 </tr>
 <tr>
-<td><strong>Ator principal</strong></td>
-<td>Farmacêutico da Unidade</td>
+  <td><strong>Ator principal</strong></td>
+  <td>Farmacêutico da Unidade</td>
 </tr>
 <tr>
-<td><strong>Atores secundários</strong></td>
-<td>Motorista / Entregador</td>
+  <td><strong>Atores secundários</strong></td>
+  <td>Motorista / Entregador</td>
 </tr>
 <tr>
-<td><strong>Resumo</strong></td>
-<td>Descreve a conferência e a confirmação de que os medicamentos entregues foram recebidos pela unidade de destino.</td>
+  <td><strong>Resumo</strong></td>
+  <td>Descreve a conferência e a confirmação de que os medicamentos entregues foram recebidos pela unidade de destino.</td>
 </tr>
 <tr>
-<td><strong>Pré-condições</strong></td>
-<td>Deve existir uma entrega despachada para a unidade.</td>
+  <td><strong>Pré-condições</strong></td>
+  <td>Deve existir uma entrega despachada para a unidade.</td>
 </tr>
 <tr>
-<td><strong>Pós-condições</strong></td>
-<td>O recebimento é registrado, o estoque da unidade é atualizado e a entrega é finalizada.</td>
+  <td><strong>Pós-condições</strong></td>
+  <td>O recebimento é registrado, o estoque da unidade é atualizado e a entrega é finalizada.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Ações do Ator</th>
-<th>Ações do Sistema</th>
+  <th>Ações do Ator</th>
+  <th>Ações do Sistema</th>
 </tr>
 </thead>
-<tbody><tr>
-<td></td>
-<td>1 – Apresentar os itens previstos na entrega, gerados a partir das transferências aprovadas</td>
+<tbody>
+<tr>
+  <td></td>
+  <td>1 – Apresentar os itens previstos na entrega, gerados a partir das transferências aprovadas</td>
 </tr>
 <tr>
-<td>2 – Conferir os itens e os lotes entregues</td>
-<td></td>
+  <td>2 – Conferir os itens e os lotes entregues</td>
+  <td></td>
 </tr>
 <tr>
-<td>3 – Confirmar o recebimento (ou registrar divergência)</td>
-<td></td>
+  <td>3 – Confirmar o recebimento (ou registrar divergência)</td>
+  <td></td>
 </tr>
 <tr>
-<td></td>
-<td>4 – Creditar o estoque da unidade de destino e concluir as transferências vinculadas</td>
+  <td></td>
+  <td>4 – Creditar o estoque da unidade de destino e concluir as transferências vinculadas</td>
 </tr>
 <tr>
-<td></td>
-<td>5 – Encerrar a entrega e atualizar a situação da rota</td>
+  <td></td>
+  <td>5 – Encerrar a entrega e atualizar a situação da rota</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
-<th>Restrições/Validações</th>
+  <th>Restrições/Validações</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Havendo divergência de itens ou lotes, o recebimento é registrado com pendência e o gestor é notificado.</td>
+<tbody>
+<tr>
+  <td>Havendo divergência de itens ou lotes, o recebimento é registrado com pendência e o gestor é notificado.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Tabela 7 – Especificação do caso de uso Confirmar recebimento.</strong></p>
 <h2>3.3. Diagramas de Sequência</h2>
 <p>Os diagramas de sequência detalham a interação entre os atores e os objetos do sistema nos casos de uso principais, seguindo o padrão <strong>boundary → control → entity</strong>.</p>
 <h3>3.3.1. Sequência – UC01 Autenticar</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/02-seq-autenticar.png" alt="Sequência Autenticar"></p>
+<p><img src="../imagens/02-seq-autenticar.png" alt="Sequência Autenticar" /></p>
 <p><strong>Figura 2 – Sequência Autenticar.</strong></p>
 <h3>3.3.2. Sequência – UC07 Sincronizar com sistemas de origem</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/03-seq-sincronizar.png" alt="Sequência Sincronizar"></p>
+<p><img src="../imagens/03-seq-sincronizar.png" alt="Sequência Sincronizar" /></p>
 <p><strong>Figura 3 – Sequência Sincronizar com sistemas de origem.</strong></p>
 <h3>3.3.3. Sequência – UC13/UC14 Sugerir e Aprovar Transferência</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/04-seq-transferencia.png" alt="Sequência Transferência"></p>
+<p><img src="../imagens/04-seq-transferencia.png" alt="Sequência Transferência" /></p>
 <p><strong>Figura 4 – Sequência Sugerir e Aprovar Transferência.</strong></p>
 <h3>3.3.4. Sequência – UC16 Gerar rota de distribuição</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/05-seq-rota.png" alt="Sequência Rota"></p>
+<p><img src="../imagens/05-seq-rota.png" alt="Sequência Rota" /></p>
 <p><strong>Figura 5 – Sequência Gerar rota de distribuição.</strong></p>
 <h2>3.4. Diagramas de Atividades</h2>
 <h3>3.4.1. Atividade – Monitoramento e reposição de estoque</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/06-atv-monitoramento.png" alt="Atividade Monitoramento"></p>
+<p><img src="../imagens/06-atv-monitoramento.png" alt="Atividade Monitoramento" /></p>
 <p><strong>Figura 6 – Atividade Monitoramento e reposição de estoque.</strong></p>
 <h3>3.4.2. Atividade – Geração de rota de distribuição</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/07-atv-rota.png" alt="Atividade Rota"></p>
+<p><img src="../imagens/07-atv-rota.png" alt="Atividade Rota" /></p>
 <p><strong>Figura 7 – Atividade Geração de rota de distribuição.</strong></p>
 <h3>3.4.3. Atividade – Autenticação</h3>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/08-atv-autenticacao.png" alt="Atividade Autenticação"></p>
+<p><img src="../imagens/08-atv-autenticacao.png" alt="Atividade Autenticação" /></p>
 <p><strong>Figura 8 – Atividade Autenticação.</strong></p>
 <h2>3.5. Diagrama de Classes</h2>
 <p>O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos. A implementação em TypeScript (seção 4) materializa essas classes no pacote <code>src/domain/entities</code>, acrescentando apenas classes de apoio de granularidade menor (por exemplo, <code>EntregaItem</code>) e as enumerações centralizadas em <code>domain/enums.ts</code>.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/09-classes.png" alt="Diagrama de Classes"></p>
+<p><img src="../imagens/09-classes.png" alt="Diagrama de Classes" /></p>
 <p><strong>Figura 9 – Diagrama de Classes do SIGLoSUS.</strong></p>
-<hr>
+<hr />
 <h1>4. Arquitetura</h1>
 <h2>4.1. Visão Geral da Arquitetura</h2>
 <p>O SIGLoSUS foi implementado como uma aplicação <strong>full-stack em Node.js com TypeScript</strong>, organizada segundo uma <strong>arquitetura em camadas</strong> de inspiração <em>Clean Architecture</em>. A escolha atende diretamente aos requisitos não-funcionais de <strong>manutenibilidade (RNF12)</strong>, <strong>interoperabilidade (RNF07)</strong> e <strong>escalabilidade (RNF08)</strong>, além de tornar explícita a separação de responsabilidades exigida por um bom projeto de engenharia de software.</p>
@@ -1267,46 +1345,48 @@
 </ul>
 <h2>4.2. Arquitetura em Camadas</h2>
 <p>A Figura 10 apresenta as quatro camadas, as responsabilidades de cada uma e o sentido das dependências.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/10-arquitetura-camadas.png" alt="Arquitetura em camadas do SIGLoSUS"></p>
+<p><img src="../imagens/10-arquitetura-camadas.png" alt="Arquitetura em camadas do SIGLoSUS" /></p>
 <p><strong>Figura 10 – Arquitetura em camadas do SIGLoSUS.</strong></p>
 <table>
 <thead>
 <tr>
-<th>Camada</th>
-<th>Pacote (backend)</th>
-<th>Responsabilidade</th>
-<th>Depende de</th>
+  <th>Camada</th>
+  <th>Pacote (backend)</th>
+  <th>Responsabilidade</th>
+  <th>Depende de</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><strong>Apresentação</strong></td>
-<td><code>frontend/</code></td>
-<td>Telas HTML/CSS/JS e cliente REST (<code>api.js</code>). Exibe dados e captura ações do usuário.</td>
-<td>Aplicação (via HTTP)</td>
+<tbody>
+<tr>
+  <td><strong>Apresentação</strong></td>
+  <td><code>frontend/</code></td>
+  <td>Telas HTML/CSS/JS e cliente REST (<code>api.js</code>). Exibe dados e captura ações do usuário.</td>
+  <td>Aplicação (via HTTP)</td>
 </tr>
 <tr>
-<td><strong>Aplicação</strong></td>
-<td><code>src/application/</code></td>
-<td>Serviços que orquestram os casos de uso, o <em>Container</em> de injeção de dependência e a composição dos objetos.</td>
-<td>Domínio, Infraestrutura</td>
+  <td><strong>Aplicação</strong></td>
+  <td><code>src/application/</code></td>
+  <td>Serviços que orquestram os casos de uso, o <em>Container</em> de injeção de dependência e a composição dos objetos.</td>
+  <td>Domínio, Infraestrutura</td>
 </tr>
 <tr>
-<td><strong>Domínio</strong></td>
-<td><code>src/domain/</code> e <code>src/patterns/</code></td>
-<td>Entidades, enumerações, as 9 regras de negócio e os padrões de projeto. É o coração do sistema e <strong>não depende de nada</strong>.</td>
-<td>—</td>
+  <td><strong>Domínio</strong></td>
+  <td><code>src/domain/</code> e <code>src/patterns/</code></td>
+  <td>Entidades, enumerações, as 9 regras de negócio e os padrões de projeto. É o coração do sistema e <strong>não depende de nada</strong>.</td>
+  <td>—</td>
 </tr>
 <tr>
-<td><strong>Infraestrutura</strong></td>
-<td><code>src/infrastructure/</code></td>
-<td>API REST (Express), repositórios, banco de dados em memória e carga inicial (<em>seed</em>).</td>
-<td>Domínio</td>
+  <td><strong>Infraestrutura</strong></td>
+  <td><code>src/infrastructure/</code></td>
+  <td>API REST (Express), repositórios, persistência JSON experimental e <em>seed</em> exclusivamente de desenvolvimento/teste.</td>
+  <td>Domínio</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>O fluxo de uma requisição típica é: <strong>Tela → HTTP (<code>routes.ts</code>) → Serviço de Aplicação → Regras de Negócio/Entidades → Repositório → Banco</strong>. As respostas percorrem o caminho inverso.</p>
 <h2>4.3. Diagrama de Componentes</h2>
 <p>A Figura 11 mostra os principais componentes de software e suas interfaces.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/11-componentes.png" alt="Diagrama de componentes do SIGLoSUS"></p>
+<p><img src="../imagens/11-componentes.png" alt="Diagrama de componentes do SIGLoSUS" /></p>
 <p><strong>Figura 11 – Diagrama de componentes do SIGLoSUS.</strong></p>
 <p>Os componentes centrais são:</p>
 <ul>
@@ -1318,37 +1398,39 @@
 </ul>
 <h2>4.4. Diagrama de Implantação</h2>
 <p>A Figura 12 representa a implantação física da solução. Para a demonstração acadêmica, o backend e o front-end estático residem no mesmo processo Node.js; em produção, o banco em memória é substituído por um SGBD e o front-end pode ser servido por um CDN ou servidor web dedicado.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/12-implantacao.png" alt="Diagrama de implantação do SIGLoSUS"></p>
+<p><img src="../imagens/12-implantacao.png" alt="Diagrama de implantação do SIGLoSUS" /></p>
 <p><strong>Figura 12 – Diagrama de implantação do SIGLoSUS.</strong></p>
 <table>
 <thead>
 <tr>
-<th>Nó</th>
-<th>Tecnologia</th>
-<th>Observação</th>
+  <th>Nó</th>
+  <th>Tecnologia</th>
+  <th>Observação</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Estação do usuário</td>
-<td>Navegador web moderno</td>
-<td>Acessa a API REST e as telas via HTTPS.</td>
+<tbody>
+<tr>
+  <td>Estação do usuário</td>
+  <td>Navegador web moderno</td>
+  <td>Acessa a API REST e as telas via HTTPS.</td>
 </tr>
 <tr>
-<td>Servidor de aplicação</td>
-<td>Node.js 20+ / Express</td>
-<td>Executa a API na porta 3000 e serve as telas estáticas.</td>
+  <td>Servidor de aplicação</td>
+  <td>Node.js 20+ / Express</td>
+  <td>Executa a API na porta 3000 e serve as telas estáticas.</td>
 </tr>
 <tr>
-<td>Banco de dados</td>
-<td>Em memória (demonstração)</td>
-<td>Substituível por PostgreSQL sem alterar o domínio (padrão Repository).</td>
+  <td>Banco de dados</td>
+  <td>Em memória (demonstração)</td>
+  <td>Substituível por PostgreSQL sem alterar o domínio (padrão Repository).</td>
 </tr>
 <tr>
-<td>Sistemas externos</td>
-<td>e-SUS APS, HÓRUS/SNA, BNAFAR</td>
-<td>Acessados por HTTPS/JSON por meio dos adaptadores (padrão Adapter).</td>
+  <td>Sistemas externos</td>
+  <td>e-SUS APS, HÓRUS/SNA, BNAFAR</td>
+  <td>Acessados por HTTPS/JSON por meio dos adaptadores (padrão Adapter).</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2>4.5. Padrão Repository e Injeção de Dependência</h2>
 <p>O <strong>padrão arquitetural Repository</strong> isola o domínio dos detalhes de persistência. Todos os repositórios herdam de <code>RepositorioBase&lt;T&gt;</code>, que oferece operações genéricas (<code>listar</code>, <code>buscarPorId</code>, <code>salvar</code>, <code>remover</code>) sobre o <code>DatabaseMemoria</code>:</p>
 <pre><code class="language-typescript">export abstract class RepositorioBase&lt;T extends { id: number }&gt; {
@@ -1406,7 +1488,8 @@
 cd &quot;pasta 02/siglosus/backend&quot;
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 72 testes automatizados
+npm test           # suíte Vitest: 76 testes definidos em 8 arquivos
+npm run test:smoke # regressão de segurança independente, após compilar
 </code></pre>
 <p>Acesse <code>http://localhost:3000/</code> no navegador. Usuários de demonstração (senha <code>siglosus123</code>): <code>gestor@siglosus.gov.br</code>, <code>farmaceutico@siglosus.gov.br</code>, <code>almoxarife@siglosus.gov.br</code>, <code>motorista@siglosus.gov.br</code>, <code>admin@siglosus.gov.br</code>.</p>
 <h2>4.7. Segurança, Autenticação e Autorização</h2>
@@ -1414,116 +1497,118 @@ npm test           # executa os 72 testes automatizados
 <table>
 <thead>
 <tr>
-<th>Mecanismo</th>
-<th>Implementação</th>
-<th>Requisito</th>
+  <th>Mecanismo</th>
+  <th>Implementação</th>
+  <th>Requisito</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Armazenamento de senhas</td>
-<td>bcrypt com salt individual e fator de custo configurável (<code>BCRYPT_COST</code>), com comparação em tempo constante. Hashes legados em SHA-256 são aceitos na leitura e migrados para bcrypt no primeiro login bem-sucedido.</td>
-<td>RNF01, RF01</td>
+  <td>Armazenamento de senhas</td>
+  <td>bcrypt com salt individual e fator de custo configurável (<code>BCRYPT_COST</code>), com comparação em tempo constante. Hashes legados em SHA-256 são aceitos na leitura e migrados para bcrypt no primeiro login bem-sucedido.</td>
+  <td>RNF01, RF01</td>
 </tr>
 <tr>
-<td>Emissão de sessão</td>
-<td>Token JWT assinado com HMAC-SHA256, expiração configurável (<code>TOKEN_ACESSO_VALIDADE_MIN</code>), emissor verificado e identificador único (<code>jti</code>) para revogação. O segredo vem da variável de ambiente <code>JWT_SECRET</code> e é obrigatório em produção.</td>
-<td>RF01, RNF01</td>
+  <td>Emissão de sessão</td>
+  <td>Token JWT assinado com HMAC-SHA256, expiração configurável (<code>TOKEN_ACESSO_VALIDADE_MIN</code>), emissor verificado e identificador único (<code>jti</code>) para revogação. O segredo vem da variável de ambiente <code>JWT_SECRET</code> e é obrigatório em produção.</td>
+  <td>RF01, RNF01</td>
 </tr>
 <tr>
-<td>Revogação de sessão</td>
-<td>O logout revoga o token no servidor; a troca ou a recuperação de senha invalida todas as sessões abertas do usuário.</td>
-<td>RF02, RF03</td>
+  <td>Revogação de sessão</td>
+  <td>O logout revoga o token no servidor; a troca ou a recuperação de senha invalida todas as sessões abertas do usuário.</td>
+  <td>RF02, RF03</td>
 </tr>
 <tr>
-<td>Autenticação das rotas</td>
-<td>Middleware aplicado a todas as rotas privadas: token ausente, inválido, expirado ou adulterado resulta em HTTP 401.</td>
-<td>RNF01</td>
+  <td>Autenticação das rotas</td>
+  <td>Middleware aplicado a todas as rotas privadas: token ausente, inválido, expirado ou adulterado resulta em HTTP 401.</td>
+  <td>RNF01</td>
 </tr>
 <tr>
-<td>Autorização por perfil</td>
-<td>Permissões declarativas por endpoint; perfil insuficiente resulta em HTTP 403. A identidade do usuário é obtida <strong>do token</strong>, nunca do corpo da requisição.</td>
-<td>RNF01, RN09</td>
+  <td>Autorização por perfil</td>
+  <td>Permissões declarativas por endpoint; perfil insuficiente resulta em HTTP 403. A identidade do usuário é obtida <strong>do token</strong>, nunca do corpo da requisição.</td>
+  <td>RNF01, RN09</td>
 </tr>
 <tr>
-<td>Proteção de dados pessoais</td>
-<td>As respostas de usuários não expõem CPF nem hash de senha (<code>usuarioDTO</code>); a trilha de auditoria registra ações sem credenciais.</td>
-<td>RNF02</td>
+  <td>Proteção de dados pessoais</td>
+  <td>As respostas de usuários não expõem CPF nem hash de senha (<code>usuarioDTO</code>); a trilha de auditoria registra ações sem credenciais.</td>
+  <td>RNF02</td>
 </tr>
 <tr>
-<td>Proteção do navegador</td>
-<td>Todo dado oriundo da API é escapado antes de ser inserido no HTML (<code>esc()</code>), reduzindo a superfície de XSS.</td>
-<td>RNF01</td>
+  <td>Proteção do navegador</td>
+  <td>Todo dado oriundo da API é escapado antes de ser inserido no HTML (<code>esc()</code>), reduzindo a superfície de XSS.</td>
+  <td>RNF01</td>
 </tr>
 <tr>
-<td>Endpoints sensíveis</td>
-<td>Limitação de requisições por endereço IP no login e na recuperação de senha, com resposta HTTP 429.</td>
-<td>RNF01</td>
+  <td>Endpoints sensíveis</td>
+  <td>Limitação de requisições por endereço IP no login e na recuperação de senha, com resposta HTTP 429.</td>
+  <td>RNF01</td>
 </tr>
 <tr>
-<td>Transporte e cabeçalhos</td>
-<td>CORS restrito às origens configuradas e cabeçalhos <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Referrer-Policy</code> e <code>Content-Security-Policy</code>.</td>
-<td>RNF01</td>
+  <td>Transporte e cabeçalhos</td>
+  <td>CORS restrito às origens configuradas e cabeçalhos <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Referrer-Policy</code> e <code>Content-Security-Policy</code>.</td>
+  <td>RNF01</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Perfis autorizados por operação.</strong></p>
 <table>
 <thead>
 <tr>
-<th>Operação</th>
-<th>Perfis autorizados</th>
+  <th>Operação</th>
+  <th>Perfis autorizados</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Consultar cadastros, estoque, alertas, rotas, entregas e relatórios</td>
-<td>Todos os perfis autenticados</td>
+  <td>Consultar cadastros, estoque, alertas, rotas, entregas e relatórios</td>
+  <td>Todos os perfis autenticados</td>
 </tr>
 <tr>
-<td>Criar usuários, cadastrar unidades e medicamentos</td>
-<td>GESTOR, ADMINISTRADOR</td>
+  <td>Criar usuários, cadastrar unidades e medicamentos</td>
+  <td>GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Editar conta de terceiros</td>
-<td>GESTOR (perfis operacionais), ADMINISTRADOR (todas)</td>
+  <td>Editar conta de terceiros</td>
+  <td>GESTOR (perfis operacionais), ADMINISTRADOR (todas)</td>
 </tr>
 <tr>
-<td>Inativar ou reativar conta</td>
-<td>ADMINISTRADOR</td>
+  <td>Inativar ou reativar conta</td>
+  <td>ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Aprovar ou rejeitar transferências</td>
-<td>GESTOR, ADMINISTRADOR</td>
+  <td>Aprovar ou rejeitar transferências</td>
+  <td>GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Registrar movimentação de estoque</td>
-<td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+  <td>Registrar movimentação de estoque</td>
+  <td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Dispensar ao paciente</td>
-<td>FARMACEUTICO, GESTOR, ADMINISTRADOR</td>
+  <td>Dispensar ao paciente</td>
+  <td>FARMACEUTICO, GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Aprovar requisições (RN09)</td>
-<td>GESTOR, ADMINISTRADOR</td>
+  <td>Aprovar requisições (RN09)</td>
+  <td>GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Gerar rotas e despachar</td>
-<td>ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+  <td>Gerar rotas e despachar</td>
+  <td>ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Confirmar recebimento de entrega</td>
-<td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+  <td>Confirmar recebimento de entrega</td>
+  <td>FARMACEUTICO, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Reportar posição de rota</td>
-<td>MOTORISTA, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
+  <td>Reportar posição de rota</td>
+  <td>MOTORISTA, ALMOXARIFE, GESTOR, ADMINISTRADOR</td>
 </tr>
 <tr>
-<td>Sincronizar integrações e consultar auditoria</td>
-<td>GESTOR, ADMINISTRADOR</td>
+  <td>Sincronizar integrações e consultar auditoria</td>
+  <td>GESTOR, ADMINISTRADOR</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2>4.8. Persistência de Dados</h2>
 <p>O protótipo opera sobre um banco em memória (<code>DatabaseMemoria</code>) <strong>com persistência em arquivo</strong> (<code>PersistenciaJSON</code>). O estado completo — usuários, unidades, medicamentos, estoques, lotes, movimentações, transferências, requisições, rotas, entregas, dispensações, relatórios, auditoria, tokens de recuperação e posições de rota — é gravado em JSON após cada operação de escrita bem-sucedida e restaurado no arranque do processo. A gravação é atômica: o estado é escrito em arquivo temporário e, em seguida, renomeado.</p>
 <p>O arquivo é configurado pela variável de ambiente <code>SIGLOSUS_ARQUIVO_PERSISTENCIA</code>; sem ela, o sistema opera somente em memória (comportamento usado nos testes). O teste <code>tests/persistencia.test.ts</code> comprova que uma movimentação registrada pela API é preservada após a criação de uma nova instância do contêiner, e que datas e métodos das entidades são restaurados corretamente.</p>
@@ -1534,160 +1619,214 @@ npm test           # executa os 72 testes automatizados
 <table>
 <thead>
 <tr>
-<th>Requisito</th>
-<th>Componente / Classe</th>
-<th>Endpoint (API)</th>
+  <th>Requisito</th>
+  <th>Componente / Classe</th>
+  <th>Endpoint (API)</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>RF01</td>
-<td><code>AutenticacaoService</code>, <code>GerenciadorJWT</code>, <code>Usuario</code></td>
-<td><code>POST /api/auth/login</code>, <code>GET /api/auth/eu</code></td>
+<tbody>
+<tr>
+  <td>RF01</td>
+  <td><code>AutenticacaoService</code>, <code>GerenciadorJWT</code>, <code>Usuario</code></td>
+  <td><code>POST /api/auth/login</code>, <code>GET /api/auth/eu</code></td>
 </tr>
 <tr>
-<td>RF02</td>
-<td><code>RecuperacaoSenhaService</code>, <code>TokenRecuperacaoSenha</code></td>
-<td><code>POST /api/auth/recuperar-senha</code>, <code>POST /api/auth/redefinir-senha</code>, <code>POST /api/auth/trocar-senha</code></td>
+  <td>RF02</td>
+  <td><code>RecuperacaoSenhaService</code>, <code>TokenRecuperacaoSenha</code></td>
+  <td><code>POST /api/auth/recuperar-senha</code>, <code>POST /api/auth/redefinir-senha</code>, <code>POST /api/auth/trocar-senha</code></td>
 </tr>
 <tr>
-<td>RF03</td>
-<td><code>AutenticacaoService.encerrarSessao()</code></td>
-<td><code>POST /api/auth/logout</code></td>
+  <td>RF03</td>
+  <td><code>AutenticacaoService.encerrarSessao()</code></td>
+  <td><code>POST /api/auth/logout</code></td>
 </tr>
 <tr>
-<td>RF04</td>
-<td><code>UsuarioService</code>, <code>UsuarioRepository</code></td>
-<td><code>GET/POST /api/usuarios</code>, <code>PATCH /api/usuarios/:id</code>, <code>PATCH /api/usuarios/:id/inativar</code></td>
+  <td>RF04</td>
+  <td><code>UsuarioService</code>, <code>UsuarioRepository</code></td>
+  <td><code>GET/POST /api/usuarios</code>, <code>PATCH /api/usuarios/:id</code>, <code>PATCH /api/usuarios/:id/inativar</code></td>
 </tr>
 <tr>
-<td>RF05</td>
-<td><code>UnidadeService</code>, <code>UnidadeSaude</code>, <code>UnidadeRepository</code></td>
-<td><code>GET/POST /api/unidades</code>, <code>PATCH /api/unidades/:id</code></td>
+  <td>RF05</td>
+  <td><code>UnidadeService</code>, <code>UnidadeSaude</code>, <code>UnidadeRepository</code></td>
+  <td><code>GET/POST /api/unidades</code>, <code>PATCH /api/unidades/:id</code></td>
 </tr>
 <tr>
-<td>RF06</td>
-<td><code>MedicamentoService</code>, <code>Medicamento</code>, <code>MedicamentoRepository</code></td>
-<td><code>GET/POST /api/medicamentos</code>, <code>PATCH /api/medicamentos/:id</code></td>
+  <td>RF06</td>
+  <td><code>MedicamentoService</code>, <code>Medicamento</code>, <code>MedicamentoRepository</code></td>
+  <td><code>GET/POST /api/medicamentos</code>, <code>PATCH /api/medicamentos/:id</code></td>
 </tr>
 <tr>
-<td>RF07</td>
-<td><code>IntegracaoService</code> + Adapters (e-SUS, HÓRUS, BNAFAR)</td>
-<td><code>GET /api/integracoes</code>, <code>POST /api/integracoes/sincronizar</code></td>
+  <td>RF07</td>
+  <td><code>IntegracaoService</code> + Adapters (e-SUS, HÓRUS, BNAFAR)</td>
+  <td><code>GET /api/integracoes</code>, <code>POST /api/integracoes/sincronizar</code></td>
 </tr>
 <tr>
-<td>RF08</td>
-<td><code>EstoqueService</code>, <code>MovimentacaoEstoque</code></td>
-<td><code>POST /api/estoque/movimentacoes</code></td>
+  <td>RF08</td>
+  <td><code>EstoqueService</code>, <code>MovimentacaoEstoque</code></td>
+  <td><code>POST /api/estoque/movimentacoes</code></td>
 </tr>
 <tr>
-<td>RF09</td>
-<td><code>EstoqueService.consolidado()</code></td>
-<td><code>GET /api/estoque</code></td>
+  <td>RF09</td>
+  <td><code>EstoqueService.consolidado()</code></td>
+  <td><code>GET /api/estoque</code></td>
 </tr>
 <tr>
-<td>RF10</td>
-<td><code>EstoqueService.configurarNiveis()</code></td>
-<td><code>PATCH /api/estoque/:id/niveis</code></td>
+  <td>RF10</td>
+  <td><code>EstoqueService.configurarNiveis()</code></td>
+  <td><code>PATCH /api/estoque/:id/niveis</code></td>
 </tr>
 <tr>
-<td>RF11</td>
-<td><code>AlertaService</code> + <code>AlertaDesabastecimentoObserver</code> (Observer)</td>
-<td><code>GET /api/alertas</code>, <code>PATCH /api/alertas/:id/resolver</code></td>
+  <td>RF11</td>
+  <td><code>AlertaService</code> + <code>AlertaDesabastecimentoObserver</code> (Observer)</td>
+  <td><code>GET /api/alertas</code>, <code>PATCH /api/alertas/:id/resolver</code></td>
 </tr>
 <tr>
-<td>RF12</td>
-<td><code>PrevisaoDemandaService</code></td>
-<td><code>POST /api/previsoes/gerar</code>, <code>GET /api/previsoes</code></td>
+  <td>RF12</td>
+  <td><code>PrevisaoDemandaService</code></td>
+  <td><code>POST /api/previsoes/gerar</code>, <code>GET /api/previsoes</code></td>
 </tr>
 <tr>
-<td>RF13, RF14</td>
-<td><code>TransferenciaService</code>, <code>EstoqueService</code></td>
-<td><code>POST /api/transferencias/sugerir</code>, <code>POST /api/transferencias/:id/aprovar</code></td>
+  <td>RF13, RF14</td>
+  <td><code>TransferenciaService</code>, <code>EstoqueService</code></td>
+  <td><code>POST /api/transferencias/sugerir</code>, <code>POST /api/transferencias/:id/aprovar</code></td>
 </tr>
 <tr>
-<td>RF15, RF16</td>
-<td><code>RotaService</code> + Strategy, <code>PosicaoService</code></td>
-<td><code>POST /api/rotas</code>, <code>POST /api/rotas/:id/despachar</code>, <code>GET/POST /api/rotas/:id/posicoes</code></td>
+  <td>RF15, RF16</td>
+  <td><code>RotaService</code> + Strategy, <code>PosicaoService</code></td>
+  <td><code>POST /api/rotas</code>, <code>POST /api/rotas/:id/despachar</code>, <code>GET/POST /api/rotas/:id/posicoes</code></td>
 </tr>
 <tr>
-<td>RF17</td>
-<td><code>EntregaService</code>, <code>EntregaItem</code></td>
-<td><code>GET /api/entregas</code>, <code>POST /api/entregas/:id/confirmar</code></td>
+  <td>RF17</td>
+  <td><code>EntregaService</code>, <code>EntregaItem</code></td>
+  <td><code>GET /api/entregas</code>, <code>POST /api/entregas/:id/confirmar</code></td>
 </tr>
 <tr>
-<td>RF18</td>
-<td><code>Lote</code>, <code>RegrasNegocio</code> (RN02 FEFO)</td>
-<td>(interno ao <code>EstoqueService</code>)</td>
+  <td>RF18</td>
+  <td><code>Lote</code>, <code>RegrasNegocio</code> (RN02 FEFO)</td>
+  <td>(interno ao <code>EstoqueService</code>)</td>
 </tr>
 <tr>
-<td>RF19</td>
-<td><code>DispensacaoService</code>, <code>Dispensacao</code> (RN05)</td>
-<td><code>GET/POST /api/dispensacoes</code></td>
+  <td>RF19</td>
+  <td><code>DispensacaoService</code>, <code>Dispensacao</code> (RN05)</td>
+  <td><code>GET/POST /api/dispensacoes</code></td>
 </tr>
 <tr>
-<td>RF20</td>
-<td><code>RequisicaoService</code>, <code>Requisicao</code> (RN09)</td>
-<td><code>GET/POST /api/requisicoes</code>, <code>POST /api/requisicoes/:id/aprovar</code>, <code>POST /api/requisicoes/:id/rejeitar</code></td>
+  <td>RF20</td>
+  <td><code>RequisicaoService</code>, <code>Requisicao</code> (RN09)</td>
+  <td><code>GET/POST /api/requisicoes</code>, <code>POST /api/requisicoes/:id/aprovar</code>, <code>POST /api/requisicoes/:id/rejeitar</code></td>
 </tr>
 <tr>
-<td>RF21</td>
-<td><code>RelatorioService</code></td>
-<td><code>GET /api/relatorios/dashboard</code>, <code>POST /api/relatorios</code></td>
+  <td>RF21</td>
+  <td><code>RelatorioService</code></td>
+  <td><code>GET /api/relatorios/dashboard</code>, <code>POST /api/relatorios</code></td>
 </tr>
 <tr>
-<td>RF22</td>
-<td><code>AuditoriaService</code>, <code>LogAuditoria</code></td>
-<td><code>GET /api/auditoria</code></td>
+  <td>RF22</td>
+  <td><code>AuditoriaService</code>, <code>LogAuditoria</code></td>
+  <td><code>GET /api/auditoria</code></td>
 </tr>
-</tbody></table>
-<hr>
+</tbody>
+</table>
+<hr />
+<h2>4.10. Gerência de Configuração e Versionamento</h2>
+<p>A gerência de configuração, conforme o material da disciplina, identifica os itens versionáveis, registra alterações, controla versões e permite auditoria e reprodução da entrega. São <strong>itens de configuração</strong> neste projeto: requisitos e documentação (<code>.md</code>, <code>.pdf</code>), fontes dos diagramas (<code>.mmd</code>), figuras, código TypeScript e JavaScript, testes, <code>package.json</code>, <code>package-lock.json</code>, CI e protótipos de telas.</p>
+<p><strong>Estratégia adotada:</strong> uma adaptação de <strong>Git Flow</strong> com <code>main</code> (linha estável), <code>develop</code> (integração de desenvolvimento), <code>feature/*</code> (mudanças isoladas) e <code>release/*</code> (preparação de entregas). O nome <code>develop</code> foi mantido por compatibilidade com o repositório existente; ele corresponde à branch de desenvolvimento demonstrada nas aulas. As mudanças desta revisão devem ser submetidas por Pull Request, revisadas e integradas ao remoto antes do envio final.</p>
+<table>
+<thead>
+<tr>
+  <th>Elemento</th>
+  <th>Procedimento verificável</th>
+  <th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Branch de alteração</td>
+  <td><code>feature/correcao-final-2026</code></td>
+  <td>Isolar as alterações desta auditoria</td>
+</tr>
+<tr>
+  <td>Commits semânticos</td>
+  <td><code>fix(seguranca): ...</code>, <code>test(seguranca): ...</code>, <code>docs(entrega): ...</code></td>
+  <td>Explicar o que mudou e por quê</td>
+</tr>
+<tr>
+  <td>Pull Request</td>
+  <td>Criar da feature para <code>develop</code>, revisar e executar CI</td>
+  <td>Registrar auditoria e integração</td>
+</tr>
+<tr>
+  <td>Release / baseline</td>
+  <td>Criar tag somente após merge e validação</td>
+  <td>Identificar versão entregue de maneira reproduzível</td>
+</tr>
+<tr>
+  <td><code>.gitignore</code></td>
+  <td>Excluir <code>node_modules/</code>, <code>dist/</code>, <code>.env</code>, logs e dados locais</td>
+  <td>Não publicar dependências ou segredos</td>
+</tr>
+<tr>
+  <td>Verificação</td>
+  <td><code>git status</code>, <code>git log --oneline --graph</code>, <code>git tag</code>, CI</td>
+  <td>Demonstrar práticas cobradas na disciplina</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Situação da entrega local:</strong> esta revisão prepara o código e os materiais para publicação; <strong>o envio ao GitHub e a criação de Pull Request/Release remotos dependem de acesso autenticado ao repositório e não devem ser considerados realizados apenas pela geração deste documento</strong>. O repositório já tinha versões e histórico anteriores, mas a versão aqui documentada precisa ser integrada ao remoto. Consulte <code>GUIA_PUBLICACAO_GIT.md</code>.</p>
+<h2>4.11. Validação e Limitações da Entrega</h2>
+<p>O backend é escrito em Node.js/TypeScript, com rotas Express protegidas por JWT e autorização por perfil. As operações sensíveis com <code>Idempotency-Key</code> possuem validação <strong>após a autorização</strong>, com registro isolado por usuário e verificação de método, rota e hash do conteúdo; reutilização incompatível responde HTTP 409. A fila offline do navegador gera uma chave única por operação e não reenvia operações de outra conta. As operações sem chave idempotente mantêm a semântica original da API.</p>
+<p>O cenário de demonstração (<strong>seed</strong>) é restrito a <code>development</code> e <code>test</code>; no ambiente <code>production</code>, seu uso é recusado mesmo com opções de inicialização ou variáveis de ambiente que tentem forçá-lo. A inicialização de produção exige persistência e criação segura de um primeiro administrador pelo comando <code>npm run bootstrap:admin</code>, com dados fornecidos pelo responsável pela instalação. A persistência JSON é válida para o <strong>protótipo acadêmico</strong>, mas não garante transações distribuídas, escala multiprocesso ou disponibilidade de produção.</p>
+<p><strong>Evidência disponível nesta revisão:</strong> verificação de tipos com <code>tsc --noEmit</code> e compilação com <code>tsc -p tsconfig.build.json</code> concluídas com sucesso; <code>npm run test:smoke</code> executou 10 verificações funcionais direcionadas às correções de segurança, todas aprovadas. A execução integral do Vitest não foi reproduzida no ambiente de auditoria por limitação de dependências nativas do Rollup, e o <code>npm ci</code> não foi concluído. Não se deve apresentar esses testes como aprovados até execução bem-sucedida em instalação limpa ou no CI remoto.</p>
+<p><strong>Limitações de escopo:</strong> (i) os sistemas externos e-SUS, HÓRUS e BNAFAR não foram conectados; (ii) não existe GPS dedicado ou telemetria contínua comprovada; (iii) o modo offline é uma fila local experimental, não um aplicativo nativo; (iv) não foram comprovados SLA, carga de milhares de usuários, FHIR em produção nem testes formais de acessibilidade. Essas limitações não impedem a demonstração das funcionalidades efetivamente implementadas, mas devem ser informadas na apresentação.</p>
 <h1>5. Padrões de Projeto</h1>
 <h2>5.1. Visão Geral</h2>
 <p>Foram aplicados <strong>cinco padrões de projeto</strong> (<em>Design Patterns</em>) do catálogo <em>Gang of Four</em>, escolhidos por resolverem problemas concretos do domínio do SIGLoSUS. Cada padrão está implementado no pacote <code>src/patterns/</code> e é exercitado por testes automatizados.</p>
 <table>
 <thead>
 <tr>
-<th>#</th>
-<th>Padrão</th>
-<th>Categoria</th>
-<th>Problema que resolve no SIGLoSUS</th>
+  <th>#</th>
+  <th>Padrão</th>
+  <th>Categoria</th>
+  <th>Problema que resolve no SIGLoSUS</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>1</td>
-<td><strong>Singleton</strong></td>
-<td>Criacional</td>
-<td>Garantir uma única instância de configuração compartilhada por toda a aplicação.</td>
+<tbody>
+<tr>
+  <td>1</td>
+  <td><strong>Singleton</strong></td>
+  <td>Criacional</td>
+  <td>Garantir uma única instância de configuração compartilhada por toda a aplicação.</td>
 </tr>
 <tr>
-<td>2</td>
-<td><strong>Factory Method</strong></td>
-<td>Criacional</td>
-<td>Criar notificações por diferentes canais (e-mail, SMS, push) sem acoplar o chamador às classes concretas.</td>
+  <td>2</td>
+  <td><strong>Factory Method</strong></td>
+  <td>Criacional</td>
+  <td>Criar notificações por diferentes canais (e-mail, SMS, push) sem acoplar o chamador às classes concretas.</td>
 </tr>
 <tr>
-<td>3</td>
-<td><strong>Adapter</strong></td>
-<td>Estrutural</td>
-<td>Integrar sistemas de saúde legados com formatos de dados incompatíveis (e-SUS, HÓRUS, BNAFAR).</td>
+  <td>3</td>
+  <td><strong>Adapter</strong></td>
+  <td>Estrutural</td>
+  <td>Integrar sistemas de saúde legados com formatos de dados incompatíveis (e-SUS, HÓRUS, BNAFAR).</td>
 </tr>
 <tr>
-<td>4</td>
-<td><strong>Observer</strong></td>
-<td>Comportamental</td>
-<td>Reagir automaticamente às movimentações de estoque (gerar alertas e notificações).</td>
+  <td>4</td>
+  <td><strong>Observer</strong></td>
+  <td>Comportamental</td>
+  <td>Reagir automaticamente às movimentações de estoque (gerar alertas e notificações).</td>
 </tr>
 <tr>
-<td>5</td>
-<td><strong>Strategy</strong></td>
-<td>Comportamental</td>
-<td>Alternar algoritmos de roteirização em tempo de execução.</td>
+  <td>5</td>
+  <td><strong>Strategy</strong></td>
+  <td>Comportamental</td>
+  <td>Alternar algoritmos de roteirização em tempo de execução.</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2>5.2. Singleton</h2>
 <p><strong>Intenção:</strong> garantir que uma classe tenha <strong>apenas uma instância</strong> e fornecer um ponto de acesso global a ela.</p>
 <p><strong>Aplicação:</strong> a classe <code>ConfiguracaoSistema</code> centraliza os parâmetros de negócio usados por várias camadas — o limite de aprovação do gestor (RN09), a validade mínima para transferência (RN03, 90 dias), a jornada máxima do motorista (RN07) e a porta do servidor. Como esses valores precisam ser <strong>consistentes em toda a aplicação</strong>, uma instância única evita divergências.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/13-pattern-singleton.png" alt="Padrão Singleton"></p>
+<p><img src="../imagens/13-pattern-singleton.png" alt="Padrão Singleton" /></p>
 <p><strong>Figura 13 – Padrão Singleton aplicado à configuração do sistema.</strong></p>
 <pre><code class="language-typescript">export class ConfiguracaoSistema {
   private static instancia: ConfiguracaoSistema | null = null;
@@ -1705,25 +1844,25 @@ npm test           # executa os 72 testes automatizados
 <h2>5.3. Factory Method</h2>
 <p><strong>Intenção:</strong> definir uma interface para criar um objeto, mas deixar as subclasses decidirem qual classe concreta instanciar.</p>
 <p><strong>Aplicação:</strong> o SIGLoSUS envia notificações por diferentes canais. A fábrica abstrata <code>NotificacaoFactory</code> declara <code>criarNotificacao()</code>; as subclasses <code>NotificacaoEmailFactory</code>, <code>NotificacaoSmsFactory</code> e <code>NotificacaoPushFactory</code> decidem qual produto criar. O chamador usa apenas <code>notificar(destinatario, mensagem)</code>, sem conhecer as classes concretas.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/14-pattern-factory.png" alt="Padrão Factory Method"></p>
+<p><img src="../imagens/14-pattern-factory.png" alt="Padrão Factory Method" /></p>
 <p><strong>Figura 14 – Padrão Factory Method aplicado às notificações.</strong></p>
 <p><strong>Rastreabilidade:</strong> RF11 (alertas) e RF07 (notificação de sincronização/ocorrências).</p>
 <h2>5.4. Adapter</h2>
 <p><strong>Intenção:</strong> converter a interface de uma classe em outra interface que o cliente espera, permitindo que classes com interfaces incompatíveis trabalhem juntas.</p>
 <p><strong>Aplicação:</strong> cada sistema de saúde legado expõe os dados em um formato próprio (<code>co_catmat</code>, <code>saldo</code>, <code>batch</code>…). A interface-alvo <code>SistemaSaudeAdapter</code> define o contrato conhecido pelo domínio (<code>obterEstoque()</code> e <code>exportarEstoque()</code>), e os adaptadores <code>ESUSAPSAdapter</code>, <code>HorusAdapter</code> e <code>BnafarAdapter</code> traduzem os formatos para o registro canônico <code>RegistroEstoqueExterno</code>.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/15-pattern-adapter.png" alt="Padrão Adapter"></p>
+<p><img src="../imagens/15-pattern-adapter.png" alt="Padrão Adapter" /></p>
 <p><strong>Figura 15 – Padrão Adapter aplicado à integração com sistemas de saúde.</strong></p>
 <p><strong>Rastreabilidade:</strong> RF07 e RNF07 (interoperabilidade).</p>
 <h2>5.5. Observer</h2>
 <p><strong>Intenção:</strong> definir uma dependência um-para-muitos entre objetos, de modo que quando um objeto muda de estado, todos os seus dependentes sejam notificados automaticamente.</p>
 <p><strong>Aplicação:</strong> o <code>EstoqueSubject</code> mantém a lista de observadores e os notifica a cada movimentação. O <code>AlertaDesabastecimentoObserver</code> gera um alerta quando o estoque fica abaixo do mínimo (RF11), e o <code>NotificacaoEstoqueObserver</code> envia a notificação ao gestor — este último <strong>combina</strong> o Observer com o Factory Method.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/16-pattern-observer.png" alt="Padrão Observer"></p>
+<p><img src="../imagens/16-pattern-observer.png" alt="Padrão Observer" /></p>
 <p><strong>Figura 16 – Padrão Observer aplicado ao monitoramento de estoque.</strong></p>
 <p><strong>Rastreabilidade:</strong> RF11 (alertas automáticos de desabastecimento).</p>
 <h2>5.6. Strategy</h2>
 <p><strong>Intenção:</strong> definir uma família de algoritmos, encapsulá-los e torná-los intercambiáveis em tempo de execução.</p>
 <p><strong>Aplicação:</strong> há várias formas de ordenar as paradas de uma rota. Cada algoritmo é uma estratégia: <code>RotaMenorDistancia</code> (RN08), <code>RotaPorPrioridade</code> (RN04) e <code>RotaCapacidadeVeiculo</code> (RN07). O contexto <code>Roteirizador</code> recebe a estratégia e pode trocá-la dinamicamente, sem alterar o código cliente.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/17-pattern-strategy.png" alt="Padrão Strategy"></p>
+<p><img src="../imagens/17-pattern-strategy.png" alt="Padrão Strategy" /></p>
 <p><strong>Figura 17 – Padrão Strategy aplicado à roteirização de entregas.</strong></p>
 <p><strong>Rastreabilidade:</strong> RF15 (rotas otimizadas) e RN04, RN07, RN08.</p>
 <h2>5.7. Resumo e Rastreabilidade dos Padrões</h2>
@@ -1731,130 +1870,134 @@ npm test           # executa os 72 testes automatizados
 <table>
 <thead>
 <tr>
-<th>Padrão</th>
-<th>Classes principais</th>
-<th>Arquivo</th>
-<th>Requisitos/Regras</th>
-<th>Teste automatizado</th>
+  <th>Padrão</th>
+  <th>Classes principais</th>
+  <th>Arquivo</th>
+  <th>Requisitos/Regras</th>
+  <th>Teste automatizado</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Singleton</td>
-<td><code>ConfiguracaoSistema</code></td>
-<td><code>patterns/singleton/ConfiguracaoSistema.ts</code></td>
-<td>RNF12, RN03, RN07, RN09</td>
-<td><code>padroes-projeto.test.ts</code></td>
+<tbody>
+<tr>
+  <td>Singleton</td>
+  <td><code>ConfiguracaoSistema</code></td>
+  <td><code>patterns/singleton/ConfiguracaoSistema.ts</code></td>
+  <td>RNF12, RN03, RN07, RN09</td>
+  <td><code>padroes-projeto.test.ts</code></td>
 </tr>
 <tr>
-<td>Factory Method</td>
-<td><code>NotificacaoFactory</code>, <code>Notificacao*Factory</code>, <code>Notificacao*</code></td>
-<td><code>patterns/factory/NotificacaoFactory.ts</code></td>
-<td>RF11</td>
-<td><code>padroes-projeto.test.ts</code></td>
+  <td>Factory Method</td>
+  <td><code>NotificacaoFactory</code>, <code>Notificacao*Factory</code>, <code>Notificacao*</code></td>
+  <td><code>patterns/factory/NotificacaoFactory.ts</code></td>
+  <td>RF11</td>
+  <td><code>padroes-projeto.test.ts</code></td>
 </tr>
 <tr>
-<td>Adapter</td>
-<td><code>SistemaSaudeAdapter</code>, <code>ESUSAPSAdapter</code>, <code>HorusAdapter</code>, <code>BnafarAdapter</code></td>
-<td><code>patterns/adapter/*.ts</code></td>
-<td>RF07, RNF07</td>
-<td><code>padroes-projeto.test.ts</code></td>
+  <td>Adapter</td>
+  <td><code>SistemaSaudeAdapter</code>, <code>ESUSAPSAdapter</code>, <code>HorusAdapter</code>, <code>BnafarAdapter</code></td>
+  <td><code>patterns/adapter/*.ts</code></td>
+  <td>RF07, RNF07</td>
+  <td><code>padroes-projeto.test.ts</code></td>
 </tr>
 <tr>
-<td>Observer</td>
-<td><code>EstoqueSubject</code>, <code>AlertaDesabastecimentoObserver</code>, <code>NotificacaoEstoqueObserver</code></td>
-<td><code>patterns/observer/*.ts</code></td>
-<td>RF11</td>
-<td><code>padroes-projeto.test.ts</code>, <code>servicos.test.ts</code></td>
+  <td>Observer</td>
+  <td><code>EstoqueSubject</code>, <code>AlertaDesabastecimentoObserver</code>, <code>NotificacaoEstoqueObserver</code></td>
+  <td><code>patterns/observer/*.ts</code></td>
+  <td>RF11</td>
+  <td><code>padroes-projeto.test.ts</code>, <code>servicos.test.ts</code></td>
 </tr>
 <tr>
-<td>Strategy</td>
-<td><code>EstrategiaRoteirizacao</code>, <code>RotaMenorDistancia</code>, <code>RotaPorPrioridade</code>, <code>RotaCapacidadeVeiculo</code>, <code>Roteirizador</code></td>
-<td><code>patterns/strategy/EstrategiaRoteirizacao.ts</code></td>
-<td>RF15, RN04, RN07, RN08</td>
-<td><code>padroes-projeto.test.ts</code></td>
+  <td>Strategy</td>
+  <td><code>EstrategiaRoteirizacao</code>, <code>RotaMenorDistancia</code>, <code>RotaPorPrioridade</code>, <code>RotaCapacidadeVeiculo</code>, <code>Roteirizador</code></td>
+  <td><code>patterns/strategy/EstrategiaRoteirizacao.ts</code></td>
+  <td>RF15, RN04, RN07, RN08</td>
+  <td><code>padroes-projeto.test.ts</code></td>
 </tr>
-</tbody></table>
-<p>A suíte de testes (<strong>72 testes</strong> em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):</p>
+</tbody>
+</table>
+<p>O código contém <strong>76 casos de teste automatizados definidos em 8 arquivos</strong> para regras de negócio, padrões de projeto, serviços, API REST, códigos de status e segurança. Esses casos devem ser executados por <code>npm test</code> em uma instalação limpa; <strong>esta revisão não comprova a aprovação da suíte completa</strong>. Em paralelo, o script independente <code>npm run test:smoke</code> foi executado com sucesso, verificando 10 condições de autenticação, autorização, idempotência e seed:</p>
 <table>
 <thead>
 <tr>
-<th>Arquivo de teste</th>
-<th>Cobertura</th>
+  <th>Arquivo de teste</th>
+  <th>Cobertura</th>
 </tr>
 </thead>
-<tbody><tr>
-<td><code>tests/regras-negocio.test.ts</code></td>
-<td>RN01 a RN09 (10 testes)</td>
+<tbody>
+<tr>
+  <td><code>tests/regras-negocio.test.ts</code></td>
+  <td>RN01 a RN09 (10 testes)</td>
 </tr>
 <tr>
-<td><code>tests/padroes-projeto.test.ts</code></td>
-<td>Singleton, Factory Method, Adapter, Observer e Strategy (7 testes)</td>
+  <td><code>tests/padroes-projeto.test.ts</code></td>
+  <td>Singleton, Factory Method, Adapter, Observer e Strategy (7 testes)</td>
 </tr>
 <tr>
-<td><code>tests/servicos.test.ts</code></td>
-<td>Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes)</td>
+  <td><code>tests/servicos.test.ts</code></td>
+  <td>Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes)</td>
 </tr>
 <tr>
-<td><code>tests/seguranca.test.ts</code></td>
-<td>bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes)</td>
+  <td><code>tests/seguranca.test.ts</code></td>
+  <td>bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes)</td>
 </tr>
 <tr>
-<td><code>tests/requisitos.test.ts</code></td>
-<td>RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (12 testes)</td>
+  <td><code>tests/requisitos.test.ts</code></td>
+  <td>RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (12 testes)</td>
 </tr>
 <tr>
-<td><code>tests/persistencia.test.ts</code></td>
-<td>Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes)</td>
+  <td><code>tests/persistencia.test.ts</code></td>
+  <td>Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes)</td>
 </tr>
 <tr>
-<td><code>tests/api.test.ts</code></td>
-<td>Endpoints REST, RF19, RF20/RN09, ausência de <code>senhaHash</code>, 401/403/404/423 (17 testes)</td>
+  <td><code>tests/api.test.ts</code></td>
+  <td>Endpoints REST, RF19, RF20/RN09, ausência de <code>senhaHash</code>, 401/403/404/423 (17 testes)</td>
 </tr>
-</tbody></table>
-<hr>
+</tbody>
+</table>
+<hr />
 <h1>6. Prototipação das Telas</h1>
 <h2>6.1. Considerações Gerais</h2>
 <p>As telas do SIGLoSUS foram prototipadas como <strong>aplicação web navegável</strong> e estão implementadas em <code>pasta 02/siglosus/frontend</code>. Diferentemente de um protótipo estático, estas telas <strong>consomem a API REST real</strong> (seção 4), de modo que os dados exibidos (estoque, alertas, rotas, entregas) são produzidos pelo backend em execução — o que reforça a compatibilidade entre documentação, arquitetura, padrões e software.</p>
 <p>O layout é composto por um <strong>menu lateral fixo</strong> com as nove áreas funcionais, uma <strong>barra superior</strong> com o título da tela e o usuário autenticado, e uma <strong>área de conteúdo</strong> com cartões, tabelas e formulários. A paleta de cores (azul/teal) e os ícones remetem ao contexto de saúde pública. A interface é responsiva e foi projetada buscando o nível AA das diretrizes WCAG 2.1 (RNF06).</p>
 <h2>6.2. Tela de Acesso</h2>
 <p>Tela de login (UC01 / RF01). O usuário informa e-mail (ou CPF) e senha; as credenciais são validadas no backend e, em caso de sucesso, é emitido um token JWT e o usuário é direcionado ao painel conforme o seu perfil. Após cinco tentativas incorretas, o acesso é bloqueado temporariamente. A mesma tela oferece a <strong>recuperação de senha</strong> (RF02): o usuário informa o e-mail cadastrado e recebe um token temporário de uso único, com expiração, para redefinir a senha.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/01-login.png" alt="Tela de acesso (login)"></p>
+<p><img src="../imagens/telas/01-login.png" alt="Tela de acesso (login)" /></p>
 <p><strong>Figura 18 – Tela de acesso (login).</strong></p>
 <h2>6.3. Painel Gerencial</h2>
 <p>Painel inicial (RF21) com os principais indicadores: unidades atendidas, itens monitorados, itens críticos e alertas abertos. Apresenta a lista de itens em nível crítico, os alertas de desabastecimento e um atalho para sincronizar com os sistemas de origem (UC07).</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/02-dashboard.png" alt="Painel gerencial"></p>
+<p><img src="../imagens/telas/02-dashboard.png" alt="Painel gerencial" /></p>
 <p><strong>Figura 19 – Painel gerencial (dashboard).</strong></p>
 <h2>6.4. Estoque em Tempo Real</h2>
 <p>Consulta consolidada da posição de estoque (UC09 / RF09), com filtros por unidade, medicamento e situação crítica. A tela também permite registrar movimentações (RF08); cada movimentação dispara o padrão Observer, que pode gerar um alerta automaticamente.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/03-estoque.png" alt="Consulta de estoque"></p>
+<p><img src="../imagens/telas/03-estoque.png" alt="Consulta de estoque" /></p>
 <p><strong>Figura 20 – Tela de estoque em tempo real.</strong></p>
 <h2>6.5. Alertas de Desabastecimento</h2>
 <p>Lista os alertas gerados automaticamente (RF11), classificados por nível de risco (baixo, médio, alto e crítico). O gestor pode marcar um alerta como resolvido.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/04-alertas.png" alt="Alertas de desabastecimento"></p>
+<p><img src="../imagens/telas/04-alertas.png" alt="Alertas de desabastecimento" /></p>
 <p><strong>Figura 21 – Tela de alertas de desabastecimento.</strong></p>
 <h2>6.6. Redistribuição entre Unidades</h2>
 <p>Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em <em>Gerar sugestões</em>, o sistema identifica unidades com excedente e unidades com déficit e propõe transferências, respeitando RN01 (nível de segurança), RN03 (validade ≥ 90 dias) e RN08 (proximidade). O gestor pode aprovar ou rejeitar cada sugestão. A aprovação dá baixa imediata no estoque de origem (mercadoria em trânsito); o crédito no destino ocorre quando a entrega é recebida.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/05-redistribuicao.png" alt="Redistribuição entre unidades"></p>
+<p><img src="../imagens/telas/05-redistribuicao.png" alt="Redistribuição entre unidades" /></p>
 <p><strong>Figura 22 – Tela de redistribuição entre unidades.</strong></p>
 <h2>6.7. Rotas de Distribuição</h2>
 <p>Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as unidades de destino e a <strong>estratégia</strong> (padrão Strategy: menor distância, prioridade ou capacidade do veículo). O sistema apresenta a sequência de paradas, a distância total e o tempo estimado, e permite despachar a rota (UC17). Na estratégia por prioridade, unidades com medicamentos da RENAME em déficit recebem desempate favorável (RN06).</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/06-rotas.png" alt="Rotas de distribuição"></p>
+<p><img src="../imagens/telas/06-rotas.png" alt="Rotas de distribuição" /></p>
 <p><strong>Figura 23 – Tela de rotas de distribuição.</strong></p>
 <h2>6.8. Entregas</h2>
 <p>Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao despachar a rota, o sistema gera os itens previstos a partir das transferências aprovadas para cada unidade. Ao confirmar, o estoque da unidade de destino é creditado com esses itens (o servidor não confia em quantidades enviadas pelo cliente), as transferências vinculadas são concluídas e a rota é encerrada quando todas as paradas terminam; havendo divergência, o recebimento é registrado com pendência e o gestor é notificado.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/07-entregas.png" alt="Entregas"></p>
+<p><img src="../imagens/telas/07-entregas.png" alt="Entregas" /></p>
 <p><strong>Figura 24 – Tela de entregas.</strong></p>
 <h2>6.9. Integrações</h2>
 <p>Configuração e execução da sincronização com os sistemas de saúde externos (UC07 · RF07), evidenciando o padrão <strong>Adapter</strong>. A tela mostra os sistemas configurados, a situação de cada integração, a última sincronização e o resultado da sincronização (registros atualizados e divergências). <strong>Limite declarado:</strong> a sincronização executada no protótipo consome dados locais de demonstração; a conexão com as APIs oficiais depende de credenciais e homologação concedidas por terceiros.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/08-integracoes.png" alt="Integrações"></p>
+<p><img src="../imagens/telas/08-integracoes.png" alt="Integrações" /></p>
 <p><strong>Figura 25 – Tela de integrações com sistemas de saúde.</strong></p>
 <h2>6.10. Relatórios</h2>
 <p>Indicadores gerenciais (RF21) e geração de previsões de demanda (RF12). O usuário escolhe o período (30, 60 ou 90 dias) e o sistema calcula a quantidade prevista por unidade/medicamento, informando o método e a confiança da previsão.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/09-relatorios.png" alt="Relatórios"></p>
+<p><img src="../imagens/telas/09-relatorios.png" alt="Relatórios" /></p>
 <p><strong>Figura 26 – Tela de relatórios e previsão de demanda.</strong></p>
 <h2>6.11. Cadastros</h2>
 <p>Cadastros e administração: usuários e perfis (RF04), unidades de saúde (RF05), catálogo de medicamentos (RF06) e a trilha de auditoria das operações críticas (RF22 · RNF10). A tela permite <strong>cadastrar</strong> usuários, <strong>editar</strong> contas (inclusive os próprios dados), <strong>inativar e reativar</strong> usuários, <strong>cadastrar</strong> unidades de saúde e <strong>cadastrar</strong> medicamentos do catálogo, com validação no servidor (unicidade de e-mail, CPF, CNES e código CATMAT) e registro das operações na trilha de auditoria.</p>
-<p><img src="file:///C:/Users/AMZ%20ITACOATIARA%2002/Documents/Projeto%20de%20ES/1%20parte/pasta%2002/imagens/telas/10-cadastros.png" alt="Cadastros"></p>
+<p><img src="../imagens/telas/10-cadastros.png" alt="Cadastros" /></p>
 <p><strong>Figura 27 – Tela de cadastros e auditoria.</strong></p>
 <h2>6.12. Mapa de Navegação e Rastreabilidade</h2>
 <p>A Tabela 10 relaciona cada tela prototipada aos casos de uso e requisitos correspondentes, fechando a rastreabilidade entre a prototipação (seção 6), os requisitos (seção 2), os diagramas (seção 3), a arquitetura (seção 4) e os padrões (seção 5).</p>
@@ -1862,96 +2005,96 @@ npm test           # executa os 72 testes automatizados
 <table>
 <thead>
 <tr>
-<th>Tela</th>
-<th>Casos de uso</th>
-<th>Requisitos</th>
-<th>Regras</th>
-<th>Padrões evidenciados</th>
+  <th>Tela</th>
+  <th>Casos de uso</th>
+  <th>Requisitos</th>
+  <th>Regras</th>
+  <th>Padrões evidenciados</th>
 </tr>
 </thead>
-<tbody><tr>
-<td>Login</td>
-<td>UC01</td>
-<td>RF01, RF02, RF03</td>
-<td>—</td>
-<td>—</td>
+<tbody>
+<tr>
+  <td>Login</td>
+  <td>UC01</td>
+  <td>RF01, RF02, RF03</td>
+  <td>—</td>
+  <td>—</td>
 </tr>
 <tr>
-<td>Painel</td>
-<td>UC07, UC09</td>
-<td>RF21, RF09, RF11</td>
-<td>RN04</td>
-<td>Observer, Adapter</td>
+  <td>Painel</td>
+  <td>UC07, UC09</td>
+  <td>RF21, RF09, RF11</td>
+  <td>RN04</td>
+  <td>Observer, Adapter</td>
 </tr>
 <tr>
-<td>Estoque</td>
-<td>UC08, UC09</td>
-<td>RF08, RF09, RF10, RF18</td>
-<td>RN01, RN02</td>
-<td>Observer</td>
+  <td>Estoque</td>
+  <td>UC08, UC09</td>
+  <td>RF08, RF09, RF10, RF18</td>
+  <td>RN01, RN02</td>
+  <td>Observer</td>
 </tr>
 <tr>
-<td>Alertas</td>
-<td>UC11</td>
-<td>RF11</td>
-<td>—</td>
-<td>Observer, Factory Method</td>
+  <td>Alertas</td>
+  <td>UC11</td>
+  <td>RF11</td>
+  <td>—</td>
+  <td>Observer, Factory Method</td>
 </tr>
 <tr>
-<td>Redistribuição</td>
-<td>UC13, UC14</td>
-<td>RF13, RF14</td>
-<td>RN01, RN03, RN08</td>
-<td>—</td>
+  <td>Redistribuição</td>
+  <td>UC13, UC14</td>
+  <td>RF13, RF14</td>
+  <td>RN01, RN03, RN08</td>
+  <td>—</td>
 </tr>
 <tr>
-<td>Rotas</td>
-<td>UC16</td>
-<td>RF15, RF16</td>
-<td>RN04, RN06, RN07, RN08</td>
-<td>Strategy</td>
+  <td>Rotas</td>
+  <td>UC16</td>
+  <td>RF15, RF16</td>
+  <td>RN04, RN06, RN07, RN08</td>
+  <td>Strategy</td>
 </tr>
 <tr>
-<td>Entregas</td>
-<td>UC17, UC18</td>
-<td>RF16, RF17</td>
-<td>RN02</td>
-<td>Observer</td>
+  <td>Entregas</td>
+  <td>UC17, UC18</td>
+  <td>RF16, RF17</td>
+  <td>RN02</td>
+  <td>Observer</td>
 </tr>
 <tr>
-<td>Integrações</td>
-<td>UC07</td>
-<td>RF07</td>
-<td>—</td>
-<td>Adapter</td>
+  <td>Integrações</td>
+  <td>UC07</td>
+  <td>RF07</td>
+  <td>—</td>
+  <td>Adapter</td>
 </tr>
 <tr>
-<td>Relatórios</td>
-<td>UC12</td>
-<td>RF12, RF21</td>
-<td>—</td>
-<td>—</td>
+  <td>Relatórios</td>
+  <td>UC12</td>
+  <td>RF12, RF21</td>
+  <td>—</td>
+  <td>—</td>
 </tr>
 <tr>
-<td>Cadastros</td>
-<td>UC01, UC04</td>
-<td>RF04, RF05, RF06, RF22</td>
-<td>—</td>
-<td>Singleton</td>
+  <td>Cadastros</td>
+  <td>UC01, UC04</td>
+  <td>RF04, RF05, RF06, RF22</td>
+  <td>—</td>
+  <td>Singleton</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><strong>Navegação:</strong> todas as telas são acessíveis a partir do menu lateral; a tela de login é a porta de entrada. O menu é composto por: <strong>Painel · Estoque · Alertas · Redistribuição · Rotas · Entregas · Integrações · Relatórios · Cadastros</strong>.</p>
 <p><strong>Observação sobre RF19 e RF20:</strong> a dispensação ao paciente (<code>/api/dispensacoes</code>, RF19/RN05) e a gestão de requisições (<code>/api/requisicoes</code>, RF20/RN09) estão implementadas como API REST e podem ser operadas por requisição HTTP autenticada. Nesta entrega não foram criadas telas dedicadas para esses dois fluxos; a prototipação cobre o caminho operacional de redistribuição entre unidades (RF13/RF14), que dialoga diretamente com a distribuição demonstrada nas telas de rotas e entregas.</p>
-<hr>
+<hr />
 <h2>Referências</h2>
 <p>BRASIL. Ministério da Saúde. <strong>Materiais de referência da disciplina de Engenharia de Software</strong>. Itacoatiara: UFAM/ICET, 2026.</p>
 <p>GAMMA, Erich; HELM, Richard; JOHNSON, Ralph; VLISSIDES, John. <strong>Padrões de projeto: soluções reutilizáveis de software orientado a objetos</strong>. Porto Alegre: Bookman, 2000.</p>
 <p>MARTIN, Robert C. <strong>Arquitetura limpa: o guia do artesão para estrutura e design de software</strong>. Rio de Janeiro: Alta Books, 2019.</p>
 <p>PRESSMAN, Roger S. <strong>Engenharia de software: uma abordagem profissional</strong>. 7. ed. Porto Alegre: AMGH, 2011.</p>
 <p>SOMMERVILLE, Ian. <strong>Engenharia de software</strong>. 9. ed. São Paulo: Pearson Addison-Wesley, 2011.</p>
-<hr>
+<hr />
 <p><em>Documento completo (Partes 1 e 2) do projeto SIGLoSUS — Engenharia de Software B.</em></p>
 
-</div>
-</body>
-</html>
+</div></body></html>

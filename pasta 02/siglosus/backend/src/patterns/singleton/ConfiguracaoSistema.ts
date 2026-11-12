@@ -59,7 +59,7 @@ export class ConfiguracaoSistema {
       jornadaMaximaMin: Number(process.env.JORNADA_MAXIMA_MIN ?? 480),
       intervaloMaximoConsultaMs: Number(process.env.INTERVALO_MAXIMO_CONSULTA_MS ?? 2000),
       sincronizacaoAutomaticaMin: Number(process.env.SINCRONIZACAO_AUTOMATICA_MIN ?? 15),
-      versao: '2.1.0',
+      versao: '2.1.1',
       segredoJwt,
       tokenAcessoValidadeMin: Number(process.env.TOKEN_ACESSO_VALIDADE_MIN ?? 60),
       tokenRecuperacaoValidadeMin: Number(process.env.TOKEN_RECUPERACAO_VALIDADE_MIN ?? 30),

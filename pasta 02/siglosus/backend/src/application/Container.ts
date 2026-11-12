@@ -54,7 +54,7 @@ export interface OpcoesContainer {
    * escrita, de modo que os dados sobrevivem ao reinício do processo.
    */
   arquivoPersistencia?: string | null;
-  /** Quando `true`, o cenário de demonstração é carregado mesmo havendo arquivo salvo. */
+  /** Cenário de demonstração apenas em desenvolvimento/teste; proibido em produção. */
   forcarSeed?: boolean;
 }
 
@@ -210,12 +210,19 @@ export class Container {
     const arquivo = opcoes.arquivoPersistencia ?? null;
     this.persistencia = arquivo ? new PersistenciaJSON(arquivo) : null;
 
+    const ambiente = configuracao.obter('ambiente');
+    // Falha fechada: credenciais públicas de demonstração NUNCA entram em produção,
+    // independentemente das opções do construtor ou das variáveis de ambiente.
+    if (ambiente === 'production' &&
+        (opcoes.forcarSeed === true || process.env.SIGLOSUS_SEED_DEMO === 'true')) {
+      throw new Error('Dados de demonstração são proibidos em produção.');
+    }
+    if (ambiente === 'production' && !this.persistencia) {
+      throw new Error('Em produção é obrigatório configurar SIGLOSUS_ARQUIVO_PERSISTENCIA.');
+    }
     const carregou = this.persistencia && !opcoes.forcarSeed ? this.persistencia.carregar(this.db) : false;
-    const ambiente = ConfiguracaoSistema.obterInstancia().obter('ambiente');
-    const permitirSeed =
-      opcoes.forcarSeed === true ||
-      process.env.SIGLOSUS_SEED_DEMO === 'true' ||
-      (ambiente !== 'production' && !carregou);
+    const permitirSeed = ambiente !== 'production' &&
+      (opcoes.forcarSeed === true || process.env.SIGLOSUS_SEED_DEMO === 'true' || !carregou);
 
     if (!carregou && permitirSeed) {
       popularBanco(this.db);
