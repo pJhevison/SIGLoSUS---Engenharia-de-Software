@@ -20,8 +20,8 @@ async function carregarTransferencias() {
             `<td><strong>${t.quantidade}</strong></td><td>${badgeStatus(t.status)}</td>` +
             `<td>${
               t.status === 'SUGERIDA'
-                ? `<button class="btn pequeno sucesso" onclick="aprovar(${t.id})">Aprovar</button> ` +
-                  `<button class="btn pequeno perigo" onclick="rejeitar(${t.id})">Rejeitar</button>`
+                ? `<button class="btn pequeno sucesso" data-acao="aprovar" data-id="${t.id}">Aprovar</button> ` +
+                  `<button class="btn pequeno perigo" data-acao="rejeitar" data-id="${t.id}">Rejeitar</button>`
                 : '—'
             }</td></tr>`,
         )
@@ -50,6 +50,15 @@ async function rejeitar(id) {
     toast(ex.message, true);
   }
 }
+
+/* Delegação de eventos: evita manipuladores inline (CSP sem 'unsafe-inline'). */
+document.getElementById('tabela-transferencias').addEventListener('click', (evento) => {
+  const botao = evento.target.closest('button[data-acao]');
+  if (!botao) return;
+  const id = Number(botao.dataset.id);
+  if (botao.dataset.acao === 'aprovar') aprovar(id);
+  if (botao.dataset.acao === 'rejeitar') rejeitar(id);
+});
 
 document.getElementById('btn-sugerir').addEventListener('click', async (e) => {
   e.target.disabled = true;

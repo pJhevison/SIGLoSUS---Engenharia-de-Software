@@ -148,6 +148,7 @@ Nenhum requisito funcional foi classificado como ausente nesta versão. Permanec
 8. **CORS restrito** às origens configuradas e cabeçalhos de segurança (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Content-Security-Policy`).
 9. Segredos **nunca versionados**: `JWT_SECRET` vem de variável de ambiente e é obrigatório em produção.
 10. Respostas de erro interno **não expõem detalhes** (mensagem genérica em HTTP 500).
+11. **Content Security Policy restritiva** (`script-src 'self'`, sem `unsafe-inline`): todo o JavaScript das telas é carregado por arquivo externo e **não há manipuladores `onclick` inline** — as ações das tabelas usam delegação de eventos. Também foram revistos o `connect-src` (endereço da API) e o `object-src`, e adicionado um favicon próprio para eliminar requisições 404 na tela de acesso.
 
 ## 10. Alterações no banco de dados
 

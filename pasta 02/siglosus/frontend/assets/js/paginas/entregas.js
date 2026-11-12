@@ -19,8 +19,8 @@ async function carregarEntregas() {
             `<td>${e.dataHoraReal ? formatarData(e.dataHoraReal) : '—'}</td>` +
             `<td>${
               e.status === 'EM_TRANSITO' || e.status === 'PENDENTE'
-                ? `<button class="btn pequeno sucesso" onclick="confirmar(${e.id})">Confirmar</button> ` +
-                  `<button class="btn pequeno perigo" onclick="confirmar(${e.id}, true)">Com divergência</button>`
+                ? `<button class="btn pequeno sucesso" data-acao="confirmar" data-id="${e.id}">Confirmar</button> ` +
+                  `<button class="btn pequeno perigo" data-acao="confirmar-divergencia" data-id="${e.id}">Com divergência</button>`
                 : '—'
             }</td></tr>`,
         )
@@ -50,6 +50,15 @@ async function confirmar(id, divergencia = false) {
     toast(ex.message, true);
   }
 }
+
+/* Delegação de eventos: evita manipuladores inline (CSP sem 'unsafe-inline'). */
+document.getElementById('tabela-entregas').addEventListener('click', (evento) => {
+  const botao = evento.target.closest('button[data-acao]');
+  if (!botao) return;
+  const id = Number(botao.dataset.id);
+  if (botao.dataset.acao === 'confirmar') confirmar(id, false);
+  if (botao.dataset.acao === 'confirmar-divergencia') confirmar(id, true);
+});
 
 (async () => {
   try {

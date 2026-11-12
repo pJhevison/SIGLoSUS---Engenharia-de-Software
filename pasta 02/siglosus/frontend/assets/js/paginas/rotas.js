@@ -31,7 +31,7 @@ async function carregarRotas() {
             `<td>${r.estrategia || '—'}</td><td>${badgeStatus(r.status)}</td>` +
             `<td>${
               r.status === 'PLANEJADA'
-                ? `<button class="btn pequeno" onclick="despachar(${r.id})">Despachar (UC17)</button>`
+                ? `<button class="btn pequeno" data-acao="despachar" data-id="${r.id}">Despachar (UC17)</button>`
                 : '—'
             }</td></tr>`,
         )
@@ -48,6 +48,12 @@ async function despachar(id) {
     toast(ex.message, true);
   }
 }
+
+/* Delegação de eventos: evita manipuladores inline (CSP sem 'unsafe-inline'). */
+document.getElementById('tabela-rotas').addEventListener('click', (evento) => {
+  const botao = evento.target.closest('button[data-acao="despachar"]');
+  if (botao) despachar(Number(botao.dataset.id));
+});
 
 document.getElementById('btn-gerar').addEventListener('click', async (e) => {
   const destinos = [...document.querySelectorAll('.destino:checked')].map((c) => Number(c.value));

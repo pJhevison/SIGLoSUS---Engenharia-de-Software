@@ -40,12 +40,31 @@ export function limiteRequisicoes(opcoes: OpcoesLimite) {
 
 /**
  * Cabeçalhos de segurança aplicados às respostas (RNF01).
+ *
+ * A Content Security Policy é mantida restritiva: **sem** `unsafe-inline`
+ * para scripts, o que exige que todo JavaScript seja carregado por arquivo
+ * externo e que não existam manipuladores `onclick` inline. As folhas de
+ * estilo inline (`style="..."`) são liberadas, assim como as imagens em
+ * `data:`.
  */
 export function cabecalhosSeguranca(_req: Request, res: Response, next: NextFunction): void {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'no-referrer');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'");
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "connect-src 'self' http://localhost:3000 http://127.0.0.1:3000",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+    ].join('; '),
+  );
   res.removeHeader('X-Powered-By');
   next();
 }
