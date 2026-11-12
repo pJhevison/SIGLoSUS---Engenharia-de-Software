@@ -12,16 +12,17 @@ async function carregarPainel() {
     ]);
 
     const cartoes = [
-      { rotulo: 'Unidades atendidas', valor: painel.unidadesAtendidas, icone: '🏥' },
-      { rotulo: 'Itens monitorados', valor: painel.itensMonitorados, icone: '📦' },
-      { rotulo: 'Itens críticos', valor: painel.itensCriticos, icone: '⚠️', alerta: true },
-      { rotulo: 'Alertas abertos', valor: painel.alertasAbertos, icone: '🚨', alerta: true },
+      { rotulo: 'Unidades atendidas', valor: painel.unidadesAtendidas, icone: 'hospital' },
+      { rotulo: 'Itens monitorados', valor: painel.itensMonitorados, icone: 'estoque' },
+      { rotulo: 'Itens críticos', valor: painel.itensCriticos, icone: 'aviso', alerta: true },
+      { rotulo: 'Alertas abertos', valor: painel.alertasAbertos, icone: 'alertas', alerta: true },
     ];
     kpis.innerHTML = cartoes
       .map(
         (c) =>
           `<div class="card kpi ${c.alerta && c.valor > 0 ? 'alerta' : ''}">` +
-          `<div class="rotulo">${c.icone} ${c.rotulo}</div><div class="valor">${c.valor}</div></div>`,
+          `<div class="rotulo">${iconeSvg(c.icone)}<span>${c.rotulo}</span></div>` +
+          `<div class="valor">${c.valor}</div></div>`,
       )
       .join('');
 
@@ -34,7 +35,7 @@ async function carregarPainel() {
               `<td>${badgeRisco(e.nivelRisco)}</td></tr>`,
           )
           .join('')
-      : '<tr><td colspan="5" class="vazio">Nenhum item crítico. 👍</td></tr>';
+      : '<tr><td colspan="5" class="vazio">Nenhum item crítico.</td></tr>';
 
     tabelaAlertas.innerHTML = alertas.length
       ? alertas

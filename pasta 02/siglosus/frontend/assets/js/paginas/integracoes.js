@@ -31,8 +31,10 @@ document.getElementById('btn-sincronizar').addEventListener('click', async (e) =
     alvo.innerHTML = resultados
       .map(
         (r) =>
-          `<div>✅ <strong>${r.sistema}</strong>: ${r.atualizados}/${r.registrosRecebidos} registros atualizados` +
-          `${r.divergencias ? ` · <span style="color:var(--vermelho)">${r.divergencias} divergência(s)</span>` : ''}</div>`,
+          `<div class="linha-ok">${iconeSvg('check')}<span><strong>${r.sistema}</strong>: ` +
+          `${r.atualizados}/${r.registrosRecebidos} registros atualizados` +
+          `${r.divergencias ? ` · <span style="color:var(--vermelho)">${r.divergencias} divergência(s)</span>` : ''}` +
+          `</span></div>`,
       )
       .join('');
     toast('Sincronização concluída.');
