@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Cadastros</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Cadastros e gestão de usuários (RF04 · RF05 · RF06)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <div class="grid cols-2">
+          <section class="card">
+            <h2>👤 Usuários (RF04)</h2>
+            <table>
+              <thead><tr><th>#</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th>Ação</th></tr></thead>
+              <tbody id="tabela-usuarios"></tbody>
+            </table>
+          </section>
+
+          <section class="card">
+            <h2>➕ Novo usuário</h2>
+            <div class="form-linha">
+              <div><label for="u-nome">Nome</label><input id="u-nome" /></div>
+              <div><label for="u-cpf">CPF</label><input id="u-cpf" /></div>
+            </div>
+            <div class="form-linha">
+              <div><label for="u-email">E-mail</label><input id="u-email" type="email" /></div>
+              <div><label for="u-senha">Senha</label><input id="u-senha" type="password" /></div>
+            </div>
+            <div class="form-linha">
+              <div>
+                <label for="u-perfil">Perfil</label>
+                <select id="u-perfil">
+                  <option value="ADMINISTRADOR">Administrador</option>
+                  <option value="GESTOR">Gestor</option>
+                  <option value="FARMACEUTICO">Farmacêutico</option>
+                  <option value="ALMOXARIFE">Almoxarife</option>
+                  <option value="MOTORISTA">Motorista</option>
+                </select>
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn" id="btn-criar-usuario">Cadastrar</button>
+              </div>
+            </div>
+            <div class="legenda">A senha é armazenada como hash SHA-256 (RNF01) — nunca em texto puro.</div>
+          </section>
+        </div>
+
+        <div class="grid cols-2 mt-16">
+          <section class="card">
+            <h2>🏥 Unidades de saúde (RF05)</h2>
+            <table>
+              <thead><tr><th>#</th><th>Nome</th><th>Tipo</th><th>CNES</th><th>Cidade/UF</th></tr></thead>
+              <tbody id="tabela-unidades"></tbody>
+            </table>
+          </section>
+
+          <section class="card">
+            <h2>💊 Medicamentos (RF06)</h2>
+            <table>
+              <thead><tr><th>#</th><th>Nome</th><th>Apresentação</th><th>CATMAT</th><th>Controlado</th></tr></thead>
+              <tbody id="tabela-medicamentos"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="card mt-16">
+          <h2>📋 Trilha de auditoria (RF22 · RNF10)</h2>
+          <table>
+            <thead><tr><th>#</th><th>Usuário</th><th>Ação</th><th>Recurso</th><th>Detalhe</th><th>Data/hora</th><th>Resultado</th></tr></thead>
+            <tbody id="tabela-auditoria"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/cadastros.js"></script>
+</body>
+</html>

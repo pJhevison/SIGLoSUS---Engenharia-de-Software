@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Estoque</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Consulta de estoque em tempo real (UC09 · RF09)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <section class="card">
+          <div class="toolbar">
+            <div class="campo">
+              <label for="f-unidade">Unidade</label>
+              <select id="f-unidade"><option value="">Todas</option></select>
+            </div>
+            <div class="campo">
+              <label for="f-medicamento">Medicamento</label>
+              <select id="f-medicamento"><option value="">Todos</option></select>
+            </div>
+            <div class="campo">
+              <label>&nbsp;</label>
+              <label style="font-weight:500;color:var(--cinza-900)">
+                <input type="checkbox" id="f-criticos" style="width:auto" /> Somente críticos
+              </label>
+            </div>
+            <button class="btn secundario" id="btn-filtrar">Filtrar</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Unidade</th><th>Medicamento</th><th>Qtd. atual</th>
+                <th>Nível mín.</th><th>Nível seg.</th><th>Situação</th><th>Atualizado</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-estoque"></tbody>
+          </table>
+          <div class="legenda">Regra RN02 (FEFO): as saídas consomem primeiro os lotes que vencem antes.</div>
+        </section>
+
+        <section class="card mt-16">
+          <h2>Registrar movimentação de estoque (RF08)</h2>
+          <div class="form-linha">
+            <div>
+              <label for="m-estoque">Item de estoque</label>
+              <select id="m-estoque"></select>
+            </div>
+            <div>
+              <label for="m-tipo">Tipo</label>
+              <select id="m-tipo">
+                <option value="ENTRADA">Entrada</option>
+                <option value="SAIDA">Saída</option>
+                <option value="AJUSTE">Ajuste</option>
+              </select>
+            </div>
+            <div>
+              <label for="m-quantidade">Quantidade</label>
+              <input type="number" id="m-quantidade" min="0" value="10" />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn" id="btn-movimentar">Registrar</button>
+            </div>
+          </div>
+          <div class="legenda">Toda movimentação dispara o padrão Observer: se o estoque ficar abaixo do mínimo, um alerta (RF11) é gerado automaticamente.</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/estoque.js"></script>
+</body>
+</html>

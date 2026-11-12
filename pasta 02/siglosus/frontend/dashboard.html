@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Painel</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Painel gerencial (RF21)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <div class="grid cols-4" id="kpis"></div>
+
+        <div class="grid cols-2 mt-16">
+          <section class="card">
+            <h2>⚠️ Estoque em nível crítico</h2>
+            <table>
+              <thead><tr><th>Unidade</th><th>Medicamento</th><th>Atual</th><th>Mínimo</th><th>Risco</th></tr></thead>
+              <tbody id="tabela-criticos"></tbody>
+            </table>
+          </section>
+
+          <section class="card">
+            <h2>🚨 Alertas de desabastecimento</h2>
+            <table>
+              <thead><tr><th>Unidade</th><th>Medicamento</th><th>Risco</th><th>Gerado em</th></tr></thead>
+              <tbody id="tabela-alertas"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="card mt-16">
+          <h2>🔌 Integrações com sistemas de origem</h2>
+          <div class="acoes">
+            <button class="btn" id="btn-sincronizar">Sincronizar agora (UC07)</button>
+          </div>
+          <div id="resultado-sincronizacao" class="legenda"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/dashboard.js"></script>
+</body>
+</html>
