@@ -1,0 +1,59 @@
+classDiagram
+    direction TB
+
+    class EstoqueSubject {
+        -ObservadorEstoque[] observadores
+        +registrarObservador(o) void
+        +removerObservador(o) void
+        +listarObservadores() String[]
+        +notificar(evento) void
+    }
+
+    class ObservadorEstoque {
+        <<interface>>
+        +String nome
+        +atualizar(evento) void
+    }
+
+    class AlertaDesabastecimentoObserver {
+        -TratadorEventoEstoque tratador
+        +atualizar(evento) void
+    }
+    class NotificacaoEstoqueObserver {
+        -TipoNotificacao canal
+        +atualizar(evento) void
+    }
+
+    class TratadorEventoEstoque {
+        <<interface>>
+        +tratar(evento) void
+    }
+    class AlertaService {
+        +tratar(evento) void
+        +listar() AlertaDesabastecimento[]
+    }
+
+    class EventoEstoque {
+        +TipoMovimentacao tipo
+        +Estoque estoque
+        +Medicamento medicamento
+        +UnidadeSaude unidade
+        +int quantidadeMovimentada
+    }
+
+    class EstoqueService {
+        +registrarMovimentacao(dados)
+    }
+
+    AlertaDesabastecimentoObserver ..|> ObservadorEstoque
+    NotificacaoEstoqueObserver ..|> ObservadorEstoque
+    AlertaService ..|> TratadorEventoEstoque
+
+    AlertaDesabastecimentoObserver --> TratadorEventoEstoque : delega
+    EstoqueSubject --> ObservadorEstoque : notifica
+    EstoqueSubject ..> EventoEstoque : publica
+    EstoqueService --> EstoqueSubject : dispara
+    AlertaDesabastecimentoObserver ..> EventoEstoque : consome
+    NotificacaoEstoqueObserver ..> EventoEstoque : consome
+
+    note for EstoqueSubject "Observer: o assunto notifica automaticamente todos os observadores registrados a cada movimentacao de estoque."
