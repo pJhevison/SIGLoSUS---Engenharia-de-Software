@@ -44,6 +44,7 @@ Este documento destina-se a todos os colaboradores inseridos na execução do pr
 |---|---|---|---|
 | 1.0 | Desenvolvedor 1 | 11/11/2026 | Criação do escopo inicial e levantamento de requisitos (RF, RNF, RN). |
 | 1.1 | Desenvolvedor 2 | 11/11/2026 | Construção dos diagramas UML (casos de uso, sequência, atividades, classes e objetos). |
+| 1.2 | Desenvolvedor 3 | 12/11/2026 | Construção do front |
 
 ---
 
