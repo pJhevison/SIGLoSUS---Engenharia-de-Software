@@ -5,3 +5,4 @@ export * from './MedicamentoRepository';
 export * from './EstoqueRepository';
 export * from './DistribuicaoRepository';
 export * from './AuditoriaRepository';
+export * from './SegurancaRepository';

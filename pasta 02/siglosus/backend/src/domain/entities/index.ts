@@ -14,6 +14,8 @@ export * from './ParadaRota';
 export * from './Veiculo';
 export * from './Entrega';
 export * from './EntregaItem';
+export * from './PosicaoRota';
+export * from './TokenRecuperacaoSenha';
 export * from './IntegracaoExterna';
 export * from './Dispensacao';
 export * from './Relatorio';

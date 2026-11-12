@@ -1,4 +1,5 @@
 import { DatabaseMemoria } from '../infrastructure/database/DatabaseMemoria';
+import { PersistenciaJSON } from '../infrastructure/database/PersistenciaJSON';
 import { popularBanco } from '../infrastructure/seed/SeedData';
 import {
   AlertaRepository,
@@ -9,19 +10,23 @@ import {
   IntegracaoRepository,
   MedicamentoRepository,
   MovimentacaoRepository,
+  PosicaoRotaRepository,
   PrevisaoRepository,
   RelatorioRepository,
   RequisicaoRepository,
   RotaRepository,
+  TokenRecuperacaoRepository,
   TransferenciaRepository,
   UnidadeRepository,
   UsuarioRepository,
   VeiculoRepository,
 } from '../infrastructure/repositories';
+import { GerenciadorJWT } from '../infrastructure/security/GerenciadorJWT';
 import { TipoNotificacao } from '../domain/enums';
 import { AlertaDesabastecimentoObserver } from '../patterns/observer/AlertaDesabastecimentoObserver';
 import { EstoqueSubject } from '../patterns/observer/EstoqueSubject';
 import { NotificacaoEstoqueObserver } from '../patterns/observer/NotificacaoEstoqueObserver';
+import { ConfiguracaoSistema } from '../patterns/singleton/ConfiguracaoSistema';
 import { AlertaService } from './services/AlertaService';
 import { AuditoriaService } from './services/AuditoriaService';
 import { AutenticacaoService } from './services/AutenticacaoService';
@@ -29,12 +34,27 @@ import { DispensacaoService } from './services/DispensacaoService';
 import { EntregaService } from './services/EntregaService';
 import { EstoqueService } from './services/EstoqueService';
 import { IntegracaoService } from './services/IntegracaoService';
+import { MedicamentoService } from './services/MedicamentoService';
+import { PosicaoService } from './services/PosicaoService';
 import { PrevisaoDemandaService } from './services/PrevisaoDemandaService';
+import { RecuperacaoSenhaService } from './services/RecuperacaoSenhaService';
 import { RelatorioService } from './services/RelatorioService';
 import { RequisicaoService } from './services/RequisicaoService';
 import { RotaService } from './services/RotaService';
 import { TransferenciaService } from './services/TransferenciaService';
+import { UnidadeService } from './services/UnidadeService';
 import { UsuarioService } from './services/UsuarioService';
+
+export interface OpcoesContainer {
+  /**
+   * Caminho do arquivo de persistência. Quando informado, o estado do banco
+   * é carregado do arquivo (se existir) e gravado após cada operação de
+   * escrita, de modo que os dados sobrevivem ao reinício do processo.
+   */
+  arquivoPersistencia?: string | null;
+  /** Quando `true`, o cenário de demonstração é carregado mesmo havendo arquivo salvo. */
+  forcarSeed?: boolean;
+}
 
 /**
  * Container de injeção de dependências (composition root).
@@ -63,15 +83,21 @@ export class Container {
   readonly integracoes = new IntegracaoRepository(this.db);
   readonly relatorios = new RelatorioRepository(this.db);
   readonly auditoriaRepo = new AuditoriaRepository(this.db);
+  readonly tokensRecuperacao = new TokenRecuperacaoRepository(this.db);
+  readonly posicoes = new PosicaoRotaRepository(this.db);
 
   // Observer (Subject)
   readonly estoqueSubject = new EstoqueSubject();
   readonly notificacaoObserver = new NotificacaoEstoqueObserver(TipoNotificacao.EMAIL);
 
+  // Segurança
+  readonly jwt: GerenciadorJWT;
+
   // Serviços (camada de aplicação)
   readonly auditoria: AuditoriaService;
   readonly alerta: AlertaService;
   readonly autenticacao: AutenticacaoService;
+  readonly recuperacaoSenha: RecuperacaoSenhaService;
   readonly estoque: EstoqueService;
   readonly dispensacao: DispensacaoService;
   readonly previsao: PrevisaoDemandaService;
@@ -82,8 +108,21 @@ export class Container {
   readonly integracao: IntegracaoService;
   readonly relatorio: RelatorioService;
   readonly usuario: UsuarioService;
+  readonly unidade: UnidadeService;
+  readonly medicamento: MedicamentoService;
+  readonly posicao: PosicaoService;
 
-  constructor() {
+  /** Persistência em arquivo (null = somente em memória). */
+  readonly persistencia: PersistenciaJSON | null;
+
+  constructor(opcoes: OpcoesContainer = {}) {
+    const configuracao = ConfiguracaoSistema.obterInstancia();
+    this.jwt = new GerenciadorJWT({
+      segredo: configuracao.obter('segredoJwt'),
+      expiraEmMinutos: configuracao.obter('tokenAcessoValidadeMin'),
+      emissor: 'siglosus',
+    });
+
     this.auditoria = new AuditoriaService(this.auditoriaRepo);
     this.alerta = new AlertaService(this.alertas);
 
@@ -91,7 +130,12 @@ export class Container {
     this.estoqueSubject.registrarObservador(new AlertaDesabastecimentoObserver(this.alerta));
     this.estoqueSubject.registrarObservador(this.notificacaoObserver);
 
-    this.autenticacao = new AutenticacaoService(this.usuarios, this.auditoria);
+    this.autenticacao = new AutenticacaoService(this.usuarios, this.auditoria, this.jwt);
+    this.recuperacaoSenha = new RecuperacaoSenhaService(
+      this.usuarios,
+      this.tokensRecuperacao,
+      this.auditoria,
+    );
     this.estoque = new EstoqueService(
       this.estoques,
       this.movimentacoes,
@@ -155,8 +199,25 @@ export class Container {
       this.entregas,
     );
     this.usuario = new UsuarioService(this.usuarios, this.auditoria);
+    this.unidade = new UnidadeService(this.unidades, this.auditoria);
+    this.medicamento = new MedicamentoService(this.medicamentos, this.auditoria);
+    this.posicao = new PosicaoService(this.posicoes, this.rotas, this.auditoria);
 
-    popularBanco(this.db);
+    const arquivo = opcoes.arquivoPersistencia ?? null;
+    this.persistencia = arquivo ? new PersistenciaJSON(arquivo) : null;
+
+    const carregou = this.persistencia && !opcoes.forcarSeed ? this.persistencia.carregar(this.db) : false;
+    if (!carregou) {
+      popularBanco(this.db);
+      this.persistir();
+    }
+  }
+
+  /** Grava o estado atual em arquivo (quando a persistência está ativa). */
+  persistir(): void {
+    if (this.persistencia) {
+      this.persistencia.persistir(this.db);
+    }
   }
 
   /** Recria o cenário inicial (usado nos testes). */
@@ -164,5 +225,6 @@ export class Container {
     this.db.limpar();
     this.notificacaoObserver.limpar();
     popularBanco(this.db);
+    this.persistir();
   }
 }
