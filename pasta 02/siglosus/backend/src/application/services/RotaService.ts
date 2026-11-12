@@ -1,5 +1,6 @@
 import { ParadaRota, Rota } from '../../domain/entities';
 import { StatusParada, StatusRota } from '../../domain/enums';
+import { ErroNaoEncontrado, ErroValidacao } from '../../domain/errors';
 import { RegrasNegocio } from '../../domain/rules/RegrasNegocio';
 import {
   EstoqueRepository,
@@ -58,14 +59,14 @@ export class RotaService {
 
   gerarRota(dados: DadosRota): Rota {
     const veiculo = this.veiculos.buscarPorId(dados.veiculoId);
-    if (!veiculo) throw new Error('Veículo não encontrado.');
+    if (!veiculo) throw new ErroNaoEncontrado('Veículo não encontrado.');
     const origem = this.unidades.centralDeDistribuicao();
-    if (!origem) throw new Error('Central de distribuição não configurada.');
+    if (!origem) throw new ErroValidacao('Central de distribuição não configurada.');
 
     const pesoPorUnidade = dados.pesoPorUnidadeKg ?? 50;
     const pontos: PontoEntrega[] = dados.unidadesDestinoIds.map((id) => {
       const unidade = this.unidades.buscarPorId(id);
-      if (!unidade) throw new Error(`Unidade ${id} não encontrada.`);
+      if (!unidade) throw new ErroNaoEncontrado(`Unidade ${id} não encontrada.`);
       return {
         unidade,
         prioridade: this.calcularPrioridade(id),
