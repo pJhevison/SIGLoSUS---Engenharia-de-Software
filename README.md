@@ -27,6 +27,8 @@ O trabalho está organizado por partes (entregas). Cada parte fica em sua própr
 SIGLoSUS---Engenharia-de-Software/
 ├── README.md                               # Este arquivo
 ├── CONTRIBUTING.md                         # Práticas de versionamento (Git Flow, commits semânticos)
+├── CHANGELOG.md                            # Histórico de versões (Keep a Changelog)
+├── .github/                                # CI (GitHub Actions) e template de pull request
 ├── .gitignore
 ├── pasta 01/                               # Parte 1 — Requisitos e Modelagem UML (seções 1 a 3.5)
 │   ├── projeto final.docx                  # Documento ABNT da Parte 1
@@ -73,7 +75,7 @@ O backend (API REST + telas) usa **Node.js 20+**:
 cd "pasta 02/siglosus/backend"
 npm install
 npm start          # API e telas em http://localhost:3000
-npm test           # 33 testes automatizados
+npm test           # 45 testes automatizados
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`):

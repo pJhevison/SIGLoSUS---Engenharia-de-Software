@@ -168,6 +168,8 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RN08** | Transferências entre unidades devem priorizar as unidades mais próximas, a fim de reduzir custo e tempo de entrega. | Distribuição | Importante |
 | **RN09** | Requisições acima do limite de valor definido pela gestão exigem aprovação do gestor de assistência farmacêutica. | Gestão | Importante |
 
+As nove regras estão implementadas em `RegrasNegocio` e aplicadas em fluxos reais: RN01/RN03 na aprovação de transferências; RN02 na baixa de estoque; RN04/RN06 na priorização de rotas; RN05 na dispensação de controlados; RN07 na validação da rota; RN08 na sugestão de transferências; e RN09 na aprovação de requisições.
+
 ---
 
 # 3. Diagramas UML
@@ -320,14 +322,14 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 | **Atores secundários** | N/A |
 | **Resumo** | Descreve a análise e a aprovação (ou rejeição) de uma transferência sugerida. |
 | **Pré-condições** | Deve existir ao menos uma sugestão de transferência pendente. |
-| **Pós-condições** | Aprovada, a transferência é registrada e passa a compor as entregas a serem roteirizadas. |
+| **Pós-condições** | Aprovada, a transferência é registrada, a quantidade é baixada do estoque de origem (mercadoria em trânsito) e passa a compor as entregas a serem roteirizadas. O crédito no destino ocorre na confirmação de recebimento (UC18). |
 
 | Ações do Ator | Ações do Sistema |
 |---|---|
 | 1 – Analisar a sugestão de transferência | |
 | 2 – Aprovar ou rejeitar a sugestão | |
 | | 3 – Validar as regras de negócio aplicáveis |
-| | 4 – Registrar a decisão e atualizar a situação da transferência |
+| | 4 – Registrar a decisão, atualizar a situação da transferência e dar baixa na origem |
 | | 5 – Notificar as unidades envolvidas |
 
 | Restrições/Validações |
@@ -364,6 +366,7 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 |---|
 | A rota deve respeitar a capacidade de carga do veículo e a jornada do motorista (RN07). |
 | Unidades com estoque abaixo do mínimo têm prioridade (RN04). |
+| Em empate de prioridade, o abastecimento de medicamentos da RENAME é priorizado (RN06). |
 
 **Tabela 6 – Especificação do caso de uso Gerar rota de distribuição.**
 
@@ -383,10 +386,10 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 
 | Ações do Ator | Ações do Sistema |
 |---|---|
-| 1 – Conferir os itens e os lotes entregues | |
-| | 2 – Apresentar os itens previstos na entrega |
+| | 1 – Apresentar os itens previstos na entrega, gerados a partir das transferências aprovadas |
+| 2 – Conferir os itens e os lotes entregues | |
 | 3 – Confirmar o recebimento (ou registrar divergência) | |
-| | 4 – Atualizar o estoque da unidade de destino |
+| | 4 – Creditar o estoque da unidade de destino e concluir as transferências vinculadas |
 | | 5 – Encerrar a entrega e atualizar a situação da rota |
 
 | Restrições/Validações |
@@ -445,7 +448,7 @@ Os diagramas de sequência detalham a interação entre os atores e os objetos d
 
 ## 3.5. Diagrama de Classes
 
-O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos. A implementação em TypeScript (seção 4) materializa exatamente estas classes no pacote `src/domain/entities`.
+O diagrama de classes abaixo representa a estrutura estática do SIGLoSUS, com suas principais entidades, atributos, métodos e relacionamentos. A implementação em TypeScript (seção 4) materializa essas classes no pacote `src/domain/entities`, acrescentando apenas classes de apoio de granularidade menor (por exemplo, `EntregaItem`) e as enumerações centralizadas em `domain/enums.ts`.
 
 ![Diagrama de Classes](../imagens/09-classes.png)
 
@@ -495,7 +498,7 @@ A Figura 11 mostra os principais componentes de software e suas interfaces.
 Os componentes centrais são:
 
 - **Rotas REST (`infrastructure/http/routes.ts`)** — expõe os endpoints `/api/*` que traduzem as operações em chamadas aos serviços;
-- **Serviços de Aplicação** — `EstoqueService`, `TransferenciaService`, `RotaService`, `EntregaService`, `IntegracaoService`, `PrevisaoDemandaService`, `RelatorioService`, `AutenticacaoService`, `UsuarioService` e `AuditoriaService`;
+- **Serviços de Aplicação** — `EstoqueService`, `TransferenciaService`, `RequisicaoService`, `RotaService`, `EntregaService`, `IntegracaoService`, `PrevisaoDemandaService`, `RelatorioService`, `AutenticacaoService`, `UsuarioService` e `AuditoriaService`;
 - **Domínio** — entidades e `RegrasNegocio` (RN01 a RN09);
 - **Padrões de Projeto** — `patterns/*`, consumidos pelos serviços;
 - **Repositórios** — `UsuarioRepository`, `EstoqueRepository`, `RotaRepository`, entre outros, sobre o `DatabaseMemoria`.
@@ -578,7 +581,7 @@ SIGLoSUS---Engenharia-de-Software/
 cd "pasta 02/siglosus/backend"
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 33 testes automatizados
+npm test           # executa os 45 testes automatizados
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`): `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`, `motorista@siglosus.gov.br`, `admin@siglosus.gov.br`.
@@ -601,12 +604,12 @@ A Tabela 8 relaciona os requisitos funcionais aos componentes de software que os
 | RF10 | `EstoqueService.configurarNiveis()` | `PATCH /api/estoque/:id/niveis` |
 | RF11 | `AlertaService` + `AlertaDesabastecimentoObserver` (Observer) | `GET /api/alertas`, `PATCH /api/alertas/:id/resolver` |
 | RF12 | `PrevisaoDemandaService` | `POST /api/previsoes/gerar`, `GET /api/previsoes` |
-| RF13, RF14 | `TransferenciaService` | `POST /api/transferencias/sugerir`, `POST /api/transferencias/:id/aprovar` |
+| RF13, RF14 | `TransferenciaService`, `EstoqueService` | `POST /api/transferencias/sugerir`, `POST /api/transferencias/:id/aprovar` |
 | RF15, RF16 | `RotaService` + Strategy | `POST /api/rotas`, `POST /api/rotas/:id/despachar` |
-| RF17 | `EntregaService` | `POST /api/entregas/:id/confirmar` |
+| RF17 | `EntregaService`, `EntregaItem` | `GET /api/entregas`, `POST /api/entregas/:id/confirmar` |
 | RF18 | `Lote`, `RegrasNegocio` (RN02 FEFO) | (interno ao `EstoqueService`) |
-| RF19 | `Dispensacao`, `DispensacaoRepository` | (domínio) |
-| RF20 | `Requisicao`, `RequisicaoRepository` | (domínio) |
+| RF19 | `DispensacaoService`, `Dispensacao` (RN05) | `GET/POST /api/dispensacoes` |
+| RF20 | `RequisicaoService`, `Requisicao` (RN09) | `GET/POST /api/requisicoes`, `POST /api/requisicoes/:id/aprovar`, `POST /api/requisicoes/:id/rejeitar` |
 | RF21 | `RelatorioService` | `GET /api/relatorios/dashboard`, `POST /api/relatorios` |
 | RF22 | `AuditoriaService`, `LogAuditoria` | `GET /api/auditoria` |
 
@@ -712,14 +715,14 @@ export class ConfiguracaoSistema {
 | Observer | `EstoqueSubject`, `AlertaDesabastecimentoObserver`, `NotificacaoEstoqueObserver` | `patterns/observer/*.ts` | RF11 | `padroes-projeto.test.ts`, `servicos.test.ts` |
 | Strategy | `EstrategiaRoteirizacao`, `RotaMenorDistancia`, `RotaPorPrioridade`, `RotaCapacidadeVeiculo`, `Roteirizador` | `patterns/strategy/EstrategiaRoteirizacao.ts` | RF15, RN04, RN07, RN08 | `padroes-projeto.test.ts` |
 
-A suíte de testes (**33 testes** em 4 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação e da API REST:
+A suíte de testes (**45 testes** em 4 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST e dos códigos de status HTTP:
 
 | Arquivo de teste | Cobertura |
 |---|---|
 | `tests/regras-negocio.test.ts` | RN01 a RN09 (10 testes) |
 | `tests/padroes-projeto.test.ts` | Singleton, Factory Method, Adapter, Observer e Strategy (7 testes) |
-| `tests/servicos.test.ts` | Autenticação, estoque, transferências, rotas, entregas, integração, previsão e painel (9 testes) |
-| `tests/api.test.ts` | Endpoints REST principais (7 testes) |
+| `tests/servicos.test.ts` | Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes) |
+| `tests/api.test.ts` | Endpoints REST, RF19, RF20/RN09, ausência de `senhaHash`, 401/404/423 (14 testes) |
 
 ---
 
@@ -765,7 +768,7 @@ Lista os alertas gerados automaticamente (RF11), classificados por nível de ris
 
 ## 6.6. Redistribuição entre Unidades
 
-Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugestões*, o sistema identifica unidades com excedente e unidades com déficit e propõe transferências, respeitando RN01 (nível de segurança), RN03 (validade ≥ 90 dias) e RN08 (proximidade). O gestor pode aprovar ou rejeitar cada sugestão.
+Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugestões*, o sistema identifica unidades com excedente e unidades com déficit e propõe transferências, respeitando RN01 (nível de segurança), RN03 (validade ≥ 90 dias) e RN08 (proximidade). O gestor pode aprovar ou rejeitar cada sugestão. A aprovação dá baixa imediata no estoque de origem (mercadoria em trânsito); o crédito no destino ocorre quando a entrega é recebida.
 
 ![Redistribuição entre unidades](../imagens/telas/05-redistribuicao.png)
 
@@ -773,7 +776,7 @@ Painel de redistribuição (UC13/UC14 · RF13/RF14). Ao clicar em *Gerar sugest�
 
 ## 6.7. Rotas de Distribuição
 
-Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as unidades de destino e a **estratégia** (padrão Strategy: menor distância, prioridade ou capacidade do veículo). O sistema apresenta a sequência de paradas, a distância total e o tempo estimado, e permite despachar a rota (UC17).
+Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as unidades de destino e a **estratégia** (padrão Strategy: menor distância, prioridade ou capacidade do veículo). O sistema apresenta a sequência de paradas, a distância total e o tempo estimado, e permite despachar a rota (UC17). Na estratégia por prioridade, unidades com medicamentos da RENAME em déficit recebem desempate favorável (RN06).
 
 ![Rotas de distribuição](../imagens/telas/06-rotas.png)
 
@@ -781,7 +784,7 @@ Geração de rotas otimizadas (UC16 · RF15). O usuário escolhe o veículo, as 
 
 ## 6.8. Entregas
 
-Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao confirmar, o estoque da unidade de destino é atualizado; havendo divergência, o recebimento é registrado com pendência e o gestor é notificado.
+Acompanhamento e confirmação de recebimento das entregas (UC18 · RF17). Ao despachar a rota, o sistema gera os itens previstos a partir das transferências aprovadas para cada unidade. Ao confirmar, o estoque da unidade de destino é creditado com esses itens (o servidor não confia em quantidades enviadas pelo cliente), as transferências vinculadas são concluídas e a rota é encerrada quando todas as paradas terminam; havendo divergência, o recebimento é registrado com pendência e o gestor é notificado.
 
 ![Entregas](../imagens/telas/07-entregas.png)
 
@@ -824,13 +827,15 @@ A Tabela 10 relaciona cada tela prototipada aos casos de uso e requisitos corres
 | Estoque | UC08, UC09 | RF08, RF09, RF10, RF18 | RN01, RN02 | Observer |
 | Alertas | UC11 | RF11 | — | Observer, Factory Method |
 | Redistribuição | UC13, UC14 | RF13, RF14 | RN01, RN03, RN08 | — |
-| Rotas | UC16 | RF15, RF16 | RN04, RN07, RN08 | Strategy |
+| Rotas | UC16 | RF15, RF16 | RN04, RN06, RN07, RN08 | Strategy |
 | Entregas | UC17, UC18 | RF16, RF17 | RN02 | Observer |
 | Integrações | UC07 | RF07 | — | Adapter |
 | Relatórios | UC12 | RF12, RF21 | — | — |
-| Cadastros | UC01, UC04 | RF04, RF05, RF06, RF22 | RN05, RN06 | Singleton |
+| Cadastros | UC01, UC04 | RF04, RF05, RF06, RF22 | — | Singleton |
 
 **Navegação:** todas as telas são acessíveis a partir do menu lateral; a tela de login é a porta de entrada. O menu é composto por: **Painel · Estoque · Alertas · Redistribuição · Rotas · Entregas · Integrações · Relatórios · Cadastros**.
+
+**Observação sobre RF19 e RF20:** a dispensação ao paciente (`/api/dispensacoes`, RF19/RN05) e a gestão de requisições (`/api/requisicoes`, RF20/RN09) estão implementadas como API REST. Nesta entrega não foram criadas telas dedicadas para esses dois fluxos; a prototipação cobre o caminho operacional de redistribuição entre unidades (RF13/RF14), que dialoga diretamente com a distribuição demonstrada nas telas de rotas e entregas.
 
 ---
 

@@ -8,6 +8,22 @@
 
 ---
 
+## Status de execução (atualizado em 12/11/2026)
+
+| Item do plano P0 | Situação |
+|---|---|
+| RF14 — aprovação de transferência movimenta estoque | Implementado: baixa na origem na aprovação; crédito no destino na confirmação de recebimento |
+| RF17 — itens de entrega e entrada no destino | Implementado: `EntregaItem` gerado no despacho a partir das transferências aprovadas; confirmação usa os itens do servidor |
+| RN06 — prioridade RENAME na roteirização | Implementado como desempate em `RotaService.calcularPrioridade` |
+| RN09 — aprovação por limite de valor | Implementado no fluxo real de requisições (RF20), com perfil GESTOR/ADMINISTRADOR |
+| RN05 — conferência dupla de controlados | Implementado no fluxo real de dispensação (RF19), com lote obrigatório e baixa no lote informado |
+| `senhaHash` nas respostas da API | Corrigido no DTO de usuários |
+| Status HTTP (401/423/404/409) | Corrigidos com erros tipados e handler 404 |
+| CI, CHANGELOG e template de PR | Adicionados; Pull Requests dependem de `push` ao GitHub |
+| Suíte de testes | 45 testes passando (eram 33) |
+
+---
+
 ## 1. Resumo executivo
 
 O trabalho está em um nível acima da média: a documentação cobre as seis seções exigidas, tem 17 figuras, os diagramas UML são coerentes entre si, os **33 testes automatizados passam** (4 arquivos, exatamente como o documento afirma) e as telas consomem a API real — não são mockups estáticos.
