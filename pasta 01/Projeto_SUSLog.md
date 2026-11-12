@@ -750,6 +750,7 @@ Protótipos de baixa fidelidade das telas principais.
 |---|---|---|---|
 | 1.0 | Desenvolvedor 1 | 11/11/2026 | Escopo inicial, requisitos e regras de negócio. |
 | 1.1 | Desenvolvedor 2 | 11/11/2026 | Diagramas UML e modelagem de classes. |
+| 1.2 | Desenvolvedor 3 | 12/11/2026 | Criação do front e interface |
 
 ## 8.2. Referências
 
