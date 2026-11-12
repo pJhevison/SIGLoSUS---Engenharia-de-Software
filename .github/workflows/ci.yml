@@ -13,6 +13,12 @@ jobs:
     defaults:
       run:
         working-directory: pasta 02/siglosus/backend
+    env:
+      NODE_ENV: test
+      # Segredo de teste: em produção o valor vem do ambiente de execução.
+      JWT_SECRET: segredo-ci-siglosus-com-tamanho-minimo-de-32-caracteres
+      BCRYPT_COST: 4
+      LIMITE_LOGIN_POR_MINUTO: 100
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,3 +38,6 @@ jobs:
 
       - name: Executar testes
         run: npm test
+
+      - name: Compilar (build)
+        run: npm run build
