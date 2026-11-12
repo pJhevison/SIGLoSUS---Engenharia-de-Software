@@ -18,7 +18,6 @@ import { RegraNegocioError } from '../../domain/rules/RegrasNegocio';
 import { ConfiguracaoSistema } from '../../patterns/singleton/ConfiguracaoSistema';
 import { criarRotas } from './routes';
 import { cabecalhosSeguranca } from './middleware/seguranca';
-import { idempotencia } from './middleware/idempotencia';
 
 /** Origens liberadas quando `CORS_ORIGINS` não é definido. */
 const ORIGENS_PADRAO = ['http://localhost:3000', 'http://127.0.0.1:3000', 'null'];
@@ -77,14 +76,16 @@ export function criarApp(container: Container): Express {
   const app = express();
   const configuracao = ConfiguracaoSistema.obterInstancia();
   const origens = configuracao.obter('origensCors');
-  const origensPermitidas = origens.length > 0 ? origens : ORIGENS_PADRAO;
+  const emProducao = configuracao.obter('ambiente') === 'production';
+  // Produção sem CORS_ORIGINS configurado não libera nenhuma origem cross-site.
+  const origensPermitidas = origens.length > 0 ? origens : (emProducao ? [] : ORIGENS_PADRAO);
 
   app.disable('x-powered-by');
   app.use(cabecalhosSeguranca);
   app.use(
     cors({
       origin: (origem, callback) => {
-        callback(null, origemPermitida(origem, origensPermitidas, configuracao.obter('ambiente') === 'production'));
+        callback(null, origemPermitida(origem, origensPermitidas, emProducao));
       },
       methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
@@ -92,7 +93,6 @@ export function criarApp(container: Container): Express {
     }),
   );
   app.use(express.json({ limit: '256kb' }));
-  app.use(idempotencia(container));
 
   // Persistência: grava o estado após cada operação de escrita bem-sucedida,
   // para que os dados não se percam quando o processo é reiniciado.
