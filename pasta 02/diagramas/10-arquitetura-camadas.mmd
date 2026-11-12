@@ -1,0 +1,52 @@
+flowchart TB
+    subgraph L1["CAMADA DE APRESENTACAO - frontend/"]
+        direction LR
+        A1["Telas HTML/CSS/JS<br/>login, painel, estoque, alertas,<br/>redistribuicao, rotas, entregas,<br/>integracoes, relatorios, cadastros"]
+        A2["Cliente REST<br/>assets/js/api.js"]
+        A1 --> A2
+    end
+
+    subgraph L2["CAMADA DE APLICACAO - src/application/"]
+        direction LR
+        B2["Container<br/>Injecao de Dependencia"]
+        B1["Servicos de aplicacao<br/>Estoque, Rota, Transferencia,<br/>Integracao, Previsao, Relatorio,<br/>Autenticacao, Auditoria, ..."]
+        B2 --- B1
+    end
+
+    subgraph L3["CAMADA DE DOMINIO - src/domain/ e src/patterns/"]
+        direction LR
+        C1["Entidades<br/>Estoque, Lote, Rota,<br/>Usuario, Transferencia, ..."]
+        C2["Regras de Negocio<br/>RN01 a RN09"]
+        C3["Padroes de Projeto<br/>Singleton, Factory Method,<br/>Adapter, Observer, Strategy"]
+    end
+
+    subgraph L4["CAMADA DE INFRAESTRUTURA - src/infrastructure/"]
+        direction LR
+        D3["API REST<br/>Express / routes.ts"]
+        D1["Repositorios<br/>padrao Repository"]
+        D2["Banco de dados<br/>em memoria"]
+    end
+
+    EXT["Sistemas de Saude Externos<br/>e-SUS APS, HORUS/SNA, BNAFAR"]
+
+    A2 -->|"HTTP / JSON"| D3
+    D3 --> B1
+    B1 --> C1
+    B1 --> C2
+    B1 --> C3
+    B1 --> D1
+    D1 --> D2
+    C3 -.->|Adapter| EXT
+    EXT -.->|API| C3
+
+    classDef apresentacao fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e;
+    classDef aplicacao fill:#dcfce7,stroke:#15803d,color:#14532d;
+    classDef dominio fill:#fef9c3,stroke:#a16207,color:#713f12;
+    classDef infra fill:#ede9fe,stroke:#6d28d9,color:#3b0764;
+    classDef externo fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
+
+    class A1,A2 apresentacao;
+    class B1,B2 aplicacao;
+    class C1,C2,C3 dominio;
+    class D1,D2,D3 infra;
+    class EXT externo;

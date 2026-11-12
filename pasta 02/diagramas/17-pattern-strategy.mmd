@@ -1,0 +1,47 @@
+classDiagram
+    direction TB
+
+    class EstrategiaRoteirizacao {
+        <<interface>>
+        +String nome
+        +ordenar(origem, pontos) PontoEntrega[]
+    }
+
+    class RotaMenorDistancia {
+        +ordenar(origem, pontos)
+    }
+    class RotaPorPrioridade {
+        +ordenar(origem, pontos)
+    }
+    class RotaCapacidadeVeiculo {
+        -double capacidadeKg
+        +ordenar(origem, pontos)
+    }
+
+    class Roteirizador {
+        -EstrategiaRoteirizacao estrategia
+        +definirEstrategia(e) void
+        +estrategiaAtual String
+        +gerarRota(origem, pontos) PontoEntrega[]
+    }
+
+    class PontoEntrega {
+        +UnidadeSaude unidade
+        +int prioridade
+        +double pesoKg
+    }
+
+    class RotaService {
+        +gerarRota(dados) Rota
+        -selecionarEstrategia(nome, capacidade)
+    }
+
+    RotaMenorDistancia ..|> EstrategiaRoteirizacao
+    RotaPorPrioridade ..|> EstrategiaRoteirizacao
+    RotaCapacidadeVeiculo ..|> EstrategiaRoteirizacao
+
+    Roteirizador --> EstrategiaRoteirizacao : usa
+    Roteirizador ..> PontoEntrega : ordena
+    RotaService --> Roteirizador : delega
+
+    note for EstrategiaRoteirizacao "Strategy: cada algoritmo de roteirizacao e uma classe intercambiavel em tempo de execucao."

@@ -1,0 +1,47 @@
+classDiagram
+    direction TB
+
+    class NotificacaoFactory {
+        <<abstract>>
+        #criarNotificacao() Notificacao
+        +canal TipoNotificacao
+        +notificar(destinatario, mensagem) ResultadoNotificacao
+    }
+
+    class NotificacaoEmailFactory {
+        +criarNotificacao() Notificacao
+    }
+    class NotificacaoSmsFactory {
+        +criarNotificacao() Notificacao
+    }
+    class NotificacaoPushFactory {
+        +criarNotificacao() Notificacao
+    }
+
+    class Notificacao {
+        <<interface>>
+        +enviar(destinatario, mensagem) ResultadoNotificacao
+    }
+    class NotificacaoEmail {
+        +enviar(destinatario, mensagem)
+    }
+    class NotificacaoSms {
+        +enviar(destinatario, mensagem)
+    }
+    class NotificacaoPush {
+        +enviar(destinatario, mensagem)
+    }
+
+    NotificacaoEmailFactory --|> NotificacaoFactory
+    NotificacaoSmsFactory --|> NotificacaoFactory
+    NotificacaoPushFactory --|> NotificacaoFactory
+
+    NotificacaoEmail ..|> Notificacao
+    NotificacaoSms ..|> Notificacao
+    NotificacaoPush ..|> Notificacao
+
+    NotificacaoEmailFactory ..> NotificacaoEmail : cria
+    NotificacaoSmsFactory ..> NotificacaoSms : cria
+    NotificacaoPushFactory ..> NotificacaoPush : cria
+
+    note for NotificacaoFactory "Factory Method: a fabrica abstrata declara o metodo de criacao; cada subclasse decide o produto concreto."

@@ -1,0 +1,40 @@
+{
+  "name": "siglosus-backend",
+  "version": "2.0.0",
+  "description": "SIGLoSUS - API REST do Sistema Inteligente de Gestão Logística e Distribuição de Medicamentos do SUS",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sus",
+    "saude",
+    "logistica",
+    "estoque",
+    "engenharia-de-software",
+    "design-patterns"
+  ],
+  "author": "Pedro Jhevison Menezes de Souza",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.4",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.2"
+  }
+}

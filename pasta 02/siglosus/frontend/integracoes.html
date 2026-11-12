@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Integrações</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Integração com sistemas de saúde (UC07 · RF07)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <section class="card">
+          <h2>🔌 Padrão Adapter — sistemas de origem</h2>
+          <p class="legenda" style="margin-top:0">
+            Cada sistema legado (e-SUS APS, HÓRUS/SNA, BNAFAR) expõe os dados em um formato próprio.
+            O padrão <strong>Adapter</strong> traduz esses formatos para o modelo interno do SIGLoSUS.
+          </p>
+          <table>
+            <thead><tr><th>Sistema</th><th>Endpoint</th><th>Situação</th><th>Última sincronização</th></tr></thead>
+            <tbody id="tabela-integracoes"></tbody>
+          </table>
+        </section>
+
+        <section class="card mt-16">
+          <h2>Sincronizar com sistemas de origem (UC07)</h2>
+          <div class="form-linha">
+            <div>
+              <label for="i-sistema">Sistema</label>
+              <select id="i-sistema">
+                <option value="">Todos</option>
+              </select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn" id="btn-sincronizar">Sincronizar</button>
+            </div>
+          </div>
+          <div id="resultado" class="legenda"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/integracoes.js"></script>
+</body>
+</html>

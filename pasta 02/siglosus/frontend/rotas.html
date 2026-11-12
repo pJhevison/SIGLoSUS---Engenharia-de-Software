@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Rotas</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Gerar rota de distribuição (UC16 · RF15)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <section class="card">
+          <h2>Parâmetros da rota</h2>
+          <div class="form-linha">
+            <div>
+              <label for="r-veiculo">Veículo</label>
+              <select id="r-veiculo"></select>
+            </div>
+            <div>
+              <label for="r-estrategia">Estratégia (padrão Strategy)</label>
+              <select id="r-estrategia">
+                <option value="MENOR_DISTANCIA">Menor distância</option>
+                <option value="PRIORIDADE">Maior prioridade (RN04)</option>
+                <option value="CAPACIDADE_VEICULO">Capacidade do veículo (RN07)</option>
+              </select>
+            </div>
+          </div>
+          <label>Unidades de destino</label>
+          <div id="r-destinos" class="grid cols-4" style="margin-bottom:14px"></div>
+          <button class="btn" id="btn-gerar">Gerar rota otimizada (UC16)</button>
+          <div class="legenda">A estratégia pode ser trocada em tempo de execução — o algoritmo de ordenação é intercambiável.</div>
+        </section>
+
+        <section class="card mt-16" id="card-resultado" style="display:none">
+          <h2 id="resultado-titulo">Rota</h2>
+          <div id="resultado-corpo"></div>
+        </section>
+
+        <section class="card mt-16">
+          <h2>Rotas geradas</h2>
+          <table>
+            <thead><tr><th>#</th><th>Veículo</th><th>Paradas</th><th>Distância</th><th>Tempo</th><th>Estratégia</th><th>Situação</th><th>Ação</th></tr></thead>
+            <tbody id="tabela-rotas"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/rotas.js"></script>
+</body>
+</html>
