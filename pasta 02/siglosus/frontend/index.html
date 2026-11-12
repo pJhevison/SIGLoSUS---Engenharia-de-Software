@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SIGLoSUS — Acesso</title>
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 </head>
 <body>
   <div class="login-wrap">
@@ -28,7 +29,7 @@
         <strong>Esqueci minha senha (RF02)</strong>
         <div class="form-linha" style="margin-top:8px">
           <input id="email-recuperacao" type="email" placeholder="seu e-mail institucional" />
-          <button class="btn pequeno" id="btn-recuperar">Solicitar</button>
+          <button class="btn pequeno" id="btn-recuperar" type="button">Solicitar</button>
         </div>
         <div id="recuperacao" style="margin-top:8px"></div>
       </div>
@@ -42,50 +43,6 @@
   </div>
 
   <script src="assets/js/api.js"></script>
-  <script>
-    const form = document.getElementById('form-login');
-    const erro = document.getElementById('erro');
-    const sessao = Sessao.obter();
-    if (sessao && sessao.token) location.href = 'dashboard.html';
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      erro.style.display = 'none';
-      const botao = form.querySelector('button');
-      botao.disabled = true;
-      botao.textContent = 'Entrando…';
-      try {
-        const dados = await api.post('/auth/login', {
-          identificador: document.getElementById('identificador').value,
-          senha: document.getElementById('senha').value,
-        });
-        Sessao.salvar(dados);
-        location.href = 'dashboard.html';
-      } catch (ex) {
-        erro.textContent = ex.message || 'Não foi possível autenticar.';
-        erro.style.display = 'block';
-        botao.disabled = false;
-        botao.textContent = 'Entrar';
-      }
-    });
-
-    /* Recuperação de senha (RF02): gera um token temporário de uso único. */
-    document.getElementById('btn-recuperar').addEventListener('click', async () => {
-      const alvo = document.getElementById('recuperacao');
-      const email = document.getElementById('email-recuperacao').value.trim();
-      if (!email) {
-        alvo.textContent = 'Informe o e-mail cadastrado.';
-        return;
-      }
-      try {
-        const resposta = await api.post('/auth/recuperar-senha', { email });
-        alvo.textContent = resposta.token
-          ? `Token temporário: ${resposta.token} (em produção ele é enviado por e-mail).`
-          : 'Se o e-mail estiver cadastrado, o token de recuperação foi enviado.';
-      } catch (ex) {
-        alvo.textContent = ex.message;
-      }
-    });
-  </script>
+  <script src="assets/js/paginas/login.js"></script>
 </body>
 </html>

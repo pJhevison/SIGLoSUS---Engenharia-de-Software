@@ -41,3 +41,6 @@ jobs:
 
       - name: Compilar (build)
         run: npm run build
+
+      - name: Testes de regressão de segurança (smoke)
+        run: node tests/smoke.cjs

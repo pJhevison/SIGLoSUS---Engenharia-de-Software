@@ -16,6 +16,8 @@ export * from './Entrega';
 export * from './EntregaItem';
 export * from './PosicaoRota';
 export * from './TokenRecuperacaoSenha';
+export * from './TokenRevogado';
+export * from './ResultadoIdempotencia';
 export * from './IntegracaoExterna';
 export * from './Dispensacao';
 export * from './Relatorio';

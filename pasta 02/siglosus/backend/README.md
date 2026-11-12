@@ -17,7 +17,7 @@ npm install
 cp .env.example .env      # ajuste o JWT_SECRET (obrigatório em produção)
 npm start        # sobe a API e as telas em http://localhost:3000
 npm run dev      # modo watch (tsx watch)
-npm test         # executa os 71 testes automatizados
+npm test         # executa os 72 testes automatizados
 npm run typecheck
 npm run build     # compila para dist/
 ```
@@ -157,7 +157,7 @@ Todas as rotas, exceto `/health` e as de autenticação listadas como públicas,
 
 ## Testes
 
-A suíte (71 testes em 7 arquivos) comprova regras, padrões, serviços, API, segurança e persistência:
+A suíte (72 testes em 7 arquivos) comprova regras, padrões, serviços, API, segurança e persistência:
 
 | Arquivo | Cobertura | Testes |
 |---|---|---|

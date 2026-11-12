@@ -6,6 +6,7 @@ import { ErroNaoEncontrado } from '../../domain/errors';
 import { ConfiguracaoSistema } from '../../patterns/singleton/ConfiguracaoSistema';
 import { autenticar, autorizar, RequisicaoAutenticada, usuarioDaRequisicao } from './middleware/autenticacao';
 import { limiteRequisicoes } from './middleware/seguranca';
+import { idempotencia } from './middleware/idempotencia';
 
 const PERFIS = PerfilUsuario;
 
@@ -84,13 +85,14 @@ export function criarRotas(container: Container): Router {
     }),
     (req, res) => {
       const resultado = container.recuperacaoSenha.solicitar(String(req.body?.email ?? ''));
-      // A resposta é a mesma exista ou não a conta, para não revelar cadastros.
+      // A resposta é **idêntica** exista ou não a conta, para não revelar
+      // quais e-mails estão cadastrados (RNF01 — confidencialidade).
       res.json({
         mensagem:
-          'Se houver uma conta ativa para o e-mail informado, um token de recuperação válido foi gerado.',
-        contaEncontrada: resultado.contaEncontrada,
+          'Se houver uma conta ativa para o e-mail informado, um token de recuperação válido foi gerado e enviado ao titular.',
         // Somente fora do ambiente de produção: em produção o token é enviado
-        // por e-mail (serviço externo, fora do escopo do protótipo).
+        // por e-mail (serviço externo, fora do escopo do protótipo) e nunca
+        // aparece na resposta.
         token: resultado.token,
         expiraEm: resultado.expiraEm,
       });
@@ -135,7 +137,7 @@ export function criarRotas(container: Container): Router {
     res.json(container.usuario.listar().map(usuarioDTO));
   });
 
-  router.post('/usuarios', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), (req, res) => {
+  router.post('/usuarios', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const usuario = container.usuario.criar(req.body, usuarioDaRequisicao(req));
     res.status(201).json(usuarioDTO(usuario));
   });
@@ -149,12 +151,12 @@ export function criarRotas(container: Container): Router {
     res.json(usuarioDTO(usuario));
   });
 
-  router.patch('/usuarios/:id/inativar', autorizar(PERFIS.ADMINISTRADOR), (req, res) => {
+  router.patch('/usuarios/:id/inativar', autorizar(PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const usuario = container.usuario.inativar(Number(req.params.id), usuarioDaRequisicao(req));
     res.json(usuarioDTO(usuario));
   });
 
-  router.patch('/usuarios/:id/ativar', autorizar(PERFIS.ADMINISTRADOR), (req, res) => {
+  router.patch('/usuarios/:id/ativar', autorizar(PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const usuario = container.usuario.ativar(Number(req.params.id), usuarioDaRequisicao(req));
     res.json(usuarioDTO(usuario));
   });
@@ -164,12 +166,12 @@ export function criarRotas(container: Container): Router {
     res.json(container.unidade.listar());
   });
 
-  router.post('/unidades', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), (req, res) => {
+  router.post('/unidades', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const unidade = container.unidade.criar(req.body, usuarioDaRequisicao(req).id);
     res.status(201).json(unidade);
   });
 
-  router.patch('/unidades/:id', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), (req, res) => {
+  router.patch('/unidades/:id', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const unidade = container.unidade.atualizar(
       Number(req.params.id),
       req.body ?? {},
@@ -183,12 +185,12 @@ export function criarRotas(container: Container): Router {
     res.json(container.medicamento.listar());
   });
 
-  router.post('/medicamentos', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), (req, res) => {
+  router.post('/medicamentos', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const medicamento = container.medicamento.criar(req.body, usuarioDaRequisicao(req).id);
     res.status(201).json(medicamento);
   });
 
-  router.patch('/medicamentos/:id', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), (req, res) => {
+  router.patch('/medicamentos/:id', autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR), idempotencia(container), (req, res) => {
     const medicamento = container.medicamento.atualizar(
       Number(req.params.id),
       req.body ?? {},
@@ -214,6 +216,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/estoque/movimentacoes',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const resultado = container.estoque.registrarMovimentacao({
         ...(req.body ?? {}),
@@ -229,6 +232,7 @@ export function criarRotas(container: Container): Router {
   router.patch(
     '/estoque/:id/niveis',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const { nivelMinimo, nivelSeguranca } = req.body ?? {};
       const estoque = container.estoque.configurarNiveis(
@@ -249,6 +253,7 @@ export function criarRotas(container: Container): Router {
   router.patch(
     '/alertas/:id/resolver',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(container.alerta.resolver(Number(req.params.id)));
     },
@@ -262,6 +267,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/previsoes/gerar',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const periodo = Number(req.body?.periodoDias ?? 30);
       res.json(container.previsao.preverTodas(periodo));
@@ -276,6 +282,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/transferencias/sugerir',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (_req, res) => {
       res.json(container.transferencia.sugerir());
     },
@@ -284,6 +291,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/transferencias/:id/aprovar',
     autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(container.transferencia.aprovar(Number(req.params.id), usuarioDaRequisicao(req).id));
     },
@@ -292,6 +300,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/transferencias/:id/rejeitar',
     autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(
         container.transferencia.rejeitar(
@@ -312,6 +321,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/dispensacoes',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const dispensacao = container.dispensacao.registrar({
         ...(req.body ?? {}),
@@ -329,6 +339,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/requisicoes',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const requisicao = container.requisicao.criar({
         ...(req.body ?? {}),
@@ -341,6 +352,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/requisicoes/:id/aprovar',
     autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(container.requisicao.aprovar(Number(req.params.id), usuarioDaRequisicao(req).id));
     },
@@ -349,6 +361,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/requisicoes/:id/rejeitar',
     autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(
         container.requisicao.rejeitar(
@@ -378,6 +391,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/rotas',
     autorizar(PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.status(201).json(
         container.rota.gerarRota({ ...(req.body ?? {}), usuarioId: usuarioDaRequisicao(req).id }),
@@ -388,6 +402,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/rotas/:id/despachar',
     autorizar(PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(container.entrega.despachar(Number(req.params.id), usuarioDaRequisicao(req).id));
     },
@@ -405,6 +420,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/rotas/:id/posicoes',
     autorizar(PERFIS.MOTORISTA, PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       const posicao = container.posicao.registrar({
         rotaId: Number(req.params.id),
@@ -429,6 +445,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/entregas/:id/confirmar',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.ALMOXARIFE, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(
         container.entrega.confirmarRecebimento(Number(req.params.id), {
@@ -450,6 +467,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/integracoes/sincronizar',
     autorizar(PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.json(
         container.integracao.sincronizar(usuarioDaRequisicao(req).id, req.body?.sistema),
@@ -469,6 +487,7 @@ export function criarRotas(container: Container): Router {
   router.post(
     '/relatorios',
     autorizar(PERFIS.FARMACEUTICO, PERFIS.GESTOR, PERFIS.ADMINISTRADOR),
+    idempotencia(container),
     (req, res) => {
       res.status(201).json(
         container.relatorio.gerar(String(req.body?.tipo ?? 'geral'), usuarioDaRequisicao(req).id),

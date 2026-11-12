@@ -10,11 +10,11 @@ async function carregarUsuarios() {
         `<tr><td>${u.id}</td><td>${esc(u.nome)}</td><td>${esc(u.email)}</td>` +
         `<td><span class="badge azul">${esc(u.perfil)}</span></td>` +
         `<td>${u.ativo ? '<span class="badge verde">ATIVO</span>' : '<span class="badge cinza">INATIVO</span>'}</td>` +
-        `<td><button class="btn pequeno" onclick="editar(${u.id})">Editar</button> ` +
+        `<td><button class="btn pequeno" data-acao="editar" data-id="${u.id}">Editar</button> ` +
         `${
           u.ativo
-            ? `<button class="btn pequeno perigo" onclick="inativar(${u.id})">Inativar</button>`
-            : `<button class="btn pequeno" onclick="ativar(${u.id})">Ativar</button>`
+            ? `<button class="btn pequeno perigo" data-acao="inativar" data-id="${u.id}">Inativar</button>`
+            : `<button class="btn pequeno" data-acao="ativar" data-id="${u.id}">Ativar</button>`
         }</td></tr>`,
     )
     .join('');
@@ -101,6 +101,16 @@ async function editar(id) {
     toast(ex.message, true);
   }
 }
+
+/* Delegação de eventos: evita manipuladores inline (CSP sem 'unsafe-inline'). */
+document.getElementById('tabela-usuarios').addEventListener('click', (evento) => {
+  const botao = evento.target.closest('button[data-acao]');
+  if (!botao) return;
+  const id = Number(botao.dataset.id);
+  if (botao.dataset.acao === 'editar') editar(id);
+  if (botao.dataset.acao === 'inativar') inativar(id);
+  if (botao.dataset.acao === 'ativar') ativar(id);
+});
 
 document.getElementById('btn-criar-usuario').addEventListener('click', async () => {
   const nome = document.getElementById('u-nome').value.trim();

@@ -12,7 +12,7 @@ async function carregarAlertas() {
             `<td>${
               a.status === 'RESOLVIDO'
                 ? '—'
-                : `<button class="btn pequeno" onclick="resolver(${a.id})">Resolver</button>`
+                : `<button class="btn pequeno" data-acao="resolver" data-id="${a.id}">Resolver</button>`
             }</td></tr>`,
         )
         .join('')
@@ -28,5 +28,11 @@ async function resolver(id) {
     toast(ex.message, true);
   }
 }
+
+/* Delegação de eventos: evita manipuladores inline (CSP sem 'unsafe-inline'). */
+document.getElementById('tabela-alertas').addEventListener('click', (evento) => {
+  const botao = evento.target.closest('button[data-acao="resolver"]');
+  if (botao) resolver(Number(botao.dataset.id));
+});
 
 carregarAlertas().catch((ex) => toast(ex.message, true));

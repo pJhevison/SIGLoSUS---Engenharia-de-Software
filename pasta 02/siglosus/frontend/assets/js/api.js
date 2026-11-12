@@ -7,8 +7,26 @@
      posterior e identificador de idempotência para evitar duplicidade.
    ========================================================================== */
 
-const API_BASE =
-  location.protocol === 'file:' ? 'http://localhost:3000/api' : location.origin + '/api';
+/**
+ * Endereço da API.
+ *
+ * - `window.SIGLOSUS_API_BASE` tem precedência (configuração explícita).
+ * - Se as telas são servidas pela própria API (http://localhost:3000), usa a
+ *   mesma origem.
+ * - Se as telas forem abertas por outro servidor estático (por exemplo, o Live
+ *   Server do VS Code na porta 5500) ou por `file://`, aponta para o backend
+ *   na porta padrão — evita que a chamada vá para um servidor sem API.
+ */
+function resolverBaseApi() {
+  if (window.SIGLOSUS_API_BASE) return window.SIGLOSUS_API_BASE;
+  if (location.protocol === 'file:') return 'http://localhost:3000/api';
+  const origem = location.origin;
+  const porta = location.port;
+  if (porta && porta !== '3000') return 'http://localhost:3000/api';
+  return origem + '/api';
+}
+
+const API_BASE = resolverBaseApi();
 
 const CHAVE_SESSAO = 'siglosus.sessao';
 const CHAVE_FILA = 'siglosus.filaOffline';
@@ -90,8 +108,16 @@ const FilaOffline = {
     let enviadas = 0;
     const restantes = [];
     for (const operacao of operacoes) {
+      // Uma fila de outro usuário nunca deve ser enviada com a sessão atual.
+      const usuarioAtual = Sessao.obter()?.usuario?.id;
+      if (!usuarioAtual || operacao.usuarioId !== usuarioAtual) {
+        restantes.push(operacao);
+        continue;
+      }
       try {
-        await requisicao(operacao.metodo, operacao.caminho, operacao.corpo, { semFila: true });
+        await requisicao(operacao.metodo, operacao.caminho, operacao.corpo, {
+          semFila: true, idem: operacao.idem,
+        });
         enviadas += 1;
       } catch (erro) {
         if (erro.status && erro.status >= 400 && erro.status < 500) {
@@ -113,11 +139,20 @@ window.addEventListener('online', () => {
 });
 
 /* ---------------------------- Requisições -------------------------------- */
+function novaChaveIdempotencia() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function requisicao(metodo, caminho, corpo, opcoes = {}) {
   const sessao = Sessao.obter();
+  // Uma operação nova recebe chave única; os reenvios reutilizam a mesma chave.
+  const idem = metodo !== 'GET' ? (opcoes.idem || novaChaveIdempotencia()) : undefined;
   const cabecalhos = { 'Content-Type': 'application/json' };
   if (sessao && sessao.token) cabecalhos.Authorization = `Bearer ${sessao.token}`;
-  if (corpo !== undefined) cabecalhos['Idempotency-Key'] = opcoes.idem || caminho;
+  if (idem) cabecalhos['Idempotency-Key'] = idem;
 
   let resposta;
   try {
@@ -129,17 +164,29 @@ async function requisicao(metodo, caminho, corpo, opcoes = {}) {
   } catch (erro) {
     // Falha de rede: a operação entra na fila offline (quando permitido).
     if (!opcoes.semFila && metodo !== 'GET') {
-      FilaOffline.enfileirar({ metodo, caminho, corpo, idem: opcoes.idem || caminho });
+      FilaOffline.enfileirar({ metodo, caminho, corpo, idem, usuarioId: sessao?.usuario?.id });
       return { offline: true, mensagem: 'Operação registrada na fila offline.' };
     }
-    throw new Error('Sem conexão com o servidor.');
+    throw new Error(
+      `Sem conexão com a API (${API_BASE}). Verifique se o backend está rodando (npm start).`,
+    );
   }
 
   const texto = await resposta.text();
-  const dados = texto ? JSON.parse(texto) : null;
+  let dados = null;
+  try {
+    dados = texto ? JSON.parse(texto) : null;
+  } catch {
+    dados = null;
+  }
 
   if (!resposta.ok) {
-    const erro = new Error((dados && (dados.erro || dados.message)) || 'Falha na requisição');
+    const mensagem = dados && (dados.erro || dados.message);
+    const erro = new Error(
+      mensagem ||
+        `Falha na requisição (HTTP ${resposta.status}). ` +
+          `Verifique se a API está disponível em ${API_BASE}.`,
+    );
     erro.status = resposta.status;
     erro.codigo = dados && dados.codigo;
     if (resposta.status === 401) {

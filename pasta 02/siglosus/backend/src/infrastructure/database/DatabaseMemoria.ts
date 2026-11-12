@@ -11,8 +11,10 @@ import {
   PrevisaoDemanda,
   Relatorio,
   Requisicao,
+  ResultadoIdempotencia,
   Rota,
   TokenRecuperacaoSenha,
+  TokenRevogado,
   Transferencia,
   UnidadeSaude,
   Usuario,
@@ -46,6 +48,8 @@ export class DatabaseMemoria {
   relatorios: Relatorio[] = [];
   auditoria: LogAuditoria[] = [];
   tokensRecuperacao: TokenRecuperacaoSenha[] = [];
+  tokensRevogados: TokenRevogado[] = [];
+  resultadosIdempotencia: ResultadoIdempotencia[] = [];
   posicoes: PosicaoRota[] = [];
 
   private contadores = new Map<string, number>();
@@ -88,6 +92,8 @@ export class DatabaseMemoria {
       relatorios: this.relatorios,
       auditoria: this.auditoria,
       tokensRecuperacao: this.tokensRecuperacao,
+      tokensRevogados: this.tokensRevogados,
+      resultadosIdempotencia: this.resultadosIdempotencia,
       posicoes: this.posicoes,
     };
   }
@@ -110,6 +116,8 @@ export class DatabaseMemoria {
     this.relatorios = [];
     this.auditoria = [];
     this.tokensRecuperacao = [];
+    this.tokensRevogados = [];
+    this.resultadosIdempotencia = [];
     this.posicoes = [];
     this.contadores.clear();
   }

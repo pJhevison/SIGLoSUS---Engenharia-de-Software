@@ -5,10 +5,10 @@
 **Instituição:** Universidade Federal do Amazonas – UFAM / Instituto de Ciências Exatas e Tecnologia – ICET
 **Curso:** Engenharia de Software
 **Disciplina:** Engenharia de Software B
-**Professor:** Walter Jonas
+**Professor:** Walter Viana
 **Autor:** Pedro Jhevison Menezes de Souza
-**Documento:** Documentação Completa do Projeto — Partes 1 e 2
-**Extensão:** 41 páginas, 27 figuras e 10 tabelas
+**Documento:** Documentação consolidada para entrega final — seções 1 a 6
+**Extensão:** documentação consolidada com 27 figuras (paginação indicada no PDF final)
 **Local/Ano:** Itacoatiara – Amazonas, 2026
 
 ---
@@ -38,6 +38,8 @@
    - [4.7. Segurança, Autenticação e Autorização](#47-segurança-autenticação-e-autorização)
    - [4.8. Persistência de Dados](#48-persistência-de-dados)
    - [4.9. Rastreabilidade: Requisitos × Componentes](#49-rastreabilidade-requisitos--componentes)
+   - [4.10. Gerência de Configuração e Versionamento](#410-gerência-de-configuração-e-versionamento)
+   - [4.11. Validação e Limitações da Entrega](#411-validação-e-limitações-da-entrega)
 5. [Padrões de Projeto](#5-padrões-de-projeto)
    - [5.1. Visão Geral](#51-visão-geral)
    - [5.2. Singleton](#52-singleton)
@@ -68,13 +70,13 @@
 
 O **SIGLoSUS** é um sistema de informação voltado à **gestão logística e à distribuição de medicamentos no âmbito do Sistema Único de Saúde (SUS)**. Ele nasce de um problema concreto e recorrente na rede pública: a **falta de medicamentos nas farmácias** (desabastecimento), causada, entre outros fatores, pela **ausência de visão consolidada do estoque** entre as unidades, por **processos manuais e descentralizados**, pela **dificuldade de prever a demanda** e por **rotas de distribuição ineficientes**.
 
-O sistema **não substitui** as ferramentas já utilizadas pela gestão de saúde — ele **integra-se a elas** (por exemplo, **e-SUS APS**, **HÓRUS/SNA** e **BNAFAR**) para consolidar dados de estoque e dispensação em uma **única visão em tempo real**. A partir dessa visão, o SIGLoSUS passa a agir de forma **proativa**:
+O SIGLoSUS **não pretende substituir** as ferramentas utilizadas pela gestão de saúde. A arquitetura disponibiliza adaptadores para futura integração com **e-SUS APS**, **HÓRUS/SNA** e **BNAFAR**; **na versão acadêmica, essas integrações são simuladas com dados locais e não realizam consultas a serviços oficiais**. O protótipo consolida os registros disponíveis na sua própria API e permite operações de consulta e atualização no ambiente local. A partir desses registros, o SIGLoSUS oferece:
 
 - **Prevê a demanda** de cada medicamento por unidade, com base no histórico de consumo;
 - **Antecipa o risco de desabastecimento** e emite alertas antes que a falta aconteça;
 - **Sugere transferências** entre unidades com excedente e unidades com déficit;
 - **Gera rotas de distribuição otimizadas**, para que o medicamento chegue mais rápido e a um custo menor;
-- **Rastreia as entregas** até a confirmação de recebimento na ponta.
+- **Registra posições reportadas pelo dispositivo** e acompanha as entregas até a confirmação de recebimento; o envio automático de coordenadas depende do dispositivo e de conectividade.
 
 O objetivo final não é apenas ter uma gestão de estoque eficiente: é **garantir que o medicamento esteja disponível quando e onde o paciente precisa**, reduzindo a falta de remédios nas farmácias e, com isso, **salvando vidas**.
 
@@ -99,7 +101,7 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **Gestor de Assistência Farmacêutica** | Profissional responsável pela gestão da assistência farmacêutica na região de saúde. | Acompanha painéis, aprova transferências e requisições, configura parâmetros de estoque, analisa previsões e relatórios. |
 | **Farmacêutico da Unidade** | Farmacêutico responsável pelo estoque e pela dispensação em uma unidade de saúde (UBS/hospital). | Consulta o estoque da unidade, registra movimentações e dispensações, confirma recebimentos e sinaliza necessidades. |
 | **Almoxarife / Responsável pela CAF** | Profissional que opera a Central de Abastecimento Farmacêutico. | Registra entradas e saídas, atende requisições, prepara e despacha entregas, controla lotes e validade. |
-| **Motorista / Entregador** | Profissional que realiza a distribuição física dos medicamentos. | Visualiza a rota, confirma a saída, registra a entrega e reporta ocorrências; opera em modo offline. |
+| **Motorista / Entregador** | Profissional que realiza a distribuição física dos medicamentos. | Visualiza a rota, confirma a saída, registra a entrega e reporta ocorrências; possui fila local experimental para operações offline e sincronização na reconexão. |
 | **Administrador do Sistema** | Profissional de TI responsável pela manutenção técnica e pela configuração do sistema. | Gerencia usuários e perfis, configura integrações, monitora sincronizações e a auditoria. |
 | **Sistema de Saúde Externo** *(ator secundário)* | Sistemas já utilizados pela rede (e-SUS APS, HÓRUS/SNA, BNAFAR). | Fornecem e recebem dados de estoque e dispensação por meio de integração/API. |
 
@@ -113,6 +115,30 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 > - **Prioridades:** *Essencial* (sem ele o sistema não funciona), *Importante* (funciona, mas de forma insatisfatória) e *Desejável* (pode ficar para versões futuras).
 
 ## 2.1. Requisitos Funcionais
+
+> **Evolução da especificação.** O escopo inicial (`pasta 01/Projeto_SUSLog.md`) registrou 14 requisitos funcionais e 10 não funcionais. Durante o detalhamento, o catálogo foi ampliado e renumerado, resultando nos 22 RF e 13 RNF desta documentação consolidada, que é a **especificação oficial** utilizada na implementação, nos diagramas e nos testes. O mapeamento entre as numerações é apresentado abaixo.
+
+**Evolução da numeração dos requisitos funcionais.**
+
+| Escopo inicial | Documentação consolidada | Observação |
+|---|---|---|
+| RF01 — acesso por login e senha | RF01 | sem alteração |
+| RF02 — logout | RF03 | renumerado |
+| RF03 — recuperação de senha | RF02 | renumerado |
+| RF04 — integração com sistema legado | RF07 | renumerado |
+| RF05 — consulta de estoque em tempo real | RF09 | renumerado |
+| RF06 — alertas de estoque | RF11 | renumerado |
+| RF07 — movimentação de estoque | RF08 | renumerado |
+| RF08 — configuração de níveis | RF10 | renumerado |
+| RF09 — sugestão de transferências | RF13 | renumerado |
+| RF10 — aprovação de transferências | RF14 | renumerado |
+| RF11 — geração de rotas | RF15 | renumerado |
+| RF12 — confirmação de recebimento | RF17 | renumerado |
+| RF13 — controle de lotes e validade | RF18 | renumerado |
+| RF14 — relatórios gerenciais | RF21 | renumerado |
+| — | RF04, RF05, RF06, RF16, RF19, RF20, RF22 | requisitos adicionados no detalhamento |
+
+Não foi feita renumeração arbitrária: cada identificador consolidado corresponde a um requisito efetivamente implementado ou parcialmente implementado, com rastreabilidade na Tabela 8 (seção 4.9).
 
 | Identificador | Descrição | Escopo | Prioridade |
 |---|---|---|---|
@@ -169,7 +195,7 @@ Os usuários do SIGLoSUS são classificados conforme o perfil de atuação na ca
 | **RNF12** | O sistema deve ser construído de forma modular e documentada, com testes automatizados que garantam sua manutenibilidade. | Manutenibilidade | Geral | Importante |
 | **RNF13** | O aplicativo do motorista deve operar em modo offline e sincronizar automaticamente quando houver conexão. | Disponibilidade | Distribuição | Importante |
 
-**Situação de atendimento dos requisitos não funcionais.** A tabela acima expressa os requisitos **estabelecidos**. O protótipo atende integralmente à RNF12 (evidência: suíte automatizada de 71 testes, verificação de tipos e compilação) e parcialmente às demais:
+**Situação de atendimento dos requisitos não funcionais.** A tabela acima expressa os requisitos **estabelecidos**. O protótipo apresenta mecanismos de teste para RNF12 (76 casos definidos em 8 arquivos, além do teste de regressão independente; execução completa em Vitest ainda não reproduzida nesta auditoria) e parcialmente às demais:
 
 - **Atendidos parcialmente** — RNF01 (senhas com bcrypt, tokens JWT assinados, autorização por perfil, CORS restrito, limitação de requisições e cabeçalhos de segurança; o TLS fica a cargo do proxy de produção), RNF07 (APIs REST; o perfil HL7 FHIR não foi implementado) e RNF13 (fila local no navegador, com identificador de idempotência e sincronização automática na reconexão).
 - **Metas não verificadas nesta versão** — RNF02 (conformidade LGPD auditada), RNF03 e RNF04 (tempo de resposta, sem ensaio), RNF05 (disponibilidade de 99,5%), RNF06 (nível AA da WCAG 2.1, sem auditoria de acessibilidade), RNF08 (500 unidades e 5.000 usuários simultâneos), RNF09 (transações ACID, exigem SGBD), RNF10 (retenção de auditoria por cinco anos) e RNF11 (dispositivos móveis).
@@ -256,7 +282,7 @@ O diagrama abaixo apresenta os atores, os casos de uso do SIGLoSUS e os relacion
 | **Atores secundários** | Sistema de Saúde Externo (e-SUS APS, HÓRUS/SNA, BNAFAR) |
 | **Resumo** | Descreve a integração do SIGLoSUS com os sistemas já utilizados pela rede para importar/exportar dados de estoque e dispensação. |
 | **Pré-condições** | As integrações devem estar configuradas e os serviços externos disponíveis. |
-| **Pós-condições** | Os dados de estoque e dispensação são consolidados e ficam disponíveis para consulta em tempo real. |
+| **Pós-condições** | Na demonstração, os dados simulados são registrados na base local e ficam disponíveis para consulta pela API; a integração com sistemas oficiais ainda depende de homologação. |
 
 | Ações do Ator | Ações do Sistema |
 |---|---|
@@ -505,7 +531,7 @@ A Figura 10 apresenta as quatro camadas, as responsabilidades de cada uma e o se
 | **Apresentação** | `frontend/` | Telas HTML/CSS/JS e cliente REST (`api.js`). Exibe dados e captura ações do usuário. | Aplicação (via HTTP) |
 | **Aplicação** | `src/application/` | Serviços que orquestram os casos de uso, o *Container* de injeção de dependência e a composição dos objetos. | Domínio, Infraestrutura |
 | **Domínio** | `src/domain/` e `src/patterns/` | Entidades, enumerações, as 9 regras de negócio e os padrões de projeto. É o coração do sistema e **não depende de nada**. | — |
-| **Infraestrutura** | `src/infrastructure/` | API REST (Express), repositórios, banco de dados em memória e carga inicial (*seed*). | Domínio |
+| **Infraestrutura** | `src/infrastructure/` | API REST (Express), repositórios, persistência JSON experimental e *seed* exclusivamente de desenvolvimento/teste. | Domínio |
 
 O fluxo de uma requisição típica é: **Tela → HTTP (`routes.ts`) → Serviço de Aplicação → Regras de Negócio/Entidades → Repositório → Banco**. As respostas percorrem o caminho inverso.
 
@@ -566,9 +592,13 @@ A **injeção de dependência** é feita de forma explícita no *composition roo
 ```
 SIGLoSUS---Engenharia-de-Software/
 ├── README.md                     # Visão geral do projeto
+├── INSTRUCOES_DE_EXECUCAO.md     # Instalação, configuração e execução
+├── RELATORIO_FINAL_DE_CORRECOES.md # Auditoria e correções realizadas
 ├── CONTRIBUTING.md               # Práticas de versionamento (Git Flow, commits semânticos)
+├── CHANGELOG.md                  # Histórico de versões
+├── .github/                      # Integração contínua (GitHub Actions) e template de pull request
 ├── .gitignore
-├── pasta 01/                     # Entrega da Parte 1 (documentação e diagramas UML)
+├── pasta 01/                     # Entrega da Parte 1 (escopo inicial e fontes dos diagramas 01–09)
 └── pasta 02/                     # Entrega da Parte 2
     ├── docs/                     # Documentação completa (este documento) + HTML/PDF
     ├── diagramas/                # Fontes Mermaid das figuras das seções 4 e 5
@@ -603,7 +633,8 @@ SIGLoSUS---Engenharia-de-Software/
 cd "pasta 02/siglosus/backend"
 npm install
 npm start          # sobe em http://localhost:3000
-npm test           # executa os 71 testes automatizados
+npm test           # suíte Vitest: 76 testes definidos em 8 arquivos
+npm run test:smoke # regressão de segurança independente, após compilar
 ```
 
 Acesse `http://localhost:3000/` no navegador. Usuários de demonstração (senha `siglosus123`): `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`, `motorista@siglosus.gov.br`, `admin@siglosus.gov.br`.
@@ -679,6 +710,34 @@ A Tabela 8 relaciona os requisitos funcionais aos componentes de software que os
 | RF22 | `AuditoriaService`, `LogAuditoria` | `GET /api/auditoria` |
 
 ---
+
+
+## 4.10. Gerência de Configuração e Versionamento
+
+A gerência de configuração, conforme o material da disciplina, identifica os itens versionáveis, registra alterações, controla versões e permite auditoria e reprodução da entrega. São **itens de configuração** neste projeto: requisitos e documentação (`.md`, `.pdf`), fontes dos diagramas (`.mmd`), figuras, código TypeScript e JavaScript, testes, `package.json`, `package-lock.json`, CI e protótipos de telas.
+
+**Estratégia adotada:** uma adaptação de **Git Flow** com `main` (linha estável), `develop` (integração de desenvolvimento), `feature/*` (mudanças isoladas) e `release/*` (preparação de entregas). O nome `develop` foi mantido por compatibilidade com o repositório existente; ele corresponde à branch de desenvolvimento demonstrada nas aulas. As mudanças desta revisão devem ser submetidas por Pull Request, revisadas e integradas ao remoto antes do envio final.
+
+| Elemento | Procedimento verificável | Finalidade |
+|---|---|---|
+| Branch de alteração | `feature/correcao-final-2026` | Isolar as alterações desta auditoria |
+| Commits semânticos | `fix(seguranca): ...`, `test(seguranca): ...`, `docs(entrega): ...` | Explicar o que mudou e por quê |
+| Pull Request | Criar da feature para `develop`, revisar e executar CI | Registrar auditoria e integração |
+| Release / baseline | Criar tag somente após merge e validação | Identificar versão entregue de maneira reproduzível |
+| `.gitignore` | Excluir `node_modules/`, `dist/`, `.env`, logs e dados locais | Não publicar dependências ou segredos |
+| Verificação | `git status`, `git log --oneline --graph`, `git tag`, CI | Demonstrar práticas cobradas na disciplina |
+
+**Situação da entrega local:** esta revisão prepara o código e os materiais para publicação; **o envio ao GitHub e a criação de Pull Request/Release remotos dependem de acesso autenticado ao repositório e não devem ser considerados realizados apenas pela geração deste documento**. O repositório já tinha versões e histórico anteriores, mas a versão aqui documentada precisa ser integrada ao remoto. Consulte `GUIA_PUBLICACAO_GIT.md`.
+
+## 4.11. Validação e Limitações da Entrega
+
+O backend é escrito em Node.js/TypeScript, com rotas Express protegidas por JWT e autorização por perfil. As operações sensíveis com `Idempotency-Key` possuem validação **após a autorização**, com registro isolado por usuário e verificação de método, rota e hash do conteúdo; reutilização incompatível responde HTTP 409. A fila offline do navegador gera uma chave única por operação e não reenvia operações de outra conta. As operações sem chave idempotente mantêm a semântica original da API.
+
+O cenário de demonstração (**seed**) é restrito a `development` e `test`; no ambiente `production`, seu uso é recusado mesmo com opções de inicialização ou variáveis de ambiente que tentem forçá-lo. A inicialização de produção exige persistência e criação segura de um primeiro administrador pelo comando `npm run bootstrap:admin`, com dados fornecidos pelo responsável pela instalação. A persistência JSON é válida para o **protótipo acadêmico**, mas não garante transações distribuídas, escala multiprocesso ou disponibilidade de produção.
+
+**Evidência disponível nesta revisão:** verificação de tipos com `tsc --noEmit` e compilação com `tsc -p tsconfig.build.json` concluídas com sucesso; `npm run test:smoke` executou 10 verificações funcionais direcionadas às correções de segurança, todas aprovadas. A execução integral do Vitest não foi reproduzida no ambiente de auditoria por limitação de dependências nativas do Rollup, e o `npm ci` não foi concluído. Não se deve apresentar esses testes como aprovados até execução bem-sucedida em instalação limpa ou no CI remoto.
+
+**Limitações de escopo:** (i) os sistemas externos e-SUS, HÓRUS e BNAFAR não foram conectados; (ii) não existe GPS dedicado ou telemetria contínua comprovada; (iii) o modo offline é uma fila local experimental, não um aplicativo nativo; (iv) não foram comprovados SLA, carga de milhares de usuários, FHIR em produção nem testes formais de acessibilidade. Essas limitações não impedem a demonstração das funcionalidades efetivamente implementadas, mas devem ser informadas na apresentação.
 
 # 5. Padrões de Projeto
 
@@ -780,7 +839,7 @@ export class ConfiguracaoSistema {
 | Observer | `EstoqueSubject`, `AlertaDesabastecimentoObserver`, `NotificacaoEstoqueObserver` | `patterns/observer/*.ts` | RF11 | `padroes-projeto.test.ts`, `servicos.test.ts` |
 | Strategy | `EstrategiaRoteirizacao`, `RotaMenorDistancia`, `RotaPorPrioridade`, `RotaCapacidadeVeiculo`, `Roteirizador` | `patterns/strategy/EstrategiaRoteirizacao.ts` | RF15, RN04, RN07, RN08 | `padroes-projeto.test.ts` |
 
-A suíte de testes (**71 testes** em 7 arquivos) comprova o funcionamento das regras de negócio, dos padrões de projeto, dos serviços de aplicação, da API REST, dos códigos de status HTTP e da camada de segurança (autenticação, autorização e persistência):
+O código contém **76 casos de teste automatizados definidos em 8 arquivos** para regras de negócio, padrões de projeto, serviços, API REST, códigos de status e segurança. Esses casos devem ser executados por `npm test` em uma instalação limpa; **esta revisão não comprova a aprovação da suíte completa**. Em paralelo, o script independente `npm run test:smoke` foi executado com sucesso, verificando 10 condições de autenticação, autorização, idempotência e seed:
 
 | Arquivo de teste | Cobertura |
 |---|---|
@@ -788,7 +847,7 @@ A suíte de testes (**71 testes** em 7 arquivos) comprova o funcionamento das re
 | `tests/padroes-projeto.test.ts` | Singleton, Factory Method, Adapter, Observer e Strategy (7 testes) |
 | `tests/servicos.test.ts` | Autenticação, estoque, RF14/RF17, RF19/RN05, RN06, RN09, rotas, entregas, integração, previsão e painel (14 testes) |
 | `tests/seguranca.test.ts` | bcrypt, migração de hash legado, JWT (assinatura, adulteração, expiração) e revogação por logout (8 testes) |
-| `tests/requisitos.test.ts` | RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (11 testes) |
+| `tests/requisitos.test.ts` | RF02, RF03, RF04, RF05, RF06, RF16 e autorização por perfil (12 testes) |
 | `tests/persistencia.test.ts` | Persistência em arquivo e sobrevivência dos dados ao reinício (4 testes) |
 | `tests/api.test.ts` | Endpoints REST, RF19, RF20/RN09, ausência de `senhaHash`, 401/403/404/423 (17 testes) |
 

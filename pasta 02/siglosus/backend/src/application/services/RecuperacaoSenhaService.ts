@@ -75,7 +75,7 @@ export class RecuperacaoSenhaService {
     const ambiente = configuracao.obter('ambiente');
     return {
       contaEncontrada: true,
-      token: ambiente === 'producao' ? undefined : token,
+      token: ambiente === 'production' ? undefined : token,
       expiraEm,
     };
   }

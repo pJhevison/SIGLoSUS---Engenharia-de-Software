@@ -7,6 +7,7 @@ import {
   DispensacaoRepository,
   EntregaRepository,
   EstoqueRepository,
+  IdempotenciaRepository,
   IntegracaoRepository,
   MedicamentoRepository,
   MovimentacaoRepository,
@@ -16,6 +17,7 @@ import {
   RequisicaoRepository,
   RotaRepository,
   TokenRecuperacaoRepository,
+  TokenRevogadoRepository,
   TransferenciaRepository,
   UnidadeRepository,
   UsuarioRepository,
@@ -52,7 +54,7 @@ export interface OpcoesContainer {
    * escrita, de modo que os dados sobrevivem ao reinício do processo.
    */
   arquivoPersistencia?: string | null;
-  /** Quando `true`, o cenário de demonstração é carregado mesmo havendo arquivo salvo. */
+  /** Cenário de demonstração apenas em desenvolvimento/teste; proibido em produção. */
   forcarSeed?: boolean;
 }
 
@@ -84,6 +86,8 @@ export class Container {
   readonly relatorios = new RelatorioRepository(this.db);
   readonly auditoriaRepo = new AuditoriaRepository(this.db);
   readonly tokensRecuperacao = new TokenRecuperacaoRepository(this.db);
+  readonly tokensRevogados = new TokenRevogadoRepository(this.db);
+  readonly idempotencia = new IdempotenciaRepository(this.db);
   readonly posicoes = new PosicaoRotaRepository(this.db);
 
   // Observer (Subject)
@@ -130,7 +134,7 @@ export class Container {
     this.estoqueSubject.registrarObservador(new AlertaDesabastecimentoObserver(this.alerta));
     this.estoqueSubject.registrarObservador(this.notificacaoObserver);
 
-    this.autenticacao = new AutenticacaoService(this.usuarios, this.auditoria, this.jwt);
+    this.autenticacao = new AutenticacaoService(this.usuarios, this.tokensRevogados, this.auditoria, this.jwt);
     this.recuperacaoSenha = new RecuperacaoSenhaService(
       this.usuarios,
       this.tokensRecuperacao,
@@ -206,9 +210,26 @@ export class Container {
     const arquivo = opcoes.arquivoPersistencia ?? null;
     this.persistencia = arquivo ? new PersistenciaJSON(arquivo) : null;
 
+    const ambiente = configuracao.obter('ambiente');
+    // Falha fechada: credenciais públicas de demonstração NUNCA entram em produção,
+    // independentemente das opções do construtor ou das variáveis de ambiente.
+    if (ambiente === 'production' &&
+        (opcoes.forcarSeed === true || process.env.SIGLOSUS_SEED_DEMO === 'true')) {
+      throw new Error('Dados de demonstração são proibidos em produção.');
+    }
+    if (ambiente === 'production' && !this.persistencia) {
+      throw new Error('Em produção é obrigatório configurar SIGLOSUS_ARQUIVO_PERSISTENCIA.');
+    }
     const carregou = this.persistencia && !opcoes.forcarSeed ? this.persistencia.carregar(this.db) : false;
-    if (!carregou) {
+    const permitirSeed = ambiente !== 'production' &&
+      (opcoes.forcarSeed === true || process.env.SIGLOSUS_SEED_DEMO === 'true' || !carregou);
+
+    if (!carregou && permitirSeed) {
       popularBanco(this.db);
+      this.persistir();
+    } else if (!carregou) {
+      // Em produção não carregamos contas de demonstração: a primeira conta
+      // administrativa deve ser criada por procedimento seguro (ver INSTRUCOES).
       this.persistir();
     }
   }

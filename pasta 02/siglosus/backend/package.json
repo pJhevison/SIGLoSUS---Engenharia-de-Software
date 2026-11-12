@@ -1,6 +1,6 @@
 {
   "name": "siglosus-backend",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "SIGLoSUS - API REST do Sistema Inteligente de Gestão Logística e Distribuição de Medicamentos do SUS",
   "private": true,
   "main": "dist/server.js",
@@ -11,6 +11,8 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:smoke": "npm run build && node tests/smoke.cjs",
+    "bootstrap:admin": "tsx src/bootstrap-admin.ts",
     "coverage": "vitest run --coverage"
   },
   "keywords": [

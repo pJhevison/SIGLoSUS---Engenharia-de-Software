@@ -46,7 +46,7 @@ export class ConfiguracaoSistema {
   private constructor() {
     const ambiente = process.env.NODE_ENV ?? 'development';
     const segredoJwt = this.obterSegredoJwt(ambiente);
-    const origens = (process.env.CORS_ORIGENS ?? '')
+    const origens = (process.env.CORS_ORIGINS ?? '')
       .split(',')
       .map((o) => o.trim())
       .filter(Boolean);
@@ -59,7 +59,7 @@ export class ConfiguracaoSistema {
       jornadaMaximaMin: Number(process.env.JORNADA_MAXIMA_MIN ?? 480),
       intervaloMaximoConsultaMs: Number(process.env.INTERVALO_MAXIMO_CONSULTA_MS ?? 2000),
       sincronizacaoAutomaticaMin: Number(process.env.SINCRONIZACAO_AUTOMATICA_MIN ?? 15),
-      versao: '2.1.0',
+      versao: '2.1.1',
       segredoJwt,
       tokenAcessoValidadeMin: Number(process.env.TOKEN_ACESSO_VALIDADE_MIN ?? 60),
       tokenRecuperacaoValidadeMin: Number(process.env.TOKEN_RECUPERACAO_VALIDADE_MIN ?? 30),
@@ -82,7 +82,7 @@ export class ConfiguracaoSistema {
     if (doAmbiente && doAmbiente.trim().length >= 32) {
       return doAmbiente;
     }
-    if (ambiente === 'producao') {
+    if (ambiente === 'production') {
       throw new Error(
         'JWT_SECRET ausente ou muito curto. Defina a variável de ambiente com ao menos 32 caracteres antes de iniciar em produção.',
       );

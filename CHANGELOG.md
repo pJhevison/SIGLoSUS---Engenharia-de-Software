@@ -1,3 +1,16 @@
+## [2.1.1] - 2026-11-12 (revisão local, publicação pendente)
+
+### Corrigido
+- Idempotência aplicada após autenticação e autorização, isolada por usuário, método, rota e conteúdo; conflito 409.
+- Chave única por operação no navegador; reenvio offline com a chave original e isolamento entre contas.
+- Proibição de seed de demonstração em produção mesmo quando explicitamente solicitado.
+- Bootstrap seguro do administrador inicial sem contas ou senhas públicas.
+- Correções na documentação, variáveis de ambiente e instruções de versionamento Git Flow.
+
+### Verificação
+- TypeScript: typecheck e build locais aprovados.
+- 10 verificações funcionais direcionadas aprovadas; suíte Vitest completa ainda não reproduzida nesta máquina.
+
 # Changelog
 
 Todas as mudanças relevantes do SIGLoSUS são registradas neste arquivo.
@@ -39,7 +52,7 @@ e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - Template de pull request em `.github/pull_request_template.md`.
 - Testes de segurança, de requisitos complementares e de persistência
   (`tests/seguranca.test.ts`, `tests/requisitos.test.ts`,
-  `tests/persistencia.test.ts`): a suíte passa de 45 para **71 testes**.
+  `tests/persistencia.test.ts`): a suíte passa de 45 para **72 testes**.
 
 ### Corrigido
 
@@ -71,7 +84,7 @@ e o projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - Documentação consolidada (seções 1 a 6) revisada: situação de implementação
   dos RF e dos RNF, nova subseção de segurança (4.7), nova subseção de
   persistência (4.8), rastreabilidade de endpoints atualizada e tabelas de
-  testes revistas (71 testes em 7 arquivos).
+  testes revistas (72 testes em 7 arquivos).
 - Diagrama de classes atualizado com `EntregaItem`, `TokenRecuperacaoSenha` e
   `PosicaoRota`.
 - PDF regenerado a partir do HTML atualizado.
