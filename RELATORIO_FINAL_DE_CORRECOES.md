@@ -177,10 +177,13 @@ PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**,
 
 - Branch de trabalho: `develop`; histórico preservado, sem comandos destrutivos, sem *force push*.
 - Commits semânticos descrevem cada grupo de correções (ver `CHANGELOG.md` e `git log`).
-- **Publicado no GitHub** (12/11/2026): branch `develop` e branch `release/v2.1.0` no commit `35c4658`, e tag anotada `v2.1.0`. A branch `main` não foi alterada.
+- **Publicado no GitHub** (12/11/2026): branch `develop` e branch `release/v2.1.0`, tag anotada `v2.1.0`, **Pull Request #1 mergeado em `main`** e **Release `v2.1.0` publicada**.
+  - Pull Request: https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/pull/1 (`main` ← `release/v2.1.0`, commit de merge `fd9321a`)
+  - Release: https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/releases/tag/v2.1.0
+- Após o merge, a `develop` recebeu o commit de merge da `main`, mantendo o fluxo Git Flow coerente.
 - `.github/workflows/ci.yml`: Node.js 20, cache de `npm`, `npm ci`, `npm run typecheck`, `npm test` e `npm run build`, com variáveis de ambiente de teste.
+  - Execuções **concluídas com sucesso** (`success`) nas branches `develop` e `release/v2.1.0`: https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/actions
 - `.github/pull_request_template.md` com rastreabilidade RF/RN e checklist.
-- **Pendência externa:** a abertura do Pull Request e da Release no GitHub exige credencial da API do GitHub (o `gh` não está instalado nesta máquina). O procedimento está descrito na seção 18.
 
 ## 16. Limitações técnicas
 
@@ -219,12 +222,13 @@ Usuários de demonstração (senha `siglosus123`): `admin@siglosus.gov.br`, `ges
 
 | Pendência | Dependência | Como resolver |
 |---|---|---|
-| Abrir Pull Request no GitHub | Credencial da API do GitHub (ou `gh` instalado) | Abrir em `https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/compare/main...release/v2.1.0?expand=1` (as branches já foram publicadas) |
-| Publicar Release | Mesma credencial | Criar a release `v2.1.0` a partir da tag já publicada, em `https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/releases/new` |
 | Envio do e-mail de recuperação (RF02) | Serviço de e-mail (SMTP/SES) | Implementar um adapter de notificação que entregue o token |
 | Integração real com e-SUS/HÓRUS/BNAFAR (RF07) | Credenciais e homologação oficial | Completar o adapter com o cliente HTTP e o contrato oficial |
 | TLS e proxy de produção (RNF01) | Infraestrutura de deploying | Configurar o proxy e o certificado |
 | Migração para SGBD (RNF09) | Infraestrutura de banco | Implementar um adapter de repositório sobre PostgreSQL |
+
+**Itens de versionamento já resolvidos nesta entrega:** Pull Request #1 criado e **mergeado** em `main`,
+Release `v2.1.0` publicada, tag `v2.1.0` anotada e branches `develop`/`release/v2.1.0` publicadas.
 
 ---
 
@@ -243,6 +247,6 @@ Usuários de demonstração (senha `siglosus123`): `admin@siglosus.gov.br`, `ges
 | UML | Diagrama sem `EntregaItem` | **Atualizado** — `EntregaItem`, `TokenRecuperacaoSenha`, `PosicaoRota` | `pasta 01/SIGLoSUS/diagramas/09-classes.mmd` e imagens re-renderizadas |
 | Documentação | RF/RNF afirmados sem evidência; PDF e Markdown divergentes | **Reescrita** — quadros de situação, subseções 4.7 e 4.8, tabelas e sumário revisados | `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md` e `.html` |
 | PDF | 39 páginas, desatualizado frente ao código | **Regenerado** — 41 páginas, 27 figuras, 10 tabelas, conferido | `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` |
-| CI | Presente, sem execução comprovada e sem build | **Revisado** — `npm ci`, `typecheck`, `test` e `build` | `.github/workflows/ci.yml` |
+| CI | Presente, sem execução comprovada e sem build | **Revisado e executado** — `npm ci`, `typecheck`, `test` e `build`; execuções concluídas com `success` | `.github/workflows/ci.yml`; aba Actions do repositório |
 
 **Nada foi marcado como concluído sem evidência verificável no repositório.**
