@@ -23,6 +23,21 @@ import { cabecalhosSeguranca } from './middleware/seguranca';
 const ORIGENS_PADRAO = ['http://localhost:3000', 'http://127.0.0.1:3000', 'null'];
 
 /**
+ * Verifica se a origem da requisição é permitida.
+ *
+ * Em desenvolvimento, qualquer porta do `localhost` é liberada (facilita abrir as
+ * telas por um servidor estático externo, como o Live Server do VS Code). Em
+ * produção, vale **apenas** a lista `CORS_ORIGINS` configurada por variável de
+ * ambiente.
+ */
+function origemPermitida(origem: string | undefined, lista: string[], producao: boolean): boolean {
+  if (!origem) return true; // requisições sem origem (mesma origem, curl, testes)
+  if (lista.includes(origem)) return true;
+  if (!producao && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origem)) return true;
+  return false;
+}
+
+/**
  * Traduz o erro de domínio/aplicação para o status HTTP correspondente.
  * Erros desconhecidos viram 500 sem expor detalhes internos.
  */
@@ -67,7 +82,9 @@ export function criarApp(container: Container): Express {
   app.use(cabecalhosSeguranca);
   app.use(
     cors({
-      origin: origensPermitidas,
+      origin: (origem, callback) => {
+        callback(null, origemPermitida(origem, origensPermitidas, configuracao.obter('ambiente') === 'producao'));
+      },
       methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: false,
