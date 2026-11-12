@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Entregas</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Confirmação de recebimento (UC18 · RF17)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <section class="card">
+          <h2>Entregas</h2>
+          <table>
+            <thead><tr><th>#</th><th>Rota</th><th>Unidade destino</th><th>Prevista</th><th>Situação</th><th>Realizada</th><th>Ação</th></tr></thead>
+            <tbody id="tabela-entregas"></tbody>
+          </table>
+          <div class="legenda">
+            Ao confirmar, o estoque da unidade de destino é atualizado (entrada) e o alerta correspondente,
+            se houver, pode ser resolvido.
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/entregas.js"></script>
+</body>
+</html>

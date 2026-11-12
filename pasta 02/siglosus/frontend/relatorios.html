@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIGLoSUS — Relatórios</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-titulo="Relatórios e previsão de demanda (RF12 · RF21)">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar"></header>
+      <main class="content">
+        <section class="card">
+          <h2>📈 Indicadores gerenciais</h2>
+          <div class="grid cols-4" id="kpis"></div>
+        </section>
+
+        <section class="card mt-16">
+          <h2>Previsão de demanda (RF12)</h2>
+          <div class="form-linha">
+            <div>
+              <label for="p-periodo">Período (dias)</label>
+              <select id="p-periodo">
+                <option value="30">30 dias</option>
+                <option value="60">60 dias</option>
+                <option value="90">90 dias</option>
+              </select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn" id="btn-prever">Gerar previsões</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Unidade</th><th>Medicamento</th><th>Período</th><th>Qtd. prevista</th><th>Método</th><th>Confiança</th></tr></thead>
+            <tbody id="tabela-previsoes"></tbody>
+          </table>
+        </section>
+
+        <section class="card mt-16">
+          <h2>Relatórios gerados</h2>
+          <div class="acoes" style="margin-bottom:14px">
+            <button class="btn secundario" id="btn-gerar-relatorio">Gerar relatório geral</button>
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>Título</th><th>Tipo</th><th>Gerado em</th></tr></thead>
+            <tbody id="tabela-relatorios"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/paginas/relatorios.js"></script>
+</body>
+</html>
