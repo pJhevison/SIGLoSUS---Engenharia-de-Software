@@ -176,10 +176,11 @@ PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**,
 ## 15. Situação do Git e da CI
 
 - Branch de trabalho: `develop`; histórico preservado, sem comandos destrutivos, sem *force push*.
-- Commits semânticos describe cada grupo de correções (ver `CHANGELOG.md` e `git log`).
+- Commits semânticos descrevem cada grupo de correções (ver `CHANGELOG.md` e `git log`).
+- **Publicado no GitHub** (12/11/2026): branch `develop` e branch `release/v2.1.0` no commit `35c4658`, e tag anotada `v2.1.0`. A branch `main` não foi alterada.
 - `.github/workflows/ci.yml`: Node.js 20, cache de `npm`, `npm ci`, `npm run typecheck`, `npm test` e `npm run build`, com variáveis de ambiente de teste.
 - `.github/pull_request_template.md` com rastreabilidade RF/RN e checklist.
-- **Pendência externa:** a abertura de Pull Requests e de Releases no GitHub exige credencial da API do GitHub; o `gh` não está instalado nesta máquina. O procedimento está descrito na seção 18.
+- **Pendência externa:** a abertura do Pull Request e da Release no GitHub exige credencial da API do GitHub (o `gh` não está instalado nesta máquina). O procedimento está descrito na seção 18.
 
 ## 16. Limitações técnicas
 
@@ -218,8 +219,8 @@ Usuários de demonstração (senha `siglosus123`): `admin@siglosus.gov.br`, `ges
 
 | Pendência | Dependência | Como resolver |
 |---|---|---|
-| Abrir Pull Request no GitHub | Credencial da API do GitHub (ou `gh` instalado) | `git checkout -b feature/v2.1.0-auditoria`, `git push -u origin feature/v2.1.0-auditoria` e abrir o PR pela interface web |
-| Publicar Release | Mesma credencial | Criar a release `v2.1.0` a partir da tag já criada |
+| Abrir Pull Request no GitHub | Credencial da API do GitHub (ou `gh` instalado) | Abrir em `https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/compare/main...release/v2.1.0?expand=1` (as branches já foram publicadas) |
+| Publicar Release | Mesma credencial | Criar a release `v2.1.0` a partir da tag já publicada, em `https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/releases/new` |
 | Envio do e-mail de recuperação (RF02) | Serviço de e-mail (SMTP/SES) | Implementar um adapter de notificação que entregue o token |
 | Integração real com e-SUS/HÓRUS/BNAFAR (RF07) | Credenciais e homologação oficial | Completar o adapter com o cliente HTTP e o contrato oficial |
 | TLS e proxy de produção (RNF01) | Infraestrutura de deploying | Configurar o proxy e o certificado |
