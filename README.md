@@ -30,14 +30,11 @@ SIGLoSUS---Engenharia-de-Software/
 ├── CHANGELOG.md                            # Histórico de versões (Keep a Changelog)
 ├── .github/                                # CI (GitHub Actions) e template de pull request
 ├── .gitignore
-├── pasta 01/                               # Parte 1 — Requisitos e Modelagem UML (seções 1 a 3.5)
-│   ├── projeto final.docx                  # Documento ABNT da Parte 1
+├── pasta 01/                               # Parte 1 — Modelagem UML (seções 1 a 3.5)
 │   ├── Projeto_SUSLog.md                   # Escopo inicial do projeto
-│   ├── Relatorio_Final_SIGLoSUS.html
 │   └── SIGLoSUS/
-│       ├── docs/                           # Documentação (md, html, docx)
-│       ├── diagramas/                      # Fontes Mermaid + gerador de casos de uso
-│       └── imagens/                        # Diagramas renderizados (SVG e PNG)
+│       ├── diagramas/                      # Fontes Mermaid das figuras 01–09 + gerador do caso de uso
+│       └── imagens/                        # Versões vetoriais (SVG) das figuras 01–09
 └── pasta 02/                               # Parte 2 — Arquitetura, Padrões e Prototipação (seções 4 a 6)
     ├── docs/                               # Documentação completa consolidada (md, html, pdf)
     ├── diagramas/                          # Fontes Mermaid das seções 4 e 5
@@ -156,6 +153,12 @@ Projeto distribuído sob a licença **Apache License 2.0** (arquivo `LICENSE` na
 
 ## Entrega
 
-- **Parte 1:** `pasta 01/projeto final.docx` (seções 1 a 3.5, em normas ABNT).
-- **Parte 2:** `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf` (seções 1 a 6, em normas ABNT) e o
-  software em `pasta 02/siglosus/` (backend + front-end).
+O material enviado ao professor é o **documento consolidado** e o **software**:
+
+- **Documento (seções 1 a 6, em normas ABNT):** `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.pdf`
+  (41 páginas, 27 figuras e 10 tabelas), com as fontes em `.md` e `.html` na mesma pasta.
+- **Software:** `pasta 02/siglosus/` — backend (API REST) e front-end (telas), com os testes automatizados.
+- **Diagramas:** fontes Mermaid em `pasta 01/SIGLoSUS/diagramas/` (figuras 01–09) e `pasta 02/diagramas/`
+  (figuras 10–17), com as figuras renderizadas em `pasta 02/imagens/`.
+- **Relatório de auditoria e correções:** `RELATORIO_FINAL_DE_CORRECOES.md`.
+- **Instruções de execução:** `INSTRUCOES_DE_EXECUCAO.md`.

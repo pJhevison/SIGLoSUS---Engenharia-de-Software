@@ -566,9 +566,13 @@ A **injeção de dependência** é feita de forma explícita no *composition roo
 ```
 SIGLoSUS---Engenharia-de-Software/
 ├── README.md                     # Visão geral do projeto
+├── INSTRUCOES_DE_EXECUCAO.md     # Instalação, configuração e execução
+├── RELATORIO_FINAL_DE_CORRECOES.md # Auditoria e correções realizadas
 ├── CONTRIBUTING.md               # Práticas de versionamento (Git Flow, commits semânticos)
+├── CHANGELOG.md                  # Histórico de versões
+├── .github/                      # Integração contínua (GitHub Actions) e template de pull request
 ├── .gitignore
-├── pasta 01/                     # Entrega da Parte 1 (documentação e diagramas UML)
+├── pasta 01/                     # Entrega da Parte 1 (escopo inicial e fontes dos diagramas 01–09)
 └── pasta 02/                     # Entrega da Parte 2
     ├── docs/                     # Documentação completa (este documento) + HTML/PDF
     ├── diagramas/                # Fontes Mermaid das figuras das seções 4 e 5

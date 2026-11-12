@@ -101,21 +101,42 @@ A auditoria externa recebida apontava, corretamente, que **o código, a document
 
 **Documentação e repositório:** `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md`, `.html` e `.pdf`; `pasta 01/SIGLoSUS/diagramas/09-classes.mmd`; `pasta 01/SIGLoSUS/imagens/09-classes.png|.svg`; `pasta 02/imagens/09-classes.png`; `README.md`; `CHANGELOG.md`; `ANALISE_E_PLANO_DE_MELHORIAS.md`; `.gitignore`; `.github/workflows/ci.yml`.
 
-## 5. Funcionalidades implementadas
+## 5. Arquivos removidos da entrega (redundantes ou contraditórios)
+
+A auditoria determinara que a entrega contivesse versões antigas do material, duplicatas e um
+documento de trabalho que descrevia o **estado anterior** às correções. Esses itens foram removidos
+do repositório e do pacote de entrega — **todo o histórico permanece no Git** (tag `v2.1.0` e
+commit `2b4fc8b`).
+
+| Removido | Motivo |
+|---|---|
+| `pasta 01/projeto final.docx` | Documento da Parte 1 em DOCX, superado pelo documento consolidado (PDF de 41 páginas, seções 1 a 6) |
+| `pasta 01/Relatorio_Final_SIGLoSUS.html` | HTML antigo da Parte 1, superado pelo HTML consolidado |
+| `pasta 01/SIGLoSUS/docs/` (5 arquivos: DOCX, HTML e MD da Parte 1) | Versões anteriores da documentação, já consolidadas no documento final |
+| `pasta 01/SIGLoSUS/imagens/*.png` (9 arquivos) | PNGs **byte a byte idênticos** aos de `pasta 02/imagens/`; as versões vetoriais (SVG), exclusivas dessa pasta, foram mantidas |
+| `ANALISE_E_PLANO_DE_MELHORIAS.md` | Documento de trabalho com a análise **pré-correção** (descrevia defeitos já corrigidos, como a RF14 sem movimentação de estoque), portanto contraditório com o estado final. Este relatório o substitui |
+
+**Mantidos por serem material de entrega ou evidência:** documento consolidado (MD, HTML e PDF),
+software (backend e front-end, com testes), fontes Mermaid de todos os diagramas (`pasta 01/SIGLoSUS/diagramas/`
+e `pasta 02/diagramas/`), figuras renderizadas (`pasta 02/imagens/`), escopo inicial do projeto
+(`pasta 01/Projeto_SUSLog.md`), README, CHANGELOG, CONTRIBUTING, LICENSE, `.github/` (CI e template
+de pull request), `INSTRUCOES_DE_EXECUCAO.md` e este relatório.
+
+## 6. Funcionalidades implementadas
 
 RF01, RF03, RF04, RF05, RF06, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF17, RF18, RF19, RF20, RF21 e RF22 — integralmente, com teste automatizado e endpoint documentado.
 
-## 6. Funcionalidades que permanecem parciais
+## 7. Funcionalidades que permanecem parciais
 
 - **RF02** — o fluxo de recuperação existe e está testado, mas a **entrega do token por e-mail** depende de um serviço externo (não disponível no escopo). Fora do ambiente de produção, o token é devolvido na resposta para demonstração.
 - **RF07** — o padrão Adapter, o contrato e o serviço de sincronização estão implementados e testados, mas a sincronização consome **dados locais de demonstração**. A conexão com e-SUS APS, HÓRUS/SNA e BNAFAR exige credenciais e homologação concedidas por terceiros.
 - **RF16** — despacho, acompanhamento por situação e posição reportada pelo dispositivo estão implementados; **não há integração com hardware GPS dedicado** e, portanto, não há rastreamento geográfico real de veículos.
 
-## 7. Funcionalidades não implementadas
+## 8. Funcionalidades não implementadas
 
 Nenhum requisito funcional foi classificado como ausente nesta versão. Permanecem como **metas técnicas sem medição** os RNF de desempenho (RNF03, RNF04), disponibilidade (RNF05), acessibilidade auditada (RNF06), escalabilidade (RNF08), transações ACID em SGBD (RNF09), retenção de auditoria por cinco anos (RNF10) e portabilidade para dispositivos móveis (RNF11), além da conformidade LGPD auditada (RNF02) e do perfil HL7 FHIR (RNF07).
 
-## 8. Correções de segurança
+## 9. Correções de segurança
 
 1. Senhas com **bcrypt** (salt individual, custo configurável), comparação em tempo constante e migração de hashes legados.
 2. Sessões por **JWT assinado**, com expiração, revogação no logout e invalidação após troca de senha.
@@ -128,13 +149,13 @@ Nenhum requisito funcional foi classificado como ausente nesta versão. Permanec
 9. Segredos **nunca versionados**: `JWT_SECRET` vem de variável de ambiente e é obrigatório em produção.
 10. Respostas de erro interno **não expõem detalhes** (mensagem genérica em HTTP 500).
 
-## 9. Alterações no banco de dados
+## 10. Alterações no banco de dados
 
 - A camada de acesso a dados permaneceu **em memória** (`DatabaseMemoria`), preservando as interfaces de repositório.
 - Foi adicionada a camada `PersistenciaJSON`, que **grava e restaura o estado em arquivo JSON** — os dados agora sobrevivem ao reinício do backend, o que era uma lacuna apontada na auditoria.
 - Não há SQL no projeto: portanto, não existe superfície de injeção de SQL. Não há, porém, transações ACID nem controle de concorrência; a migração para SGBD é prevista atrás das mesmas interfaces.
 
-## 10. Testes executados
+## 11. Testes executados
 
 Comandos executados na pasta `pasta 02/siglosus/backend`:
 
@@ -144,7 +165,7 @@ npm test            # vitest run
 npm run build       # tsc -p tsconfig.build.json — gera dist/
 ```
 
-## 11. Resultados reais dos testes
+## 12. Resultados reais dos testes
 
 | Indicador | Resultado |
 |---|---|
@@ -161,19 +182,19 @@ Distribuição: `regras-negocio` (10), `padroes-projeto` (7), `servicos` (14), `
 
 Além da suíte, foi executado um **teste manual de ponta a ponta** com o servidor em execução (porta 3111): `/api/health` respondeu 200; o login emitiu um JWT de 335 caracteres; uma requisição sem token recebeu **401**; uma requisição autenticada criou uma unidade (201) e o arquivo de persistência foi gravado no disco.
 
-## 12. Situação da documentação
+## 13. Situação da documentação
 
 `pasta 02/docs/Documentacao_SIGLoSUS_Parte2.md` (fonte), `.html` (versão ABNT navegável) e `.pdf` (entrega) foram atualizados e conferidos entre si. O documento passou a declarar explicitamente o que é **implementado**, **parcial**, **meta não verificada** e **dependente de terceiros**, com o quadro de situação dos RF e dos RNF e com as subseções 4.7 (segurança) e 4.8 (persistência). A ficha técnica da capa foi conferida contra o PDF gerado.
 
-## 13. Situação dos diagramas
+## 14. Situação dos diagramas
 
 O diagrama de classes (`09-classes.mmd`) foi atualizado com `EntregaItem`, `TokenRecuperacaoSenha` e `PosicaoRota`, com o atributo `Usuario.versaoToken` e os métodos de senha; PNG e SVG foram re-renderizados pelo Mermaid CLI e o PNG foi copiado para `pasta 02/imagens/`. Os demais diagramas foram conferidos e não exigiram alteração. Todos os arquivos `.mmd` permanecem renderizáveis.
 
-## 14. Situação do PDF
+## 15. Situação do PDF
 
 PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**, 27 figuras e 10 tabelas. Verificação por extração de texto: presentes "71 testes", "Segurança, Autenticação e Autorização", "Persistência de Dados", "bcrypt", "JWT", `RecuperacaoSenhaService`, `PosicaoService` e `GerenciadorJWT`; última figura numerada: **Figura 27**.
 
-## 15. Situação do Git e da CI
+## 16. Situação do Git e da CI
 
 - Branch de trabalho: `develop`; histórico preservado, sem comandos destrutivos, sem *force push*.
 - Commits semânticos descrevem cada grupo de correções (ver `CHANGELOG.md` e `git log`).
@@ -185,7 +206,7 @@ PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**,
   - Execuções **concluídas com sucesso** (`success`) nas branches `develop` e `release/v2.1.0`: https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software/actions
 - `.github/pull_request_template.md` com rastreabilidade RF/RN e checklist.
 
-## 16. Limitações técnicas
+## 17. Limitações técnicas
 
 1. Persistência em arquivo JSON: sem transações ACID, sem concorrência entre processos e sem consultas agregadas em SQL.
 2. Integração com e-SUS APS, HÓRUS/SNA e BNAFAR é simulada com dados locais.
@@ -195,7 +216,7 @@ PDF regenerado a partir do HTML atualizado com Chrome headless: **41 páginas**,
 6. Não foram executados ensaios de desempenho, disponibilidade, escalabilidade ou acessibilidade.
 7. A versão da auditoria foi executada em Node.js local; o pipeline de CI precisa ser observado no GitHub após o push para comprovar execução remota.
 
-## 17. Instruções para execução
+## 18. Instruções para execução
 
 ```bash
 git clone https://github.com/pJhevison/SIGLoSUS---Engenharia-de-Software.git
@@ -218,7 +239,7 @@ Para persistir os dados entre reinícios, defina `SIGLOSUS_ARQUIVO_PERSISTENCIA=
 
 Usuários de demonstração (senha `siglosus123`): `admin@siglosus.gov.br`, `gestor@siglosus.gov.br`, `farmaceutico@siglosus.gov.br`, `almoxarife@siglosus.gov.br`, `motorista@siglosus.gov.br`.
 
-## 18. Pendências que dependem de terceiros
+## 19. Pendências que dependem de terceiros
 
 | Pendência | Dependência | Como resolver |
 |---|---|---|
