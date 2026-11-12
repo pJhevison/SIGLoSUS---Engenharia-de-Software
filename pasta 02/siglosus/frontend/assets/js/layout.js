@@ -109,9 +109,11 @@ function montarLayout(titulo) {
   }
 
   if (topbar) {
+    const nome = sessao ? esc(sessao.usuario.nome) : 'visitante';
+    const perfil = sessao ? esc(sessao.usuario.perfil) : '';
     topbar.innerHTML =
-      `<h1>${titulo}</h1>` +
-      `<div class="user">${sessao ? `${sessao.usuario.nome} · <strong>${sessao.usuario.perfil}</strong>` : 'visitante'}</div>`;
+      `<h1>${esc(titulo)}</h1>` +
+      `<div class="user">${nome}${perfil ? ' · <strong>' + perfil + '</strong>' : ''}</div>`;
   }
 }
 
@@ -137,7 +139,7 @@ function formatarData(valor) {
 const ROTULO_RISCO = { BAIXO: 'verde', MEDIO: 'amarelo', ALTO: 'laranja', CRITICO: 'vermelho' };
 
 function badgeRisco(risco) {
-  return `<span class="badge ${ROTULO_RISCO[risco] || 'cinza'}">${risco}</span>`;
+  return `<span class="badge ${ROTULO_RISCO[risco] || 'cinza'}">${esc(risco)}</span>`;
 }
 
 const ROTULO_STATUS = {
@@ -148,7 +150,7 @@ const ROTULO_STATUS = {
 };
 
 function badgeStatus(status) {
-  return `<span class="badge ${ROTULO_STATUS[status] || 'cinza'}">${status}</span>`;
+  return `<span class="badge ${ROTULO_STATUS[status] || 'cinza'}">${esc(status)}</span>`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

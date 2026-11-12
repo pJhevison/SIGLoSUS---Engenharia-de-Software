@@ -14,7 +14,7 @@ async function carregarParametros() {
     .map(
       (u) =>
         `<label style="font-weight:500;color:var(--cinza-900);display:flex;gap:8px;align-items:center;border:1px solid var(--cinza-200);border-radius:8px;padding:8px 10px">` +
-        `<input type="checkbox" class="destino" value="${u.id}" style="width:auto" /> ${u.nome}</label>`,
+        `<input type="checkbox" class="destino" value="${u.id}" style="width:auto" /> ${esc(u.nome)}</label>`,
     )
     .join('');
 }
@@ -41,7 +41,7 @@ async function carregarRotas() {
 
 async function despachar(id) {
   try {
-    const entregas = await api.post(`/rotas/${id}/despachar`, { usuarioId: 4 });
+    const entregas = await api.post(`/rotas/${id}/despachar`, {});
     toast(`Rota ${id} despachada — ${entregas.length} entrega(s) gerada(s).`);
     carregarRotas();
   } catch (ex) {
@@ -58,7 +58,6 @@ document.getElementById('btn-gerar').addEventListener('click', async (e) => {
       veiculoId: Number(document.getElementById('r-veiculo').value),
       unidadesDestinoIds: destinos,
       estrategia: document.getElementById('r-estrategia').value,
-      usuarioId: 2,
     });
     const card = document.getElementById('card-resultado');
     card.style.display = 'block';
@@ -70,8 +69,8 @@ document.getElementById('btn-gerar').addEventListener('click', async (e) => {
       rota.paradas
         .map(
           (p) =>
-            `<tr><td>${p.ordem}</td><td>${p.unidade.nome}</td>` +
-            `<td>${p.prioridade > 0 ? `<span class="badge laranja">${p.prioridade}</span>` : '—'}</td></tr>`,
+            `<tr><td>${p.ordem}</td><td>${esc(p.unidade.nome)}</td>` +
+            `<td>${p.prioridade > 0 ? `<span class="badge laranja">${esc(p.prioridade)}</span>` : '—'}</td></tr>`,
         )
         .join('') +
       '</tbody></table>';

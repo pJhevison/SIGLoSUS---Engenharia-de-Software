@@ -4,10 +4,10 @@ let itensAtuais = [];
 async function carregarSeletores() {
   const [unidades, medicamentos] = await Promise.all([api.get('/unidades'), api.get('/medicamentos')]);
   document.getElementById('f-unidade').innerHTML += unidades
-    .map((u) => `<option value="${u.id}">${u.nome}</option>`)
+    .map((u) => `<option value="${u.id}">${esc(u.nome)}</option>`)
     .join('');
   document.getElementById('f-medicamento').innerHTML += medicamentos
-    .map((m) => `<option value="${m.id}">${m.nome}</option>`)
+    .map((m) => `<option value="${m.id}">${esc(m.nome)}</option>`)
     .join('');
 }
 
@@ -27,16 +27,19 @@ async function carregarEstoque() {
     ? itensAtuais
         .map(
           (e) =>
-            `<tr><td>${e.unidadeNome}</td><td>${e.medicamentoNome}</td>` +
-            `<td><strong>${e.quantidadeAtual}</strong></td><td>${e.nivelMinimo}</td>` +
-            `<td>${e.nivelSeguranca}</td><td>${badgeRisco(e.nivelRisco)}</td>` +
+            `<tr><td>${esc(e.unidadeNome)}</td><td>${esc(e.medicamentoNome)}</td>` +
+            `<td><strong>${esc(e.quantidadeAtual)}</strong></td><td>${esc(e.nivelMinimo)}</td>` +
+            `<td>${esc(e.nivelSeguranca)}</td><td>${badgeRisco(e.nivelRisco)}</td>` +
             `<td>${formatarData(e.atualizadoEm)}</td></tr>`,
         )
         .join('')
     : '<tr><td colspan="7" class="vazio">Nenhum item encontrado.</td></tr>';
 
   document.getElementById('m-estoque').innerHTML = itensAtuais
-    .map((e) => `<option value="${e.estoqueId}">${e.unidadeNome} — ${e.medicamentoNome}</option>`)
+    .map(
+      (e) =>
+        `<option value="${e.estoqueId}">${esc(e.unidadeNome)} — ${esc(e.medicamentoNome)}</option>`,
+    )
     .join('');
 }
 
@@ -48,7 +51,6 @@ document.getElementById('btn-movimentar').addEventListener('click', async () => 
       estoqueId: Number(document.getElementById('m-estoque').value),
       tipo: document.getElementById('m-tipo').value,
       quantidade: Number(document.getElementById('m-quantidade').value),
-      usuarioId: 3,
     });
     toast('Movimentação registrada.');
     await carregarEstoque();

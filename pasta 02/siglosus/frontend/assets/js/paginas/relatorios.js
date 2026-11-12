@@ -15,7 +15,12 @@ async function carregarKpis() {
     { rotulo: 'Itens críticos', valor: painel.itensCriticos },
     { rotulo: 'Unidades em risco', valor: painel.totalUnidadesEmRisco },
   ]
-    .map((c) => `<div class="card kpi"><div class="rotulo">${c.rotulo}</div><div class="valor">${c.valor}</div></div>`)
+    .map(
+      (c) =>
+        `<div class="card kpi"><div class="rotulo">${esc(c.rotulo)}</div><div class="valor">${esc(
+          c.valor,
+        )}</div></div>`,
+    )
     .join('');
 }
 
@@ -26,10 +31,10 @@ async function carregarPrevisoes() {
     ? previsoes
         .map(
           (p) =>
-            `<tr><td>${nomes.unidades[p.unidadeId] || p.unidadeId}</td>` +
-            `<td>${nomes.medicamentos[p.medicamentoId] || p.medicamentoId}</td>` +
-            `<td>${p.periodo}</td><td><strong>${p.quantidadePrevista}</strong></td>` +
-            `<td>${p.metodo}</td><td>${(p.confianca * 100).toFixed(0)}%</td></tr>`,
+            `<tr><td>${esc(nomes.unidades[p.unidadeId] || p.unidadeId)}</td>` +
+            `<td>${esc(nomes.medicamentos[p.medicamentoId] || p.medicamentoId)}</td>` +
+            `<td>${esc(p.periodo)}</td><td><strong>${esc(p.quantidadePrevista)}</strong></td>` +
+            `<td>${esc(p.metodo)}</td><td>${esc((p.confianca * 100).toFixed(0) + '%')}</td></tr>`,
         )
         .join('')
     : '<tr><td colspan="6" class="vazio">Nenhuma previsão gerada.</td></tr>';
@@ -42,7 +47,7 @@ async function carregarRelatorios() {
     ? relatorios
         .map(
           (r) =>
-            `<tr><td>${r.id}</td><td>${r.titulo}</td><td>${r.tipo}</td>` +
+            `<tr><td>${esc(r.id)}</td><td>${esc(r.titulo)}</td><td>${esc(r.tipo)}</td>` +
             `<td>${formatarData(r.geradoEm)}</td></tr>`,
         )
         .join('')
@@ -52,7 +57,9 @@ async function carregarRelatorios() {
 document.getElementById('btn-prever').addEventListener('click', async (e) => {
   e.target.disabled = true;
   try {
-    await api.post('/previsoes/gerar', { periodoDias: Number(document.getElementById('p-periodo').value) });
+    await api.post('/previsoes/gerar', {
+      periodoDias: Number(document.getElementById('p-periodo').value),
+    });
     toast('Previsões geradas.');
     carregarPrevisoes();
   } catch (ex) {
@@ -64,7 +71,7 @@ document.getElementById('btn-prever').addEventListener('click', async (e) => {
 
 document.getElementById('btn-gerar-relatorio').addEventListener('click', async () => {
   try {
-    await api.post('/relatorios', { tipo: 'geral', usuarioId: 2 });
+    await api.post('/relatorios', { tipo: 'geral' });
     toast('Relatório gerado.');
     carregarRelatorios();
   } catch (ex) {

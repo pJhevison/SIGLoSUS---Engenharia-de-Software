@@ -14,7 +14,7 @@ async function carregarEntregas() {
         .map(
           (e) =>
             `<tr><td>${e.id}</td><td>#${e.rotaId}</td>` +
-            `<td>${nomesUnidades[e.unidadeDestinoId] || e.unidadeDestinoId}</td>` +
+            `<td>${esc(nomesUnidades[e.unidadeDestinoId] || e.unidadeDestinoId)}</td>` +
             `<td>${formatarData(e.dataHoraPrevista)}</td><td>${badgeStatus(e.status)}</td>` +
             `<td>${e.dataHoraReal ? formatarData(e.dataHoraReal) : '—'}</td>` +
             `<td>${
@@ -30,12 +30,21 @@ async function carregarEntregas() {
 
 async function confirmar(id, divergencia = false) {
   try {
-    await api.post(`/entregas/${id}/confirmar`, {
-      usuarioId: 3,
-      divergencia,
-      observacao: divergencia ? 'Divergência registrada na conferência' : 'Recebimento conferido',
-    });
-    toast(`Entrega ${id} ${divergencia ? 'registrada com divergência' : 'confirmada'}.`);
+    // A confirmação entra na fila local quando não há conexão (uso offline do
+    // motorista) e é sincronizada automaticamente quando a rede voltar.
+    const resposta = await api.post(
+      `/entregas/${id}/confirmar`,
+      {
+        divergencia,
+        observacao: divergencia ? 'Divergência registrada na conferência' : 'Recebimento conferido',
+      },
+      { idem: `entrega-${id}-confirmar` },
+    );
+    if (resposta && resposta.offline) {
+      toast(`Entrega ${id} registrada na fila offline. Ela será sincronizada na reconexão.`);
+    } else {
+      toast(`Entrega ${id} ${divergencia ? 'registrada com divergência' : 'confirmada'}.`);
+    }
     carregarEntregas();
   } catch (ex) {
     toast(ex.message, true);
