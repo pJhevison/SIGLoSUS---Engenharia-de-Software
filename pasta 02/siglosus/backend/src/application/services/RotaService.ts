@@ -3,6 +3,7 @@ import { StatusParada, StatusRota } from '../../domain/enums';
 import { RegrasNegocio } from '../../domain/rules/RegrasNegocio';
 import {
   EstoqueRepository,
+  MedicamentoRepository,
   RotaRepository,
   UnidadeRepository,
   VeiculoRepository,
@@ -39,6 +40,7 @@ export class RotaService {
     private readonly veiculos: VeiculoRepository,
     private readonly unidades: UnidadeRepository,
     private readonly estoques: EstoqueRepository,
+    private readonly medicamentos: MedicamentoRepository,
     private readonly auditoria: AuditoriaService,
   ) {}
 
@@ -90,7 +92,7 @@ export class RotaService {
     for (const ponto of ordenados) {
       rota.adicionarParada(
         new ParadaRota(
-          this.rotas.proximoId(),
+          this.rotas.proximoIdParada(),
           ordem++,
           ponto.unidade,
           StatusParada.PENDENTE,
@@ -128,10 +130,21 @@ export class RotaService {
     }
   }
 
-  /** RN04 — unidades abaixo do mínimo têm prioridade. */
+  /**
+   * RN04 + RN06 — unidades abaixo do mínimo têm prioridade; dentro do mesmo
+   * nível, o abastecimento de medicamentos da RENAME é desempatado para cima.
+   */
   private calcularPrioridade(unidadeId: number): number {
     const estoques = this.estoques.listarPorUnidade(unidadeId);
     if (estoques.length === 0) return 0;
-    return Math.max(...estoques.map((e) => RegrasNegocio.calcularPrioridadeRecebimento(e)));
+    return Math.max(
+      ...estoques.map((e) => {
+        const prioridadeBase = RegrasNegocio.calcularPrioridadeRecebimento(e);
+        if (e.deficitParaSeguranca() <= 0) return prioridadeBase;
+        const medicamento = this.medicamentos.buscarPorId(e.medicamentoId);
+        const bonusRENAME = RegrasNegocio.prioridadeRENAME(medicamento?.temPrioridadeAbastecimento() ?? false);
+        return prioridadeBase + bonusRENAME * 5;
+      }),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import { StatusEntrega } from '../enums';
+import { EntregaItem } from './EntregaItem';
 
 /**
  * Entrega de medicamentos a uma unidade de destino. (RF16, RF17)
@@ -12,6 +13,7 @@ export class Entrega {
     public status: StatusEntrega = StatusEntrega.PENDENTE,
     public dataHoraReal?: Date,
     public observacao: string = '',
+    public itens: EntregaItem[] = [],
   ) {}
 
   despachar(): void {

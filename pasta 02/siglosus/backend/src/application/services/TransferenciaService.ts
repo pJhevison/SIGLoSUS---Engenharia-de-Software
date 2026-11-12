@@ -1,4 +1,6 @@
 import { Transferencia } from '../../domain/entities';
+import { StatusTransferencia, TipoMovimentacao } from '../../domain/enums';
+import { ErroConflito, ErroNaoEncontrado } from '../../domain/errors';
 import { RegrasNegocio, RegraNegocioError } from '../../domain/rules/RegrasNegocio';
 import {
   EstoqueRepository,
@@ -7,6 +9,7 @@ import {
   UnidadeRepository,
 } from '../../infrastructure/repositories';
 import { AuditoriaService } from './AuditoriaService';
+import { EstoqueService } from './EstoqueService';
 
 /**
  * Serviço de transferências entre unidades (RF13, RF14 — UC13/UC14).
@@ -19,6 +22,7 @@ export class TransferenciaService {
     private readonly estoques: EstoqueRepository,
     private readonly unidades: UnidadeRepository,
     private readonly medicamentos: MedicamentoRepository,
+    private readonly estoqueService: EstoqueService,
     private readonly auditoria: AuditoriaService,
   ) {}
 
@@ -36,6 +40,11 @@ export class TransferenciaService {
    */
   sugerir(): Transferencia[] {
     const sugestoes: Transferencia[] = [];
+    const abertas = this.transferencias
+      .listar()
+      .filter(
+        (t) => t.status === StatusTransferencia.SUGERIDA || t.status === StatusTransferencia.APROVADA,
+      );
 
     for (const medicamento of this.medicamentos.listar()) {
       const estoquesDoMedicamento = this.estoques
@@ -71,6 +80,13 @@ export class TransferenciaService {
           if (necessidade <= 0) break;
           const disponivel = disponibilidade.get(doadora.id) ?? 0;
           if (disponivel <= 0) continue;
+          const jaExiste = abertas.some(
+            (t) =>
+              t.medicamentoId === medicamento.id &&
+              t.unidadeOrigemId === doadora.unidadeId &&
+              t.unidadeDestinoId === receptora.unidadeId,
+          );
+          if (jaExiste) continue;
           const quantidade = Math.min(disponivel, necessidade);
 
           const sugestao = new Transferencia(
@@ -91,7 +107,13 @@ export class TransferenciaService {
     return sugestoes;
   }
 
-  /** UC14 — aprova uma transferência sugerida (valida RN01 e RN03). */
+  /**
+   * UC14 — aprova uma transferência sugerida (valida RN01 e RN03).
+   *
+   * A aprovação dá baixa na origem (mercadoria em trânsito). O crédito no
+   * destino ocorre somente na confirmação de recebimento (UC18), evitando
+   * contabilizar a mesma quantidade duas vezes.
+   */
   aprovar(id: number, usuarioId: number): Transferencia {
     const transferencia = this.obterSugerida(id);
     const estoqueOrigem = this.estoques.buscarPorUnidadeEMedicamento(
@@ -101,10 +123,28 @@ export class TransferenciaService {
     if (!estoqueOrigem) {
       throw new RegraNegocioError('RN01', 'Estoque de origem não encontrado.');
     }
+    const estoqueDestino = this.estoques.buscarPorUnidadeEMedicamento(
+      transferencia.unidadeDestinoId,
+      transferencia.medicamentoId,
+    );
+    if (!estoqueDestino) {
+      throw new ErroNaoEncontrado(
+        `A unidade de destino não possui registro de estoque para o medicamento ${transferencia.medicamentoId}.`,
+      );
+    }
     RegrasNegocio.validarRN01_OrigemAcimaDoSeguranca(estoqueOrigem, transferencia.quantidade);
     if (!this.temLoteTransferivel(estoqueOrigem.lotes)) {
       throw new RegraNegocioError('RN03', 'A origem não possui lote com validade igual ou superior a 90 dias.');
     }
+
+    this.estoqueService.registrarMovimentacao({
+      estoqueId: estoqueOrigem.id,
+      tipo: TipoMovimentacao.TRANSFERENCIA,
+      quantidade: transferencia.quantidade,
+      usuarioId,
+      observacao:
+        `Transferência ${transferencia.id} em trânsito para a unidade ${transferencia.unidadeDestinoId}`,
+    });
     transferencia.aprovar();
     this.auditoria.registrar(usuarioId, 'APROVAR_TRANSFERENCIA', 'transferencia', `Transferência ${id}`, true);
     return transferencia;
@@ -120,8 +160,10 @@ export class TransferenciaService {
 
   private obterSugerida(id: number): Transferencia {
     const transferencia = this.transferencias.buscarPorId(id);
-    if (!transferencia) throw new Error('Transferência não encontrada.');
-    if (!transferencia.estaPendente()) throw new Error('Transferência não está pendente de aprovação.');
+    if (!transferencia) throw new ErroNaoEncontrado('Transferência não encontrada.');
+    if (!transferencia.estaPendente()) {
+      throw new ErroConflito('Transferência não está pendente de aprovação.');
+    }
     return transferencia;
   }
 

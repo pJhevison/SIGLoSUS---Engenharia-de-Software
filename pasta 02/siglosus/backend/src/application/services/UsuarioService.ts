@@ -1,5 +1,6 @@
 import { Usuario } from '../../domain/entities';
 import { PerfilUsuario } from '../../domain/enums';
+import { ErroConflito, ErroNaoEncontrado } from '../../domain/errors';
 import { UsuarioRepository } from '../../infrastructure/repositories';
 import { AuditoriaService } from './AuditoriaService';
 
@@ -26,7 +27,7 @@ export class UsuarioService {
 
   criar(dados: DadosNovoUsuario, autorId: number): Usuario {
     if (this.usuarios.buscarPorEmailOuCpf(dados.email)) {
-      throw new Error('Já existe usuário com este e-mail.');
+      throw new ErroConflito('Já existe usuário com este e-mail.');
     }
     const usuario = new Usuario(
       this.usuarios.proximoId(),
@@ -44,7 +45,7 @@ export class UsuarioService {
 
   inativar(id: number, autorId: number): Usuario | undefined {
     const usuario = this.usuarios.buscarPorId(id);
-    if (!usuario) throw new Error('Usuário não encontrado.');
+    if (!usuario) throw new ErroNaoEncontrado('Usuário não encontrado.');
     usuario.inativar();
     this.auditoria.registrar(autorId, 'INATIVAR_USUARIO', 'usuario', usuario.email, true);
     return usuario;

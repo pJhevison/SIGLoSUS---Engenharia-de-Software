@@ -6,8 +6,9 @@ export class Dispensacao {
     public readonly id: number,
     public unidadeId: number,
     public medicamentoId: number,
-    public loteId: number,
+    public loteId: number | null,
     public quantidade: number,
     public dataHora: Date = new Date(),
+    public conferentes: number = 1,
   ) {}
 }

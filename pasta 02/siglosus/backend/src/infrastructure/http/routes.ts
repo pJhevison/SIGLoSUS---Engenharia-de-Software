@@ -1,6 +1,19 @@
 import { Router } from 'express';
 import { Container } from '../../application/Container';
+import { Usuario } from '../../domain/entities';
+import { ErroNaoEncontrado } from '../../domain/errors';
 import { ConfiguracaoSistema } from '../../patterns/singleton/ConfiguracaoSistema';
+
+/** Projeção pública do usuário: nunca expõe hash de senha nem CPF. */
+function usuarioDTO(usuario: Usuario) {
+  return {
+    id: usuario.id,
+    nome: usuario.nome,
+    email: usuario.email,
+    perfil: usuario.perfil,
+    ativo: usuario.ativo,
+  };
+}
 
 /**
  * Definição das rotas REST da API do SIGLoSUS.
@@ -20,6 +33,11 @@ export function criarRotas(container: Container): Router {
       ambiente: config.obter('ambiente'),
       regras: ['RN01', 'RN02', 'RN03', 'RN04', 'RN05', 'RN06', 'RN07', 'RN08', 'RN09'],
       padroes: ['Singleton', 'Factory Method', 'Adapter', 'Observer', 'Strategy'],
+      parametros: {
+        limiteAprovacaoGestor: config.obter('limiteAprovacaoGestor'),
+        validadeMinimaTransferenciaDias: config.obter('validadeMinimaTransferenciaDias'),
+        jornadaMaximaMin: config.obter('jornadaMaximaMin'),
+      },
     });
   });
 
@@ -40,15 +58,15 @@ export function criarRotas(container: Container): Router {
 
   // ---- Usuários (RF04) ----
   router.get('/usuarios', (_req, res) => {
-    res.json(container.usuario.listar().map((u) => ({ id: u.id, nome: u.nome, email: u.email, perfil: u.perfil, ativo: u.ativo })));
+    res.json(container.usuario.listar().map(usuarioDTO));
   });
   router.post('/usuarios', (req, res) => {
     const usuario = container.usuario.criar(req.body, Number(req.body?.autorId ?? 1));
-    res.status(201).json(usuario);
+    res.status(201).json(usuarioDTO(usuario));
   });
   router.patch('/usuarios/:id/inativar', (req, res) => {
     const usuario = container.usuario.inativar(Number(req.params.id), Number(req.body?.autorId ?? 1));
-    res.json(usuario);
+    res.json(usuarioDTO(usuario!));
   });
 
   // ---- Cadastros (RF05, RF06) ----
@@ -121,6 +139,35 @@ export function criarRotas(container: Container): Router {
     );
   });
 
+  // ---- Dispensação ao paciente (RF19 / RN05) ----
+  router.get('/dispensacoes', (req, res) => {
+    const unidadeId = req.query.unidadeId ? Number(req.query.unidadeId) : undefined;
+    res.json(container.dispensacao.listar(unidadeId));
+  });
+  router.post('/dispensacoes', (req, res) => {
+    res.status(201).json(container.dispensacao.registrar(req.body));
+  });
+
+  // ---- Requisições de medicamentos (RF20 / RN09) ----
+  router.get('/requisicoes', (_req, res) => {
+    res.json(container.requisicao.listar());
+  });
+  router.post('/requisicoes', (req, res) => {
+    res.status(201).json(container.requisicao.criar(req.body));
+  });
+  router.post('/requisicoes/:id/aprovar', (req, res) => {
+    res.json(container.requisicao.aprovar(Number(req.params.id), Number(req.body?.usuarioId ?? 2)));
+  });
+  router.post('/requisicoes/:id/rejeitar', (req, res) => {
+    res.json(
+      container.requisicao.rejeitar(
+        Number(req.params.id),
+        String(req.body?.justificativa ?? 'Sem justificativa'),
+        Number(req.body?.usuarioId ?? 2),
+      ),
+    );
+  });
+
   // ---- Rotas de distribuição (RF15, RF16) ----
   router.get('/rotas', (_req, res) => {
     res.json(container.rota.listar());
@@ -129,7 +176,9 @@ export function criarRotas(container: Container): Router {
     res.json(container.rota.estrategiasDisponiveis());
   });
   router.get('/rotas/:id', (req, res) => {
-    res.json(container.rota.buscar(Number(req.params.id)));
+    const rota = container.rota.buscar(Number(req.params.id));
+    if (!rota) throw new ErroNaoEncontrado('Rota não encontrada.');
+    res.json(rota);
   });
   router.post('/rotas', (req, res) => {
     res.status(201).json(container.rota.gerarRota(req.body));

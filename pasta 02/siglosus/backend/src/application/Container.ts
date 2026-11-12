@@ -25,11 +25,13 @@ import { NotificacaoEstoqueObserver } from '../patterns/observer/NotificacaoEsto
 import { AlertaService } from './services/AlertaService';
 import { AuditoriaService } from './services/AuditoriaService';
 import { AutenticacaoService } from './services/AutenticacaoService';
+import { DispensacaoService } from './services/DispensacaoService';
 import { EntregaService } from './services/EntregaService';
 import { EstoqueService } from './services/EstoqueService';
 import { IntegracaoService } from './services/IntegracaoService';
 import { PrevisaoDemandaService } from './services/PrevisaoDemandaService';
 import { RelatorioService } from './services/RelatorioService';
+import { RequisicaoService } from './services/RequisicaoService';
 import { RotaService } from './services/RotaService';
 import { TransferenciaService } from './services/TransferenciaService';
 import { UsuarioService } from './services/UsuarioService';
@@ -71,8 +73,10 @@ export class Container {
   readonly alerta: AlertaService;
   readonly autenticacao: AutenticacaoService;
   readonly estoque: EstoqueService;
+  readonly dispensacao: DispensacaoService;
   readonly previsao: PrevisaoDemandaService;
   readonly transferencia: TransferenciaService;
+  readonly requisicao: RequisicaoService;
   readonly rota: RotaService;
   readonly entrega: EntregaService;
   readonly integracao: IntegracaoService;
@@ -96,16 +100,45 @@ export class Container {
       this.estoqueSubject,
       this.auditoria,
     );
+    this.dispensacao = new DispensacaoService(
+      this.dispensacoes,
+      this.estoques,
+      this.medicamentos,
+      this.unidades,
+      this.estoque,
+      this.auditoria,
+    );
     this.previsao = new PrevisaoDemandaService(this.estoques, this.previsoes, this.movimentacoes);
     this.transferencia = new TransferenciaService(
       this.transferencias,
       this.estoques,
       this.unidades,
       this.medicamentos,
+      this.estoque,
       this.auditoria,
     );
-    this.rota = new RotaService(this.rotas, this.veiculos, this.unidades, this.estoques, this.auditoria);
-    this.entrega = new EntregaService(this.entregas, this.rotas, this.estoque, this.auditoria);
+    this.requisicao = new RequisicaoService(
+      this.requisicoes,
+      this.unidades,
+      this.medicamentos,
+      this.usuarios,
+      this.auditoria,
+    );
+    this.rota = new RotaService(
+      this.rotas,
+      this.veiculos,
+      this.unidades,
+      this.estoques,
+      this.medicamentos,
+      this.auditoria,
+    );
+    this.entrega = new EntregaService(
+      this.entregas,
+      this.rotas,
+      this.transferencias,
+      this.estoque,
+      this.auditoria,
+    );
     this.integracao = new IntegracaoService(
       this.integracoes,
       this.unidades,
